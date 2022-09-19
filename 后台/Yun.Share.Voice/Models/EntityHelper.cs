@@ -14,17 +14,12 @@ namespace Yun.Share.Voice
         /// <summary>
         /// 昵称长度
         /// </summary>
-        public const int NameLength = 20;
+        public const int NameLength = 8;
 
         /// <summary>
         /// 编号长度
         /// </summary>
         public const int CodeLength = 17;
-
-        /// <summary>
-        /// 联系方式长度
-        /// </summary>
-        public const int PhoneLength = 15;
 
         /// <summary>
         /// 密码长度
@@ -45,6 +40,11 @@ namespace Yun.Share.Voice
         /// 长度10
         /// </summary>
         public const int Length10 = 10;
+
+        /// <summary>
+        /// 手机号长度
+        /// </summary>
+        public const int PhonLength = 11;
 
         /// <summary>
         /// 长度50
