@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Yun.Share.Voice.IApplication;
 using Yun.Share.Voice.Models.Base;
+using Yun.Share.Voice.Models.Entities;
 
 namespace Yun.Share.Voice.DataBase
 {
@@ -30,8 +31,20 @@ namespace Yun.Share.Voice.DataBase
                 , LogLevel.Information);
         }
         #region 新增
-      
-        
+        public virtual DbSet<CarType> CarTypes { get; set; }
+
+        public virtual DbSet<ErrorPracticeLog> ErrorPracticeLoges { get; set; }
+
+        public virtual DbSet<Option> Optiones { get; set; }
+
+        public virtual DbSet<Practice> Practices { get; set; }
+
+        public virtual DbSet<PracticeImage> PracticeImages { get; set; }
+
+        public virtual DbSet<SubjectType> SubjectTypes { get; set; }
+
+        public virtual DbSet<User> Users { get; set; }
+
         #endregion
 
         #region 重写

@@ -51,4 +51,22 @@ namespace Yun.Share.Voice.Enum
         [Description("其他")]
         Other = 20,
     }
+
+    /// <summary>
+    /// 选择类型
+    /// </summary>
+    public enum ChoiceTyope
+    {
+        /// <summary>
+        ///单选
+        /// </summary>
+        [Description("单选")]
+        Single = 10,
+
+        /// <summary>
+        ///多选
+        /// </summary>
+        [Description("多选")]
+        More = 20
+    }
 }

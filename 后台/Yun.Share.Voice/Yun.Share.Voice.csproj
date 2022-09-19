@@ -39,7 +39,6 @@
     <Folder Include="IApplication\Dtos\Models\" />
     <Folder Include="IApplication\interface\" />
     <Folder Include="Logs\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
