@@ -44,7 +44,12 @@ namespace Yun.Share.Voice.Models.Entities
         /// 答题技巧
         /// </summary>
         public string Skill { get; set; }
-        
+
+        /// <summary>
+        /// 试题详解
+        /// </summary>
+        public string Introduce { get; set; }
+
         /// <summary>
         /// 单选/多选
         /// </summary>

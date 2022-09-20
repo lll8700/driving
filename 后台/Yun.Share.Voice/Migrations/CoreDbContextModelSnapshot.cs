@@ -156,6 +156,9 @@ namespace Yun.Share.Voice.Migrations
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime");
 
+                    b.Property<string>("Introduce")
+                        .HasColumnType("longtext");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 

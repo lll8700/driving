@@ -22,4 +22,21 @@ namespace Yun.Share.Voice.IApplication.UtilDtos
         /// </summary>
         public virtual string Message { get; set; }
     }
+
+    public class TokenData
+    {
+        /// <summary>
+        /// 数据源
+        /// </summary>
+        public virtual Token data { get; set; }
+
+        /// <summary>
+        /// 如果出错 这里将有信息
+        /// </summary>
+        public virtual int code { get; set; }
+    }
+    public class Token
+    {
+        public virtual string token { get; set; }
+    }
 }

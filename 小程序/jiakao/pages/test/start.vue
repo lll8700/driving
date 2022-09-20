@@ -6,14 +6,12 @@
 			</view>
 			<test :item='question[seq]' :anstype='seltype' />
 		</view>
-		
+
 		<view class="u_foot">
-
-			<button class="mini-btn" type="primary" @click="pre">上一题</button>
-
-			<button class="mini-btn" type="primary" @click="next">下一题</button>
-
-
+			<view class="itemflex">
+				<button class="mini-btn" type="primary" @click="pre">上一题</button>
+				<button class="mini-btn " type="primary" @click="next">下一题</button>
+			</view>
 		</view>
 
 	</view>
@@ -51,17 +49,17 @@
 							Math.floor(diffTime % 60) :
 							`0${Math.floor(diffTime % 60)}`;
 						this.countdownTxt = `${diffM}分${diffS}秒`;
-						
+
 
 						diffTime--;
 						if (diffTime < 0) {
 							clearInterval(this.countdownTime);
 							return;
 						}
-						
+
 					}, 1000);
-					
-				
+
+
 				}
 			},
 			pre() {
@@ -84,7 +82,7 @@
 
 		},
 		onReady() {
-			this.countdownFun(60*60)
+			this.countdownFun(60 * 60)
 
 
 		},
@@ -94,19 +92,24 @@
 <style lang="less" scoped>
 	.content {
 		height: 90vh;
-		.center{
+		position: relative;
+
+		.center {
 			text-align: center;
 		}
 	}
 
 	.content-wrap {
 		padding: 20px;
-		height: 70vh;
-		
+		height: auto;
 	}
 
 	.u_foot {
-		display: flex;
-
+		
+		width: 100%;
+		bottom: 20px;
+		.itemflex {
+			display: flex;
+		}
 	}
 </style>

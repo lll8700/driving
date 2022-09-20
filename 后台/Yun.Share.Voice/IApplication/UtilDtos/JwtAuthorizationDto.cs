@@ -16,6 +16,7 @@ namespace Yun.Share.Voice.IApplication.UtilDtos
         /// 昵称
         /// </summary>
         public virtual string Name { get; set; }
+        ///<summary>
         /// 联系方式
         /// </summary>
         public virtual string PhoneNumber { get; set; }
