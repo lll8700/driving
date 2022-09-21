@@ -19,5 +19,7 @@ namespace Yun.Share.Voice.IApplication
         /// <returns></returns>
         Task<string> Login(LoginInputDto input);
 
+        Task<string> Create(LoginInputDto input);
+
     }
 }

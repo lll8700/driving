@@ -17,10 +17,10 @@ namespace Yun.Share.Voice.Enum
         Apply = 10,
 
         /// <summary>
-        ///20VIP
+        ///20正式
         /// </summary>
-        [Description("VIP")]
-        VIP = 20,
+        [Description("正式")]
+        Formal = 20,
 
         /// <summary>
         ///30失效

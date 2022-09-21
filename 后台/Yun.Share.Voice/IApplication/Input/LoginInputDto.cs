@@ -17,4 +17,5 @@ namespace Yun.Share.Voice.IApplication.Input
         /// </summary>
         public virtual string Password { get; set; }
     }
+    
 }

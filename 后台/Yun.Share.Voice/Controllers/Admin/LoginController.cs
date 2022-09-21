@@ -32,5 +32,19 @@ namespace Yun.Share.Voice.Controllers.Admin
             }
             return data;
         }
+
+        [HttpPost]
+        [Route(RouteName.CreateAction)]
+        public async Task<TokenData> Create(LoginInputDto input)
+        {
+            var str = await _loginServer.Create(input);
+            TokenData data = new TokenData { code = 40000 };
+            if (!string.IsNullOrEmpty(str))
+            {
+                data.code = 20000;
+                data.data = new Token { token = str };
+            }
+            return data;
+        }
     }
 }
