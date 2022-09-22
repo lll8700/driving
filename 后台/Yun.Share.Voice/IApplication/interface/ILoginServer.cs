@@ -21,5 +21,12 @@ namespace Yun.Share.Voice.IApplication
 
         Task<string> Create(LoginInputDto input);
 
+        /// <summary>
+        /// 微信登录
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<string> WeChatLogin(LoginInputDto input);
+
     }
 }

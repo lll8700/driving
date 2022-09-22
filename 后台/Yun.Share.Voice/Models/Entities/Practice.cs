@@ -33,8 +33,9 @@ namespace Yun.Share.Voice.Models.Entities
         /// </summary>
         public StatusTypeEnum StatusTypeEnum { get; set; }
 
-        public List<PracticeImage> PracticeImageslist { get; set; }
+        public List<PracticeImage> PracticeImages { get; set; }
 
+        public List<Option> Options { get; set; }
         /// <summary>
         /// 关键字 ，分隔
         /// </summary>
@@ -44,6 +45,11 @@ namespace Yun.Share.Voice.Models.Entities
         /// 答题技巧
         /// </summary>
         public string Skill { get; set; }
+
+        /// <summary>
+        /// 答题技巧2
+        /// </summary>
+        public string SkillLast { get; set; }
 
         /// <summary>
         /// 试题详解

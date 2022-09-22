@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,5 +17,6 @@ namespace Yun.Share.Voice.IApplication
         Task<PracticeDto> GetAsync(Guid Id);
         Task<PracticeDto> UpdateAsync(PracticeDto input);
         Task<PagedResultDto<PracticeDto>> GetListAsync(PracticeListInput input);
+        Task<bool> UploadFilePath(IFormFile file);
     }
 }

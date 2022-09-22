@@ -39,6 +39,24 @@ namespace Yun.Share.Voice.Application.Serve
             return userData;
         }
 
+        public async Task<string> WeChatLogin(LoginInputDto input)
+        {
+
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.Phone == input.PhoneNumber && x.WeChatId == input.OpenId && x.UserStatusTypeEnum == Enum.UserStatusTypeEnum.Formal);
+            var userData = string.Empty;
+            if (user != null)
+            {
+                var jwtInput = new JwtAuthorizationTokenInput
+                {
+                    Name = user.Name,
+                    PhoneNumber = input.PhoneNumber,
+                    UserId = user.Id
+                };
+                userData = _jwtTokenServer.GetToken(jwtInput);
+            }
+            return userData;
+        }
+
         public async Task<string> Create(LoginInputDto input)
         {
             var pass = Md5Encrypt.Encrypt(input.Password);

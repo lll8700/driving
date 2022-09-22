@@ -16,6 +16,11 @@ namespace Yun.Share.Voice.IApplication.Input
         /// 密码
         /// </summary>
         public virtual string Password { get; set; }
+
+         /// <summary>
+        /// 微信ID
+        /// </summary>
+        public virtual string OpenId { get; set; }
     }
     
 }

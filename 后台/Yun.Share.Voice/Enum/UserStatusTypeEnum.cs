@@ -67,6 +67,11 @@ namespace Yun.Share.Voice.Enum
         ///多选
         /// </summary>
         [Description("多选")]
-        More = 20
+        More = 20,
+        /// <summary>
+        ///判断
+        /// </summary>
+        [Description("判断")]
+        Choice = 30
     }
 }

@@ -18,6 +18,7 @@ namespace Yun.Share.Voice.IApplication
         /// <returns></returns>
         string GetToken(JwtAuthorizationTokenInput input);
 
+
         /// <summary>
         /// 获取当前登录的用户Id
         /// </summary>

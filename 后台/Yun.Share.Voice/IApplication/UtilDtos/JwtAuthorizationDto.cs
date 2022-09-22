@@ -25,7 +25,14 @@ namespace Yun.Share.Voice.IApplication.UtilDtos
         /// 用户Id
         /// </summary>
         public virtual Guid UserId { get; set; }
+
+        /// <summary>
+        /// 微信Id
+        /// </summary>
+        public virtual string OpenId { get; set; }
     }
+
+ 
     public class CurrentUserDto
     {
         /// <summary>

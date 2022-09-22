@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +10,7 @@ using Yun.Share.Voice.IApplication.Dtos.Models;
 using Yun.Share.Voice.IApplication.Input;
 using Yun.Share.Voice.IApplication.UtilDtos;
 using Yun.Share.Voice.Models.Entities;
+using Yun.Share.Voice.Utils;
 
 namespace Yun.Share.Voice.Application.Serve
 {
@@ -47,10 +50,24 @@ namespace Yun.Share.Voice.Application.Serve
         {
             return await base.GetListAsync(input);
         }
-
+        /// <summary>
+        /// 初始化外键
+        /// </summary>
+        /// <param name="iq"></param>
+        /// <returns></returns>
+        private IQueryable<Practice> IncludeDefault(IQueryable<Practice> iq)
+        {
+            return iq
+                .Include(x => x.PracticeImages)
+                .Include(x => x.CarType)
+                .Include(x => x.Options)
+                .Include(x => x.SubjectType);
+        }
         protected override IQueryable<Practice> Filter(IQueryable<Practice> iq, PracticeListInput input)
         {
-            if(input.Name.IsNotEmpty())
+            iq = IncludeDefault(iq);
+
+            if (input.Name.IsNotEmpty())
             {
                 iq = iq.Where(x => x.Title.Contains(input.Name));
             }
@@ -81,6 +98,77 @@ namespace Yun.Share.Voice.Application.Serve
         {
             var list = entities.MapTo<List<PracticeDto>, List<Practice>>();
             return list;
+        }
+
+        public async Task<bool> UploadFilePath(IFormFile file)
+        {
+            ExcelUtil excelUtil = new ExcelUtil();
+            var dt =  excelUtil.ExcelToTable(file);
+            List<Practice> list = new List<Practice>();
+            var car = await _db.CarTypes.FirstOrDefaultAsync(x => x.Name == "小车C1C2C3");
+            var su = await _db.SubjectTypes.FirstOrDefaultAsync(x => x.Name == "科目一");
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                Practice per = new Practice()
+                {
+                    CarTypeId = car.Id,
+                    SubjectTypeId = su.Id,
+                    ChoiceTyope = dt.Rows[i][1].ToString().Contains("判断")? Enum.ChoiceTyope.Choice: dt.Rows[i][1].ToString().Contains("单选")? Enum.ChoiceTyope.Single: Enum.ChoiceTyope.More,
+                    Title = dt.Rows[i][3].ToString(),
+                    Skill = dt.Rows[i][9].ToString(),
+                    SkillLast = dt.Rows[i][10].ToString(),
+                    Introduce = dt.Rows[i][11].ToString()
+                };
+                var images = dt.Rows[i][2].ToString();
+                if(images.IsNotEmpty())
+                {
+                    var sp = images.Split(new char[] { ',', '，' });
+                    List<PracticeImage> listImage = new List<PracticeImage>();
+                    foreach (var im in sp)
+                    {
+                        if(im.IsNotEmpty())
+                        {
+                            listImage.Add(new PracticeImage
+                            {
+                                Url = im
+                            });
+                        }
+                    }
+                    per.PracticeImages = listImage;
+                }
+                var isIndex = dt.Rows[i][8].ToString().Trim();
+                List<Option> ops = new List<Option>();
+                for (var j = 4; j< 8;j++)
+                {
+                    var sp = dt.Rows[i][j].ToString();
+                    if (sp.Split(' ').Length >1)
+                    {
+                        Option op = new Option()
+                        {
+                            Index = j - 3,
+                            Title = sp,
+                            IsCorrect = false
+                        };
+                        if(sp[0].ToString().Trim() == isIndex)
+                        {
+                            op.IsCorrect = true;
+                        }
+                        ops.Add(op);
+                    }
+                }
+                per.Options = ops;
+
+
+
+                for (int j = 1; j < dt.Columns.Count; j++)
+                {
+                    var dataStr = dt.Rows[i][1].ToString();
+                }
+                list.Add(per);
+            }
+            await _db.Practices.AddRangeAsync(list);
+            await _db.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -13,6 +13,10 @@ namespace Yun.Share.Voice.Models.Entities
     public class Option : BaseModel, ModelTitle, ModelPracticeId
     {
         /// <summary>
+        /// 排序
+        /// </summary>
+        public virtual int Index { get; set; }
+        /// <summary>
         /// 选项题目
         /// </summary>
         public virtual string Title { get; set; }

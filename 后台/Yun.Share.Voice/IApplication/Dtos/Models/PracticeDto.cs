@@ -31,7 +31,7 @@ namespace Yun.Share.Voice.IApplication.Dtos.Models
         /// </summary>
         public StatusTypeEnum StatusTypeEnum { get; set; }
 
-        public List<PracticeImageDto> PracticeImageslist { get; set; }
+        public List<PracticeImageDto> PracticeImages { get; set; }
 
         /// <summary>
         /// 关键字 ，分隔
@@ -42,6 +42,11 @@ namespace Yun.Share.Voice.IApplication.Dtos.Models
         /// 答题技巧
         /// </summary>
         public string Skill { get; set; }
+
+        /// <summary>
+        /// 答题技巧2
+        /// </summary>
+        public string SkillLast { get; set; }
 
         /// <summary>
         /// 试题详解

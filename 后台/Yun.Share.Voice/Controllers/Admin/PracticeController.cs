@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -44,6 +45,12 @@ namespace Yun.Share.Voice.Controllers.Admin
         public Task<PracticeDto> UpdateAsync(PracticeDto input)
         {
             return _server.UpdateAsync(input);
+        }
+        [HttpPost]
+        [Route("excel")]
+        public Task<bool> UploadFilePath(IFormFile file)
+        {
+            return _server.UploadFilePath(file);
         }
     }
 }
