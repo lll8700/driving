@@ -91,8 +91,18 @@
 			selVal() {
 				return this.queTypeArrs[this.queType]
 			}
+			
+		},
+		mounted() {
+			this.initData();
 		},
 		methods: {
+			initData() {
+				var that = this;
+				that.$http(that.$api.CarType.list, "POST", {}).then(res=> {
+					console.log(res)
+				})
+			},
 			toUrl(type) {
 				if(type === 2){
 					uni.navigateTo({

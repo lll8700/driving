@@ -19,7 +19,7 @@ namespace Yun.Share.Voice.Controllers.Admin
         {
             _loginServer = loginServer;
         }
-        [HttpPost]
+        [HttpGet]
         [Route("token")]
         public async Task<TokenData> GetToken(LoginInputDto input)
         {
@@ -33,7 +33,7 @@ namespace Yun.Share.Voice.Controllers.Admin
             return data;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("gettoken")]
         public async Task<TokenData> WeChatLogin(LoginInputDto input)
         {

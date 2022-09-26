@@ -57,7 +57,7 @@ namespace Yun.Share.Voice.Application.Serve
 
         protected override async Task<List<CarTypeDto>> MapToGetListOutputDtosAsync(List<CarType> entities)
         {
-            var list = entities.MapTo<List<CarTypeDto>, List<CarType>>();
+            var list = entities.Select(x=>x.MapTo<CarTypeDto, CarType>()).ToList();
             return list;
         }
     }

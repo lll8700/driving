@@ -13,7 +13,7 @@ namespace Yun.Share.Voice.Controllers
     }
     [ApiController]
     [Authorize]
-    [Route("api/Voice/Enum")]
+    [Route("api/Enum")]
     [ResponseCache(Duration = 60 * 60, Location = ResponseCacheLocation.Client)]
     public class EnumsController : AuthorizeController
     {

@@ -1,0 +1,1 @@
+<view class="contanier data-v-80842834"><view class="m10 data-v-80842834"><button class="mini-btn data-v-80842834" type="warn" plain="true" data-event-opts="{{[['tap',[['toUrl']]]]}}" bindtap="__e">错题库</button></view><view class="m10 data-v-80842834"><button class="mini-btn data-v-80842834" type="primary">开通账号</button></view></view>
