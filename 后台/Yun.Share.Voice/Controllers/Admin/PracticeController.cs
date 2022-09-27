@@ -52,5 +52,29 @@ namespace Yun.Share.Voice.Controllers.Admin
         {
             return _server.UploadFilePath(file);
         }
+
+        /// <summary>
+        ///  按顺序获取下一个
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("next")]
+        public Task<PracticeDto> GetNextAsync(Guid Id)
+        {
+            return _server.GetNextAsync(Id);
+        }
+
+        /// <summary>
+        /// 获取排除ids的随机一个题
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("Random")]
+        public Task<PracticeDto> GetRandomAsync(PracticeListInput input)
+        {
+            return _server.GetRandomAsync(input);
+        }
     }
 }

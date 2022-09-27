@@ -33,23 +33,29 @@ namespace Yun.Share.Voice.Enum
     {
 
         /// <summary>
-        ///普通会员
+        ///普通会员 给钱了的
         /// </summary>
         [Description("普通会员")]
         Empty = 0,
 
         /// <summary>
-        ///管理员
+        ///管理员 后台管理的人
         /// </summary>
         [Description("管理员")]
         Admin = 10,
 
 
         /// <summary>
-        ///其他
+        ///游客 来的游客
         /// </summary>
-        [Description("其他")]
+        [Description("游客")]
         Other = 20,
+
+        /// <summary>
+        ///销售员
+        /// </summary>
+        [Description("销售员")]
+        Sale = 30,
     }
 
     /// <summary>

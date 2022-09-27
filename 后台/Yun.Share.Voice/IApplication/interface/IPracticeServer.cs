@@ -18,5 +18,19 @@ namespace Yun.Share.Voice.IApplication
         Task<PracticeDto> UpdateAsync(PracticeDto input);
         Task<PagedResultDto<PracticeDto>> GetListAsync(PracticeListInput input);
         Task<bool> UploadFilePath(IFormFile file);
+
+        /// <summary>
+        ///  按顺序获取下一个
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        Task<PracticeDto> GetNextAsync(Guid Id);
+
+        /// <summary>
+        /// 获取排除ids的随机一个题
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PracticeDto> GetRandomAsync(PracticeListInput input);
     }
 }

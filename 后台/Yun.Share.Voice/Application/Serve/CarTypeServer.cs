@@ -43,6 +43,35 @@ namespace Yun.Share.Voice.Application.Serve
 
         public override async Task<PagedResultDto<CarTypeDto>> GetListAsync(CarTypeListInput input)
         {
+            //List<CarType> list = new List<CarType>
+            //{
+            //    new CarType
+            //    {
+            //        Name = "小车",
+            //        Subname ="C1C2C3",
+            //        Icon = "icon-xiaoche"
+            //    },
+            //    new CarType
+            //    {
+            //        Name = "摩托车",
+            //        Subname ="D/F/E",
+            //        Icon = "icon-motuoche"
+            //    },
+            //    new CarType
+            //    {
+            //        Name = "货车",
+            //        Subname ="A2/N2",
+            //        Icon = "icon-xiaochewuliu"
+            //    },
+            //    new CarType
+            //    {
+            //        Name = "轻型牵引挂车",
+            //        Subname ="C6",
+            //        Icon = "icon-qianyinche01"
+            //    }
+            //};
+            //await _db.CarTypes.AddRangeAsync(list);
+            //await _db.SaveChangesAsync();
             return await base.GetListAsync(input);
         }
 

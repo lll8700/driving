@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Yun.Share.Voice.IApplication.Dtos;
 
 namespace Yun.Share.Voice.IApplication.UtilDtos
 {
@@ -38,5 +39,14 @@ namespace Yun.Share.Voice.IApplication.UtilDtos
     public class Token
     {
         public virtual string token { get; set; }
+    }
+    public class WxTokenData
+    {
+        /// <summary>
+        /// 如果出错 这里将有信息
+        /// </summary>
+        public virtual int code { get; set; }
+
+        public virtual LoginDto data { get; set; }
     }
 }

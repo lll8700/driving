@@ -2667,18 +2667,18 @@ function normalizeComponent (
 
 /***/ }),
 
-/***/ 114:
+/***/ 110:
 /*!**********************************************************!*\
   !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
   \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! regenerator-runtime */ 115);
+module.exports = __webpack_require__(/*! regenerator-runtime */ 111);
 
 /***/ }),
 
-/***/ 115:
+/***/ 111:
 /*!************************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime-module.js ***!
   \************************************************************/
@@ -2709,7 +2709,7 @@ var oldRuntime = hadRuntime && g.regeneratorRuntime;
 // Force reevalutation of runtime.js.
 g.regeneratorRuntime = undefined;
 
-module.exports = __webpack_require__(/*! ./runtime */ 116);
+module.exports = __webpack_require__(/*! ./runtime */ 112);
 
 if (hadRuntime) {
   // Restore the original runtime.
@@ -2726,7 +2726,7 @@ if (hadRuntime) {
 
 /***/ }),
 
-/***/ 116:
+/***/ 112:
 /*!*****************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime.js ***!
   \*****************************************************/
@@ -3458,7 +3458,7 @@ if (hadRuntime) {
 
 /***/ }),
 
-/***/ 117:
+/***/ 113:
 /*!***********************************************************************************************!*\
   !*** F:/项目文件/驾照题库/driving/小程序/jiakao/uni_modules/yui-tabs/components/yui-tabs/utils/uitls.js ***!
   \***********************************************************************************************/
@@ -3561,7 +3561,7 @@ function getDirection(startx, starty, endx, endy) {
 
 /***/ }),
 
-/***/ 118:
+/***/ 114:
 /*!***********************************************************************************************!*\
   !*** F:/项目文件/驾照题库/driving/小程序/jiakao/uni_modules/yui-tabs/components/yui-tabs/utils/const.js ***!
   \***********************************************************************************************/
@@ -3688,7 +3688,132 @@ exports.props = props;props[valueField] = {
 
 /***/ }),
 
-/***/ 126:
+/***/ 12:
+/*!***************************************************!*\
+  !*** F:/项目文件/驾照题库/driving/小程序/jiakao/api/http.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.get = get;exports.post = post;
+
+function get(url) {var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var requestheader = arguments.length > 2 ? arguments[2] : undefined;var isshowLoading = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+  if (isshowLoading) {// 是否打开加载缓冲
+    uni.showLoading({
+      title: '加载数据中',
+      mask: true });
+
+  }
+  if (!requestheader) {
+    var token = uni.getStorageSync("Token");
+    requestheader = {
+      'content-type': 'application/json; charset=utf-8',
+      'Authorization': token };
+
+  };
+  return new Promise(function (resolve, reject) {
+    uni.request({
+      url: url,
+      data: params || {},
+      method: 'GET',
+      header: requestheader,
+      success: function success(res) {
+        switch (res.statusCode) {
+          case 200:
+            resolve(res.data);
+            break;
+          case 401:
+            uni.showToast({
+              title: '未登录或者登录超时，请登录',
+              icon: 'none',
+              duration: 2000 });
+
+            uni.switchTab({
+              url: '/pages/home/home.vue' });
+
+            break;
+          default:
+            reject(err);
+            break;}
+
+      },
+      fail: function fail(res) {
+        console.error(res);
+      },
+      complete: function complete() {
+        if (isshowLoading) {
+          uni.hideLoading();
+        }
+      } });
+
+  });
+}
+
+
+/**
+   * 封装post请求
+   * @param url  地址
+   * @param data 参数
+   * @returns {Promise} 返回数据
+   */
+function post(url) {var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var requestheader = arguments.length > 2 ? arguments[2] : undefined;var isshowLoading = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+  if (isshowLoading) {// 是否打开加载缓冲
+    uni.showLoading({
+      title: '加载数据中',
+      mask: true });
+
+  }
+  if (!requestheader) {
+    var token = uni.getStorageSync("Token");
+    requestheader = {
+      'content-type': 'application/json; charset=utf-8',
+      'Authorization': token };
+
+  };
+  return new Promise(function (resolve, reject) {
+    uni.request({
+      url: url,
+      data: data || {},
+      method: 'POST',
+      header: requestheader,
+      success: function success(res) {
+        switch (res.statusCode) {
+          case 200:
+            resolve(res.data);
+            break;
+          case 401:
+            uni.showToast({
+              title: '未登录或者登录超时，请登录',
+              icon: 'none',
+              duration: 2000 });
+
+            uni.switchTab({
+              url: '/pages/home/home.vue' });
+
+            break;
+          default:
+            reject(err);
+            break;}
+
+      },
+      fail: function fail(res) {
+        console.error(res);
+      },
+      complete: function complete() {
+        if (isshowLoading) {
+          uni.hideLoading();
+        }
+      } });
+
+  });
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 122:
 /*!*******************************************************************************************!*\
   !*** F:/项目文件/驾照题库/driving/小程序/jiakao/uni_modules/uni-icons/components/uni-icons/icons.js ***!
   \*******************************************************************************************/
@@ -4865,264 +4990,68 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 /***/ }),
 
-/***/ 141:
-/*!***************************************************************************************************************!*\
-  !*** F:/项目文件/驾照题库/driving/小程序/jiakao/uni_modules/uni-transition/components/uni-transition/createAnimation.js ***!
-  \***************************************************************************************************************/
+/***/ 13:
+/*!******************************************************!*\
+  !*** F:/项目文件/驾照题库/driving/小程序/jiakao/api/request.js ***!
+  \******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.createAnimation = createAnimation;function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;} // const defaultOption = {
-// 	duration: 300,
-// 	timingFunction: 'linear',
-// 	delay: 0,
-// 	transformOrigin: '50% 50% 0'
-// }
-var
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.request = request; // 对uni.request进行封装
+/* 
+   url            请求地址
+   method         请求方式
+   data           请求参数
+   contentType    请求内容类型 1=json  2=form
+ */
+function request(url) {var method = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "get";var data = arguments.length > 2 ? arguments[2] : undefined;var contentType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+  var token = uni.getStorageSync("Token");
+  var header = {
+    'content-type': contentType === 1 ? 'application/json' : 'application/x-www-from-urlencoded',
+    'Authorization': token };
 
-
-MPAnimation = /*#__PURE__*/function () {
-  function MPAnimation(options, _this) {_classCallCheck(this, MPAnimation);
-    this.options = options;
-    this.animation = uni.createAnimation(options);
-    this.currentStepAnimates = {};
-    this.next = 0;
-    this.$ = _this;
-
-  }_createClass(MPAnimation, [{ key: "_nvuePushAnimates", value: function _nvuePushAnimates(
-
-    type, args) {
-      var aniObj = this.currentStepAnimates[this.next];
-      var styles = {};
-      if (!aniObj) {
-        styles = {
-          styles: {},
-          config: {} };
-
-      } else {
-        styles = aniObj;
-      }
-      if (animateTypes1.includes(type)) {
-        if (!styles.styles.transform) {
-          styles.styles.transform = '';
-        }
-        var unit = '';
-        if (type === 'rotate') {
-          unit = 'deg';
-        }
-        styles.styles.transform += "".concat(type, "(").concat(args + unit, ") ");
-      } else {
-        styles.styles[type] = "".concat(args);
-      }
-      this.currentStepAnimates[this.next] = styles;
-    } }, { key: "_animateRun", value: function _animateRun()
-    {var styles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var ref = this.$.$refs['ani'].ref;
-      if (!ref) return;
-      return new Promise(function (resolve, reject) {
-        nvueAnimation.transition(ref, _objectSpread({
-          styles: styles },
-        config),
-        function (res) {
-          resolve();
-        });
-      });
-    } }, { key: "_nvueNextAnimate", value: function _nvueNextAnimate(
-
-    animates) {var _this2 = this;var step = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;var fn = arguments.length > 2 ? arguments[2] : undefined;
-      var obj = animates[step];
-      if (obj) {var
-
-        styles =
-
-        obj.styles,config = obj.config;
-        this._animateRun(styles, config).then(function () {
-          step += 1;
-          _this2._nvueNextAnimate(animates, step, fn);
-        });
-      } else {
-        this.currentStepAnimates = {};
-        typeof fn === 'function' && fn();
-        this.isEnd = true;
-      }
-    } }, { key: "step", value: function step()
-
-    {var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-      this.animation.step(config);
-
-
-
-
-
-
-      return this;
-    } }, { key: "run", value: function run(
-
-    fn) {
-
-      this.$.animationData = this.animation.export();
-      this.$.timer = setTimeout(function () {
-        typeof fn === 'function' && fn();
-      }, this.$.durationTime);
-
-
-
-
-
-
-
-
-    } }]);return MPAnimation;}();
-
-
-
-var animateTypes1 = ['matrix', 'matrix3d', 'rotate', 'rotate3d', 'rotateX', 'rotateY', 'rotateZ', 'scale', 'scale3d',
-'scaleX', 'scaleY', 'scaleZ', 'skew', 'skewX', 'skewY', 'translate', 'translate3d', 'translateX', 'translateY',
-'translateZ'];
-
-var animateTypes2 = ['opacity', 'backgroundColor'];
-var animateTypes3 = ['width', 'height', 'left', 'right', 'top', 'bottom'];
-animateTypes1.concat(animateTypes2, animateTypes3).forEach(function (type) {
-  MPAnimation.prototype[type] = function () {var _this$animation;
-
-    (_this$animation = this.animation)[type].apply(_this$animation, arguments);
-
-
-
-
-    return this;
-  };
-});
-
-function createAnimation(option, _this) {
-  if (!_this) return;
-  clearTimeout(_this.timer);
-  return new MPAnimation(option, _this);
-}
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 159:
-/*!***************************************************!*\
-  !*** F:/项目文件/驾照题库/driving/小程序/jiakao/api/http.js ***!
-  \***************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.get = get;exports.post = post;
-
-function get(url) {var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var requestheader = arguments.length > 2 ? arguments[2] : undefined;var isshowLoading = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-  if (isshowLoading) {// 是否打开加载缓冲
-    uni.showLoading({
-      title: '加载数据中',
-      mask: true });
-
-  }
-  if (!requestheader) {
-    var token = uni.getStorageSync("Token");
-    requestheader = {
-      'content-type': 'application/json; charset=utf-8',
-      'Authorization': token };
-
-  };
   return new Promise(function (resolve, reject) {
     uni.request({
       url: url,
-      data: params || {},
-      method: 'get',
-      header: requestheader,
+      method: method,
+      data: data,
+      header: header,
       success: function success(res) {
-        switch (res.statusCode) {
-          case 200:
-            resolve(res.data);
-            break;
-          case 401:
-            uni.showToast({
-              title: '未登录或者登录超时，请登录',
-              icon: 'none',
-              duration: 2000 });
+        if (res.statusCode == 200) {
+          // 请求成功
+          resolve(res);
+        } else if (res.statusCode == 401) {
+          uni.showToast({
+            icon: "none",
+            title: '未登入或登入状态已超时',
+            duration: 1500 });
 
-            uni.switchTab({
-              url: '/pages/home/home.vue' });
+        } else if (res.statusCode == 405) {
+          uni.showToast({
+            icon: "none",
+            title: '请求方式错误',
+            duration: 1500 });
 
-            break;
-          default:
-            reject(err);
-            break;}
+        } else {
+          uni.showToast({
+            icon: "none",
+            title: '请求错误' + res.statusCode,
+            duration: 1500 });
 
-      },
-      fail: function fail(res) {
-        console.error(res);
-      },
-      complete: function complete() {
-        if (isshowLoading) {
-          uni.hideLoading();
         }
+      },
+
+      fail: function fail(err) {
+        console.log('err', err);
+        uni.showToast({
+          icon: "none",
+          title: err.errMsg,
+          duration: 1500 });
+
+        reject(err);
       } });
 
-  });
-}
-
-
-/**
-   * 封装post请求
-   * @param url  地址
-   * @param data 参数
-   * @returns {Promise} 返回数据
-   */
-function post(url) {var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};var requestheader = arguments.length > 2 ? arguments[2] : undefined;var isshowLoading = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-
-  if (isshowLoading) {// 是否打开加载缓冲
-    uni.showLoading({
-      title: '加载数据中',
-      mask: true });
-
-  }
-  if (!requestheader) {
-    var token = uni.getStorageSync("Token");
-    requestheader = {
-      'content-type': 'application/json; charset=utf-8',
-      'Authorization': token };
-
-  };
-  return new Promise(function (resolve, reject) {
-    uni.request({
-      url: url,
-      data: data || {},
-      method: 'post',
-      header: requestheader,
-      success: function success(res) {
-        switch (res.statusCode) {
-          case 200:
-            resolve(res.data);
-            break;
-          case 401:
-            uni.showToast({
-              title: '未登录或者登录超时，请登录',
-              icon: 'none',
-              duration: 2000 });
-
-            uni.switchTab({
-              url: '/pages/home/home.vue' });
-
-            break;
-          default:
-            reject(err);
-            break;}
-
-      },
-      fail: function fail(res) {
-        console.error(res);
-      },
-      complete: function complete() {
-        if (isshowLoading) {
-          uni.hideLoading();
-        }
-      } });
 
   });
 }
@@ -5130,7 +5059,7 @@ function post(url) {var data = arguments.length > 1 && arguments[1] !== undefine
 
 /***/ }),
 
-/***/ 160:
+/***/ 14:
 /*!**************************************************!*\
   !*** F:/项目文件/驾照题库/driving/小程序/jiakao/api/api.js ***!
   \**************************************************/
@@ -5139,8 +5068,8 @@ function post(url) {var data = arguments.length > 1 && arguments[1] !== undefine
 
 //这里存放所有api路径
 
-var portUrl = 'http://localhost:44312/api'; //正式地址
-
+var portUrl = 'https://localhost:44312/api'; //正式地址
+// const portUrl = "/api";
 var api = {
   // 车型
   CarType: {
@@ -5200,7 +5129,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 26:
+/***/ 29:
 /*!******************************************************!*\
   !*** F:/项目文件/驾照题库/driving/小程序/jiakao/common/data.js ***!
   \******************************************************/

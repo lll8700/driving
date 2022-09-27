@@ -33,20 +33,30 @@ namespace Yun.Share.Voice.Controllers.Admin
             return data;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("gettoken")]
-        public async Task<TokenData> WeChatLogin(LoginInputDto input)
+        public async Task<WxTokenData> WeChatLogin(LoginInputDto input)
         {
-            var str = await _loginServer.WeChatLogin(input);
-            TokenData data = new TokenData { code = 40000 };
-            if (!string.IsNullOrEmpty(str))
+            var dto = await _loginServer.WeChatLogin(input);
+            WxTokenData data = new WxTokenData { code = 40000 };
+            if (dto != null)
             {
                 data.code = 20000;
-                data.data = new Token { token = str };
+                data.data = dto;
             }
             return data;
         }
-      
+        /// <summary>
+        /// ÐÞ¸ÄÊÖ»úºÅ
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("save")]
+        public Task<bool> SavePhoneNumber(LoginInputDto input)
+        {
+            return _loginServer.SavePhoneNumber(input);
+        }
 
         [HttpPost]
         [Route(RouteName.CreateAction)]

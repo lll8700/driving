@@ -35,7 +35,7 @@ namespace Yun.Share.Voice.Models.Entities
         public string Password { get; set; }
 
         /// <summary>
-        /// 账号类型
+        /// 身份类型
         /// </summary>
         public UserTypeEnum UserTypeEnum { get; set; }
 

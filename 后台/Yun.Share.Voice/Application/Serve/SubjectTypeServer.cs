@@ -57,7 +57,7 @@ namespace Yun.Share.Voice.Application.Serve
 
         protected override async Task<List<SubjectTypeDto>> MapToGetListOutputDtosAsync(List<SubjectType> entities)
         {
-            var list = entities.MapTo<List<SubjectTypeDto>, List<SubjectType>>();
+            var list = entities.Select(x => x.MapTo<SubjectTypeDto, SubjectType>()).ToList();
             return list;
         }
     }

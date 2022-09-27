@@ -1,9 +1,9 @@
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NPOI.Util;
+using System.Text.Json;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Yun.Share.Voice.DataBase;
 using Yun.Share.Voice.Utils.IServer;
+using Newtonsoft.Json;
 
 namespace Yun.Share.Voice.Utils.Server
 {
@@ -29,9 +30,8 @@ namespace Yun.Share.Voice.Utils.Server
         private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
+        private const string loginUrlTemplate = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&grant_type=authorization_code&js_code={2}";
         private readonly CoreDbContext _myDBContext;
-
         public WeCharCodeServer(IConfiguration configuration, IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor, CoreDbContext myDBContext)
         {
             _configuration = configuration;
@@ -39,6 +39,53 @@ namespace Yun.Share.Voice.Utils.Server
             _httpContextAccessor = httpContextAccessor;
             _myDBContext = myDBContext;
         }
+        public class AuthCode2SessionResponse
+        {
+            public string openid { get; set; }
+            public string session_key { get; set; }
+            public string unionid { get; set; }
+            public int errcode { get; set; }
+            public string errmsg { get; set; }
+        }
+
+        /// <summary>
+        /// 微信登录凭证校验，获取服务器端session_key
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public async Task<AuthCode2SessionResponse> AuthCode2SessionAsync(string code)
+        {
+            var appId = _configuration["Authentication:Wechat:AppId"];
+            var appSecret = _configuration["Authentication:Wechat:AppSecret"];
+            var loginUrl = string.Format(loginUrlTemplate, appId, appSecret, code);
+
+            AuthCode2SessionResponse result = null;
+
+            var client = _httpClientFactory.CreateClient(WechatHttpConsts.HttpClientName);
+            var request = new HttpRequestMessage(HttpMethod.Get, loginUrl);
+            request.Headers.Add("Accept", "application/json");
+            var response = await client.SendAsync(request);
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                result = await System.Text.Json.JsonSerializer.DeserializeAsync<AuthCode2SessionResponse>(responseStream);
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// 小程序登录
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public async Task<string> GetOpenId(string code)
+        {
+            var wxResult = await AuthCode2SessionAsync(code);
+
+            return wxResult.openid;
+        }
+
         /// <summary>
         /// 获取accessToken
         /// </summary>

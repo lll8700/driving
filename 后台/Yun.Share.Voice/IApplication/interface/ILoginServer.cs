@@ -26,7 +26,14 @@ namespace Yun.Share.Voice.IApplication
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        Task<string> WeChatLogin(LoginInputDto input);
+        Task<LoginDto> WeChatLogin(LoginInputDto input);
+
+        /// <summary>
+        /// 修改手机号
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<bool> SavePhoneNumber(LoginInputDto input);
 
     }
 }

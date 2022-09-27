@@ -3,27 +3,24 @@
 		<uni-list>
 			<uni-list-item title="当前题库"   >
 				<template v-slot:footer class="carClass">
-					<span>{{carName}} {{selVal}}</span>	
+					<span>{{CarType.name}} - {{Subject.name}}</span>	
 				</template>
 			</uni-list-item>
 		</uni-list>
 		<uni-section title="驾驶证类型" type="line">
 				<uni-row class="demo-uni-row">
 					<uni-col v-for="(citem,cidx) in typeArrs" :key="cidx" :span="8" class="driveWrap">
-						<view  @click="changeCarType(cidx)" class="drives"  :class="cartype === citem.value ?'carActive':''"  >
+						<view  @click="changeCarType(citem)" class="drives"  :class="CarType.id === citem.id ?'carActive':''"  >
 					<span style='font-size: 36px;color: skyblue;' class="iconfont" :class="citem.icon"></span> <br/>{{citem.name}}<br/> {{citem.subname}}
 						</view>
-						
 					</uni-col>
 				</uni-row>
-				
 		</uni-section>
 		<uni-section title="切换题库" type="line">
 			<uni-card :is-shadow="false" class="btn">
 				<uni-row class="demo-uni-row">
 					<uni-col v-for="(t,index) in queTypeArrs" :key="index" :span="6" class="carWrap">
-						<uni-tag  class="cartype" @click="changeType(index)" :inverted="true" :text="t" type="primary" :class="queType === index ?'carActive':''"  />
-						
+						<uni-tag  class="cartype" @click="changeType(t)" :inverted="true" :text="t.name" type="primary" :class="Subject.id === t.id ?'carActive':''"  />
 					</uni-col>
 				</uni-row>
 			
@@ -31,25 +28,17 @@
 		</uni-section>
 		<uni-section title="题库练习" type="line">
 			<uni-card :is-shadow="false" class="btn">
-				<button class="mini-btn" type="default" size="mini" plain="true" @click="toUrl(1)">全量题库</button>
+				<button class="mini-btn" open-type="getPhoneNumber"  @getphonenumber="all" size="mini" plain="true">全量题库</button>
 				
 			</uni-card>
 		</uni-section>
 		<uni-section title="模拟考试" type="line">
 			<uni-card :is-shadow="false" class="btn">
-				<button class="mini-btn" type="primary" size="mini" plain="true" @click="toUrl(2)">开始考试</button>
+				<button class="mini-btn" open-type="getPhoneNumber"  @getphonenumber="test" size="mini" plain="true" >开始考试</button>
 
 			</uni-card>
 		</uni-section>
-		<uni-popup ref="popup" type="bottom" background-color="#fff">
-			<view class="">
-				<uni-section title="驾驶证类型" type="line">
-					<uni-card :is-shadow="false" class="btn">
-						<button class="mini-btn" v-for="(citem,cidx) in typeArrs" :key="cidx" type="primary" size="mini" plain="true" @click="changeCarType(cidx)">{{citem.name}}<br/> {{citem.subname}}</button>
-					</uni-card>
-				</uni-section>
-			</view>
-		</uni-popup>
+		
 
 	</view>
 </template>
@@ -58,52 +47,47 @@
 	export default {
 		data() {
 			return {
-				carName:'小车',
-				queType: 0,
-				cartype:1,
-				typeArrs: [{
-					name: '小车',
-					subname:'C1C2C3',
-					value: 1,
-					icon:'icon-xiaoche'
-				},{
-					name: '摩托车',
-					subname:'D/F/E',
-					value: 2,
-					icon:'icon-motuoche'
-				} ,{
-					name: '货车',
-					subname:'A2/N2',
-					value: 3,
-					icon:'icon-xiaochewuliu'
-				},{
-					name: '轻型牵引挂车',
-					subname:'C6',
-					value: 4,
-					icon:'icon-qianyinche01'
-				}],
-				queTypeArrs: ['未报名','科目一','科目二','科目三', '科目四', '扣满12分'],
-				
-
+				CarType: {
+					name:'',
+					id:'',
+					icon: ''
+				}, // 选择的车型
+				Subject: {
+					name:''
+				}, // 选择的科目
+				typeArrs: [],
+				queTypeArrs: [],
 			}
-		},
-		computed: {
-			selVal() {
-				return this.queTypeArrs[this.queType]
-			}
-			
 		},
 		mounted() {
+			this.login();
 			this.initData();
 		},
 		methods: {
+			login() {
+				var that = this;
+				uni.login({
+					success(data) {
+						that.$http(that.$api.login.token, "POST", { OpenId: data.code}).then(res=> {
+							uni.setStorageSync("Token", res.data.data.token);
+							uni.setStorageSync("User", res.data.data.userDto);
+						})
+					}
+				})
+			},
 			initData() {
 				var that = this;
-				that.$http(that.$api.CarType.list, "POST", {}).then(res=> {
-					console.log(res)
+				that.$http(that.$api.CarType.list, "POST", { Sorting:"CreationTime"}).then(res=> {
+					that.typeArrs = res.data.items;
+					that.CarType = that.typeArrs[0]
+				})
+				that.$http(that.$api.SubjectType.list, 'POST', { Sorting:"CreationTime"}).then(res=> {
+					that.queTypeArrs = res.data.items;
+					that.Subject = that.queTypeArrs[0]
 				})
 			},
 			toUrl(type) {
+				
 				if(type === 2){
 					uni.navigateTo({
 						url: '/pages/test/start?type='+type,
@@ -115,19 +99,16 @@
 				}
 				
 			},
-			changeCarType(val){
-				this.carName = this.typeArrs[val].name
-				this.cartype = this.typeArrs[val].value
-				// this.close()
-				
+			changeCarType(item){
+				this.CarType = item
 			},
-			changeType(val) {
-				this.queType = val
-				this.setNav(this.queTypeArrs[this.queType])
+			changeType(item) {
+				this.Subject = item
+				this.setNav(item)
 			},
 			setNav(val) {
 				uni.setNavigationBarTitle({
-					title: val
+					title: val.name
 				});
 			},
 			open() {
@@ -142,7 +123,26 @@
 		},
 		onReady() {
 			this.setNav('科目一')
-		}
+		},
+		all(e) {
+			var that = this;
+			uni.login({
+				success(data) {
+					console.log(data)
+					if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
+						console.log(e.detail)
+						return;
+					}
+					this.$wxTellPhoneNumber(e.detail.encryptedData,e.detail.iv)
+					.then(()=>{
+						that.phone = uni.getStorageSync("USERTellPhoneNumber");
+						console.log(that.phone)
+					})
+				}
+			})
+			
+		},
+		
 	}
 </script>
 

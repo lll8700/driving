@@ -1,7 +1,7 @@
  //这里存放所有api路径
  
-//const portUrl = 'https://localhost:44312/api' //正式地址
- const portUrl = "/api";
+const portUrl = 'https://localhost:44312/api' //正式地址
+// const portUrl = "/api";
 var api = {
 	// 车型
 	CarType: {

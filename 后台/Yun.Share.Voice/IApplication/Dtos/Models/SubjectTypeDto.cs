@@ -9,6 +9,9 @@ namespace Yun.Share.Voice.IApplication.Dtos.Models
 {
     public class SubjectTypeDto : BaseModelDto, ModelName
     {
+        /// <summary>
+        /// 名称
+        /// </summary>
         public string Name { get; set; }
     }
 }

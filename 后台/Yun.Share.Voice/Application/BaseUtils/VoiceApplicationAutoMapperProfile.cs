@@ -1,5 +1,6 @@
 
 using AutoMapper;
+using Yun.Share.Voice.IApplication.Dtos;
 using Yun.Share.Voice.IApplication.Dtos.Models;
 using Yun.Share.Voice.Models.Entities;
 
@@ -18,7 +19,7 @@ namespace Yun.Share.Voice
             CreateMap<SubjectType, SubjectTypeDto>(MemberList.Source);
             CreateMap<CarType, CarTypeDto>(MemberList.Source);
             CreateMap<PracticeImage, PracticeImageDto>(MemberList.Source);
-
+            CreateMap<User, UserDto>(MemberList.Source);
         }
     }
 }

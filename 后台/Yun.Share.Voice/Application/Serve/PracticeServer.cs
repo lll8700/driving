@@ -36,6 +36,29 @@ namespace Yun.Share.Voice.Application.Serve
             return per.MapTo<PracticeDto, Practice>();
         }
 
+        
+        public async Task<PracticeDto> GetNextAsync(Guid Id)
+        {
+            Practice per = await _db.Practices.FindAsync(Id);
+            var perItem = await _db.Practices.FirstOrDefaultAsync(x => x.CreationTime < per.CreationTime);
+            if(perItem == null)
+            {
+                perItem = await _db.Practices.OrderByDescending(x=>x.CreationTime).FirstOrDefaultAsync();
+            }
+            return perItem.MapTo<PracticeDto, Practice>();
+        }
+
+        public async Task<PracticeDto> GetRandomAsync(PracticeListInput input)
+        {
+            if(!input.Ids.IsNotEmpty())
+            {
+                
+                input.Ids = new List<Guid>();
+            }
+            var perItem = await _db.Practices.Where(x => !input.Ids.Contains(x.Id)).OrderBy(x=> Guid.NewGuid()).FirstOrDefaultAsync();
+            return perItem.MapTo<PracticeDto, Practice>();
+        }
+
         public override async Task<PracticeDto> UpdateAsync(PracticeDto input)
         {
             Practice per = await _db.Practices.FindAsync(input.Id);
@@ -96,7 +119,7 @@ namespace Yun.Share.Voice.Application.Serve
 
         protected override async Task<List<PracticeDto>> MapToGetListOutputDtosAsync(List<Practice> entities)
         {
-            var list = entities.MapTo<List<PracticeDto>, List<Practice>>();
+            var list = entities.Select(x => x.MapTo<PracticeDto, Practice>()).ToList();
             return list;
         }
 

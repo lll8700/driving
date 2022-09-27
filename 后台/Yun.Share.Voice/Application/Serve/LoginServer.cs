@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Yun.Share.Voice.DataBase;
 using Yun.Share.Voice.IApplication;
+using Yun.Share.Voice.IApplication.Dtos;
 using Yun.Share.Voice.IApplication.Input;
 using Yun.Share.Voice.IApplication.UtilDtos;
 using Yun.Share.Voice.Models.Entities;
 using Yun.Share.Voice.Utils;
+using Yun.Share.Voice.Utils.IServer;
 
 namespace Yun.Share.Voice.Application.Serve
 {
@@ -16,10 +18,12 @@ namespace Yun.Share.Voice.Application.Serve
     {
         private readonly IJwtTokenServer _jwtTokenServer;
         private readonly CoreDbContext _db;
-        public LoginServer(IJwtTokenServer jwtTokenServer, CoreDbContext db)
+        private readonly IWeCharCodeServer _weCharCodeServer;
+        public LoginServer(IJwtTokenServer jwtTokenServer, CoreDbContext db, IWeCharCodeServer weCharCodeServer)
         {
             _jwtTokenServer = jwtTokenServer;
             _db = db;
+            _weCharCodeServer = weCharCodeServer;
         }
         public async Task<string> Login(LoginInputDto input)
         {
@@ -39,22 +43,57 @@ namespace Yun.Share.Voice.Application.Serve
             return userData;
         }
 
-        public async Task<string> WeChatLogin(LoginInputDto input)
+        public async Task<LoginDto> WeChatLogin(LoginInputDto input)
         {
-
-            var user = await _db.Users.FirstOrDefaultAsync(x => x.Phone == input.PhoneNumber && x.WeChatId == input.OpenId && x.UserStatusTypeEnum == Enum.UserStatusTypeEnum.Formal);
-            var userData = string.Empty;
-            if (user != null)
+            var userId = _jwtTokenServer.GetCurrentUserId();
+            User user = null;
+            LoginDto dto = new LoginDto();
+            if (userId.HasValue)
             {
-                var jwtInput = new JwtAuthorizationTokenInput
+                user = await _db.Users.FindAsync(userId.Value);
+            }else
+            {
+                var openId = await _weCharCodeServer.GetOpenId(input.OpenId);
+                if(openId.IsNotEmpty())
                 {
-                    Name = user.Name,
-                    PhoneNumber = input.PhoneNumber,
-                    UserId = user.Id
-                };
-                userData = _jwtTokenServer.GetToken(jwtInput);
+                    user = await _db.Users.FirstOrDefaultAsync(x => x.WeChatId == openId);
+                    if (user == null)
+                    {
+                        user = new User
+                        {
+                            WeChatId = openId,
+                            UserTypeEnum = Enum.UserTypeEnum.Other,
+                            StrTime = DateTime.Now,
+                            UserStatusTypeEnum = Enum.UserStatusTypeEnum.Formal
+                        };
+                        await _db.Users.AddAsync(user);
+                        await _db.SaveChangesAsync();
+                    }
+                }else
+                {
+                    return null;
+                }
             }
-            return userData;
+           
+            var jwtInput = new JwtAuthorizationTokenInput
+            {
+                Name = user.Name,
+                PhoneNumber = input.PhoneNumber,
+                UserId = user.Id
+            };
+            var token = _jwtTokenServer.GetToken(jwtInput);
+            var userDto = user.MapTo<UserDto, User>();
+            dto.Token = token;
+            dto.UserDto = userDto;
+            return dto;
+        }
+
+        public async Task<bool> SavePhoneNumber(LoginInputDto input)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.WeChatId == input.OpenId);
+            user.Phone = input.PhoneNumber;
+            await _db.SaveChangesAsync();
+            return true;
         }
 
         public async Task<string> Create(LoginInputDto input)
