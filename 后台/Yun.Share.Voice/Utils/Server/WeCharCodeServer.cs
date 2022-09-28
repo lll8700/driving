@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Yun.Share.Voice.DataBase;
 using Yun.Share.Voice.Utils.IServer;
 using Newtonsoft.Json;
+using Yun.Share.Voice.IApplication.Input;
 
 namespace Yun.Share.Voice.Utils.Server
 {
@@ -84,6 +85,28 @@ namespace Yun.Share.Voice.Utils.Server
             var wxResult = await AuthCode2SessionAsync(code);
 
             return wxResult.openid;
+        }
+        /// <summary>
+        /// 提交手机号
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <param name="encryptedData"></param>
+        /// <param name="iv"></param>
+        /// <returns></returns>
+        public async Task<string> TellPhoneNumber(TellPhonenumberInputDto inputDto)
+        {
+            var wxResult = await AuthCode2SessionAsync(inputDto.Code);
+            string phone = string.Empty;
+            try
+            {
+               var phoneInfo = EncryptHelper.DecryptPhoneNumber(wxResult.session_key, inputDto.EncryptedData, inputDto.Iv);
+                phone = phoneInfo.phoneNumber;
+            }
+            catch (Exception ex)
+            {
+                return phone;
+            }
+            return phone;
         }
 
         /// <summary>

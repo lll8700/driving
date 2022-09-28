@@ -22,6 +22,7 @@ export function request(url,method="get",data,contentType=1) {
 					// 请求成功
 					resolve(res)
 				} else if (res.statusCode == 401) {
+					uni.setStorageSync("Token", null);
 					uni.showToast({
 						icon:"none",
 						title: '未登入或登入状态已超时',

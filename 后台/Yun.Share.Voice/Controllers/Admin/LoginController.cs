@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using Yun.Share.Voice.IApplication;
+using Yun.Share.Voice.IApplication.Dtos;
 using Yun.Share.Voice.IApplication.Input;
 using Yun.Share.Voice.IApplication.UtilDtos;
 
@@ -45,6 +46,15 @@ namespace Yun.Share.Voice.Controllers.Admin
                 data.data = dto;
             }
             return data;
+        }
+
+
+        [HttpPost]
+        [Route("phone")]
+        public Task<UserDto> TellPhoneNumber(TellPhonenumberInputDto input)
+        {
+            return _loginServer.TellPhoneNumber(input);
+           
         }
         /// <summary>
         /// ÐÞ¸ÄÊÖ»úºÅ

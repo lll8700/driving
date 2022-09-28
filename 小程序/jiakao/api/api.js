@@ -17,7 +17,8 @@ var api = {
 	},
 	// 登录
 	login: {
-		token:  portUrl +  '/login/' + "gettoken"
+		token:  portUrl +  '/login/' + "gettoken",
+		phone:  portUrl +  '/login/' + "phone"
 	},
 	// 
 	Practice: {

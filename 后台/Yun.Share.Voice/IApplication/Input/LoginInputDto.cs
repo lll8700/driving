@@ -22,5 +22,12 @@ namespace Yun.Share.Voice.IApplication.Input
         /// </summary>
         public virtual string OpenId { get; set; }
     }
-    
+    public class TellPhonenumberInputDto
+    {
+        public Guid UserId { get; set; }
+        public string Code { get; set; }
+        public string EncryptedData { get; set; }
+        public string Iv { get; set; }
+
+    }
 }

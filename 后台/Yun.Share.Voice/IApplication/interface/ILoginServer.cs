@@ -34,6 +34,12 @@ namespace Yun.Share.Voice.IApplication
         /// <param name="input"></param>
         /// <returns></returns>
         Task<bool> SavePhoneNumber(LoginInputDto input);
+        /// <summary>
+        /// 获取并保存手机号
+        /// </summary>
+        /// <param name="inputDto"></param>
+        /// <returns></returns>
+        Task<UserDto> TellPhoneNumber(TellPhonenumberInputDto inputDto);
 
     }
 }

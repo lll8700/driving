@@ -88,6 +88,26 @@ namespace Yun.Share.Voice.Application.Serve
             return dto;
         }
 
+        public async Task<UserDto> TellPhoneNumber(TellPhonenumberInputDto inputDto)
+        {
+            var phone = await _weCharCodeServer.TellPhoneNumber(inputDto);
+
+            if(phone.IsEmpty())
+            {
+                return null;
+            }
+
+            var user = await _db.Users.FindAsync(inputDto.UserId);
+
+            if(user.Phone.IsEmpty())
+            {
+                user.Phone = phone;
+                await _db.SaveChangesAsync();
+            }
+
+            return user.MapTo<UserDto, User>();
+        }
+
         public async Task<bool> SavePhoneNumber(LoginInputDto input)
         {
             var user = await _db.Users.FirstOrDefaultAsync(x => x.WeChatId == input.OpenId);

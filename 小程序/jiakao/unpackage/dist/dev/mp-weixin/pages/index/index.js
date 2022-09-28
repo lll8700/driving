@@ -227,6 +227,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 var _default =
 {
   data: function data() {
@@ -240,7 +241,8 @@ var _default =
         name: '' },
       // 选择的科目
       typeArrs: [],
-      queTypeArrs: [] };
+      queTypeArrs: [],
+      userDto: {} };
 
   },
   mounted: function mounted() {
@@ -250,12 +252,21 @@ var _default =
   methods: {
     login: function login() {
       var that = this;
-      uni.login({
-        success: function success(data) {
-          that.$http(that.$api.login.token, "POST", { OpenId: data.code }).then(function (res) {
-            uni.setStorageSync("Token", res.data.data.token);
-          });
-        } });
+      var token = uni.getStorageSync("Token");
+      var user = uni.getStorageSync("User");
+      if (!token || !user) {
+        uni.login({
+          success: function success(data) {
+            that.$http(that.$api.login.token, "POST", { OpenId: data.code }).then(function (res) {
+              uni.setStorageSync("Token", res.data.data.token);
+              uni.setStorageSync("User", res.data.data.userDto);
+              that.userDto = res.data.data.userDto;
+            });
+          } });
+
+      } else {
+        that.userDto = user;
+      }
 
     },
     initData: function initData() {
@@ -300,30 +311,65 @@ var _default =
     },
     close: function close() {
       this.$refs.popup.close();
-    } },
+    },
+    all: function all(e) {
+      var that = this;
+      uni.login({
+        success: function success(data) {
+          console.log(data);
+          if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
+            console.log(e.detail);
+            return;
+          }
+          console.log(e.detail);
+          var input = {
+            userId: that.userDto.id,
+            code: data.code,
+            encryptedData: e.detail.encryptedData,
+            iv: e.detail.iv };
 
+          that.$http(that.$api.login.phone, "POST", input).then(function (res) {
+            if (res.data.data) {
+              that.userDto = res.data.data;
+              uni.setStorageSync("User", that.userDto);
+              that.toUrl(1);
+            }
+          });
+        } });
+
+
+    },
+    test: function test(e) {
+      var that = this;
+      uni.login({
+        success: function success(data) {
+          console.log(data);
+          if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
+            console.log(e.detail);
+            return;
+          }
+          console.log(e.detail);
+          var input = {
+            userId: that.userDto.id,
+            code: data.code,
+            encryptedData: e.detail.encryptedData,
+            iv: e.detail.iv };
+
+          that.$http(that.$api.login.phone, "POST", input).then(function (res) {
+            if (res.data.data) {
+              that.userDto = res.data.data;
+              uni.setStorageSync("User", that.userDto);
+              that.toUrl(2);
+            }
+          });
+        } });
+
+
+    } },
 
 
   onReady: function onReady() {
     this.setNav('科目一');
-  },
-  all: function all(e) {
-    var that = this;
-    uni.login({
-      success: function success(data) {
-        console.log(data);
-        if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
-          console.log(e.detail);
-          return;
-        }
-        this.$wxTellPhoneNumber(e.detail.encryptedData, e.detail.iv).
-        then(function () {
-          that.phone = uni.getStorageSync("USERTellPhoneNumber");
-          console.log(that.phone);
-        });
-      } });
-
-
   } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

@@ -11,18 +11,15 @@
     "minified": false,
     "newFeature": true,
     "bigPackageSizeSupport": true,
-    "coverView": true,
-    "showShadowRootInWxmlPanel": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
-    },
-    "packNpmRelationList": []
+    }
   },
   "compileType": "miniprogram",
   "libVersion": "2.14.0",
-  "appid": "wx9d877963105e01ac",
+  "appid": "wx30d0ef6d0459a711",
   "projectname": "jiakao",
   "condition": {},
   "editorSetting": {

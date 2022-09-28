@@ -28,13 +28,14 @@
 		</uni-section>
 		<uni-section title="题库练习" type="line">
 			<uni-card :is-shadow="false" class="btn">
-				<button class="mini-btn" open-type="getPhoneNumber"  @getphonenumber="all" size="mini" plain="true">全量题库</button>
-				
+				<button v-if="userDto.phone" class="mini-btn" @click="toUrl(1)"   @getphonenumber="all" size="mini" plain="true">全量题库</button>
+				<button v-else class="mini-btn" open-type="getPhoneNumber"  @getphonenumber="all" size="mini" plain="true">全量题库</button>
 			</uni-card>
 		</uni-section>
 		<uni-section title="模拟考试" type="line">
 			<uni-card :is-shadow="false" class="btn">
-				<button class="mini-btn" open-type="getPhoneNumber"  @getphonenumber="test" size="mini" plain="true" >开始考试</button>
+				<button v-if="userDto.phone" class="mini-btn" @click="toUrl(2)"   @getphonenumber="all" size="mini" plain="true">开始考试</button>
+				<button v-else class="mini-btn" open-type="getPhoneNumber"  @getphonenumber="test" size="mini" plain="true">开始考试</button>
 
 			</uni-card>
 		</uni-section>
@@ -57,6 +58,7 @@
 				}, // 选择的科目
 				typeArrs: [],
 				queTypeArrs: [],
+				userDto: {},
 			}
 		},
 		mounted() {
@@ -66,14 +68,22 @@
 		methods: {
 			login() {
 				var that = this;
-				uni.login({
-					success(data) {
-						that.$http(that.$api.login.token, "POST", { OpenId: data.code}).then(res=> {
-							uni.setStorageSync("Token", res.data.data.token);
-							uni.setStorageSync("User", res.data.data.userDto);
-						})
-					}
-				})
+				var token = uni.getStorageSync("Token");
+				var user = uni.getStorageSync("User");
+				if(!token || !user) {
+					uni.login({
+						success(data) {
+							that.$http(that.$api.login.token, "POST", { OpenId: data.code}).then(res=> {
+								uni.setStorageSync("Token", res.data.data.token);
+								uni.setStorageSync("User", res.data.data.userDto);
+								that.userDto = res.data.data.userDto;
+							})
+						}
+					})
+				}else {
+					that.userDto = user;
+				}
+				
 			},
 			initData() {
 				var that = this;
@@ -117,31 +127,67 @@
 			},
 			close() {
 				this.$refs.popup.close()
-			}
-
+			},
+			all(e) {
+				var that = this;
+				uni.login({
+					success(data) {
+						console.log(data)
+						if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
+							console.log(e.detail)
+							return;
+						}
+						console.log(e.detail)
+						var input = {
+							userId: that.userDto.id,
+							code:  data.code,
+							encryptedData: e.detail.encryptedData,
+							iv: e.detail.iv
+						}
+						that.$http(that.$api.login.phone, "POST", input).then(res=> {
+							if(res.data.data) {
+								that.userDto = res.data.data;
+								uni.setStorageSync("User", that.userDto);
+								that.toUrl(1)
+							}
+						})
+					}
+				})
+				
+			},
+			test(e) {
+				var that = this;
+				uni.login({
+					success(data) {
+						console.log(data)
+						if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
+							console.log(e.detail)
+							return;
+						}
+						console.log(e.detail)
+						var input = {
+							userId: that.userDto.id,
+							code:  data.code,
+							encryptedData: e.detail.encryptedData,
+							iv: e.detail.iv
+						}
+						that.$http(that.$api.login.phone, "POST", input).then(res=> {
+							if(res.data.data) {
+								that.userDto = res.data.data;
+								uni.setStorageSync("User", that.userDto);
+								that.toUrl(2)
+							}
+						})
+					}
+				})
+				
+			},
 
 		},
 		onReady() {
 			this.setNav('科目一')
 		},
-		all(e) {
-			var that = this;
-			uni.login({
-				success(data) {
-					console.log(data)
-					if (e.detail.errMsg == 'getPhoneNumber:fail user deny') {
-						console.log(e.detail)
-						return;
-					}
-					this.$wxTellPhoneNumber(e.detail.encryptedData,e.detail.iv)
-					.then(()=>{
-						that.phone = uni.getStorageSync("USERTellPhoneNumber");
-						console.log(that.phone)
-					})
-				}
-			})
-			
-		},
+		
 		
 	}
 </script>

@@ -5022,6 +5022,7 @@ function request(url) {var method = arguments.length > 1 && arguments[1] !== und
           // 请求成功
           resolve(res);
         } else if (res.statusCode == 401) {
+          uni.setStorageSync("Token", null);
           uni.showToast({
             icon: "none",
             title: '未登入或登入状态已超时',
@@ -5085,7 +5086,8 @@ var api = {
 
   // 登录
   login: {
-    token: portUrl + '/login/' + "gettoken" },
+    token: portUrl + '/login/' + "gettoken",
+    phone: portUrl + '/login/' + "phone" },
 
   // 
   Practice: {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Yun.Share.Voice.BaseInterface;
+using Yun.Share.Voice.IApplication.Input;
 
 namespace Yun.Share.Voice.Utils.IServer
 {
@@ -20,5 +21,14 @@ namespace Yun.Share.Voice.Utils.IServer
         /// <param name="MicroId"></param>
         /// <returns></returns>
         string CreateWxCode(string code);
+
+        /// <summary>
+        /// 注册手机号
+        /// </summary>
+        /// <param name="sessionId"></param>
+        /// <param name="encryptedData"></param>
+        /// <param name="iv"></param>
+        /// <returns></returns>
+        Task<string> TellPhoneNumber(TellPhonenumberInputDto inputDto);
     }
 }
