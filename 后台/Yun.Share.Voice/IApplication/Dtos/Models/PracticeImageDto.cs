@@ -10,8 +10,6 @@ namespace Yun.Share.Voice.IApplication.Dtos.Models
     {
         public Guid PracticeId { get; set; }
 
-        public PracticeDto Practice { get; set; }
-
         public string Url { get; set; }
     }
 }

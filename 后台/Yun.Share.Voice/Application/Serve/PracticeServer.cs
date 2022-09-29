@@ -37,26 +37,22 @@ namespace Yun.Share.Voice.Application.Serve
         }
 
         
-        public async Task<PracticeDto> GetNextAsync(Guid Id)
+        public async Task<PracticeDto> GetNextAsync(PracticeListInput input)
         {
-            Practice per = await _db.Practices.FindAsync(Id);
-            var perItem = await _db.Practices.FirstOrDefaultAsync(x => x.CreationTime < per.CreationTime);
-            if(perItem == null)
-            {
-                perItem = await _db.Practices.OrderByDescending(x=>x.CreationTime).FirstOrDefaultAsync();
-            }
-            return perItem.MapTo<PracticeDto, Practice>();
+            var iq = NextFilter(input);
+
+            Practice perItem = await iq.OrderByDescending(x=>x.CreationTime).FirstOrDefaultAsync();
+            
+            return perItem == null? new PracticeDto() : await GetMapDto(perItem);
         }
+
+       
 
         public async Task<PracticeDto> GetRandomAsync(PracticeListInput input)
         {
-            if(!input.Ids.IsNotEmpty())
-            {
-                
-                input.Ids = new List<Guid>();
-            }
-            var perItem = await _db.Practices.Where(x => !input.Ids.Contains(x.Id)).OrderBy(x=> Guid.NewGuid()).FirstOrDefaultAsync();
-            return perItem.MapTo<PracticeDto, Practice>();
+            var perItem = await NextFilter(input).OrderBy(x=> Guid.NewGuid()).FirstOrDefaultAsync();
+
+            return perItem == null ? new PracticeDto() : await GetMapDto(perItem);
         }
 
         public override async Task<PracticeDto> UpdateAsync(PracticeDto input)
@@ -81,10 +77,41 @@ namespace Yun.Share.Voice.Application.Serve
         private IQueryable<Practice> IncludeDefault(IQueryable<Practice> iq)
         {
             return iq
-                .Include(x => x.PracticeImages)
-                .Include(x => x.CarType)
-                .Include(x => x.Options)
-                .Include(x => x.SubjectType);
+                //.Include(x => x.PracticeImages)
+                //.Include(x => x.CarType)
+                //.Include(x => x.Options)
+                //.Include(x => x.SubjectType);
+                ;
+            
+        }
+        /// <summary>
+        /// 答题的筛选
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private IQueryable<Practice> NextFilter(PracticeListInput input)
+        {
+
+            var iq = _db.Practices.AsQueryable();
+            iq = IncludeDefault(iq);
+            input.StatusTypeEnum = Enum.StatusTypeEnum.Succeed;
+            if (!input.Ids.IsNotEmpty())
+            {
+                input.Ids = new List<Guid>();
+            }
+            if (input.CarTypeId.HasValue)
+            {
+                iq = iq.Where(x => x.CarTypeId == input.CarTypeId);
+            }
+            if (input.SubjectTypeId.HasValue)
+            {
+                iq = iq.Where(x => x.SubjectTypeId == input.SubjectTypeId);
+            }
+            if (input.StatusTypeEnum.HasValue)
+            {
+                iq = iq.Where(x => x.StatusTypeEnum == input.StatusTypeEnum);
+            }
+            return iq.Where(x => !input.Ids.Contains(x.Id));
         }
         protected override IQueryable<Practice> Filter(IQueryable<Practice> iq, PracticeListInput input)
         {
@@ -119,8 +146,57 @@ namespace Yun.Share.Voice.Application.Serve
 
         protected override async Task<List<PracticeDto>> MapToGetListOutputDtosAsync(List<Practice> entities)
         {
+            if(entities.Count == 0)
+            {
+                return new List<PracticeDto>();
+            }
+
             var list = entities.Select(x => x.MapTo<PracticeDto, Practice>()).ToList();
+
+            var carIds = list.Select(x => x.CarTypeId).ToList();
+
+            var subIds = list.Select(x => x.SubjectTypeId).ToList();
+
+            var carList = await _db.CarTypes.Where(x => carIds.Contains(x.Id)).ToListAsync();
+            var subLIst = await _db.SubjectTypes.Where(x => subIds.Contains(x.Id)).ToListAsync();
+
+            var ids = list.Select(x => x.Id).ToList();
+
+            var imges = await _db.PracticeImages.Where(x => ids.Contains(x.PracticeId)).ToListAsync();
+
+            var options = await _db.Optiones.Where(x => ids.Contains(x.PracticeId)).ToListAsync();
+
+            for(var i=0;i<list.Count;i++)
+            {
+                var x = list[i];
+                var car = carList.FirstOrDefault(s => s.Id == x.CarTypeId);
+                if (car != null)
+                {
+                    x.CarType = car.MapTo<CarTypeDto, CarType>();
+                }
+                var sub = subLIst.FirstOrDefault(s => s.Id == x.SubjectTypeId);
+                if (sub != null)
+                {
+                    x.SubjectType = sub.MapTo<SubjectTypeDto, SubjectType>();
+                }
+
+                var ims = imges.Where(s => s.PracticeId == x.Id).ToList();
+
+                var ops = options.Where(s => s.PracticeId == x.Id).ToList();
+
+                x.PracticeImages = ims.Select(f => f.MapTo<PracticeImageDto, PracticeImage>()).ToList();
+
+                x.Options = ops.Select(f => f.MapTo<OptionDto, Option>()).ToList();
+            }
+
+
             return list;
+        }
+
+        private async Task<PracticeDto> GetMapDto(Practice per)
+        {
+            var list = await MapToGetListOutputDtosAsync(new List<Practice> { per });
+            return list[0];
         }
 
         public async Task<bool> UploadFilePath(IFormFile file)
@@ -128,8 +204,8 @@ namespace Yun.Share.Voice.Application.Serve
             ExcelUtil excelUtil = new ExcelUtil();
             var dt =  excelUtil.ExcelToTable(file);
             List<Practice> list = new List<Practice>();
-            var car = await _db.CarTypes.FirstOrDefaultAsync(x => x.Name == "小车C1C2C3");
-            var su = await _db.SubjectTypes.FirstOrDefaultAsync(x => x.Name == "科目一");
+            var car = await _db.CarTypes.FirstOrDefaultAsync();
+            var su = await _db.SubjectTypes.FirstOrDefaultAsync();
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 Practice per = new Practice()

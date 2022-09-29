@@ -176,7 +176,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _data = __webpack_require__(/*! ../../common/data.js */ 29);
+
 
 
 
@@ -187,26 +187,57 @@ var _test = _interopRequireDefault(__webpack_require__(/*! ../test/test.vue */ 3
 
   data: function data() {
     return {
-      question: _data.question,
       activeKey: 0,
       offsetTop: 0, //粘性定位布局下与顶部的最小距离
       scrollData: ['答题', '背题'],
-      seq: 0 };
+      seq: 0,
+      input: {}, // 请求页面参数
+      list: [], // 加载的题库集合
+      index: -1, // 当前显示的题库指针
+      dataItem: {}, // 选择的项
+      isNext: true };
 
   },
+
   methods: {
     pre: function pre() {
-      if (this.seq === 0) {
-        return;
+      var that = this;
+      if (this.index > -1) {
+        this.index--;
+        this.dataItem = this.list[this.index];
+        that.isNext = true;
       }
-      this.seq--;
     },
-    next: function next() {
-      if (this.seq == _data.question.length - 1) {
+    next: function next() {var _this = this;
+      var that = this;
+      if (that.index <= this.list.length - 2 && that.list.length > 0) {
+        this.index++;
+        this.dataItem = this.list[this.index];
         return;
       }
-      this.activeKey = 0;
-      this.seq++;
+      if (!that.isNext) {
+        return;
+      }
+      that.input.id = that.dataItem.id;
+      if (that.dataItem.id) {
+        that.input.ids.push(that.dataItem.id);
+      }
+      that.$http(that.$api.Practice.next, "POST", that.input).then(function (res) {
+        if (res.data.id) {
+          that.list.push(res.data);
+          _this.index++;
+          that.dataItem = res.data;
+          that.index = that.list.length - 1;
+        } else {
+          that.isNext = false;
+          uni.showToast({
+            icon: "none",
+            title: '已经没有再多的题了',
+            duration: 1500 });
+
+        }
+
+      });
     },
     tabClick: function tabClick(index, item) {
       console.log("tabClick", index, item);
@@ -218,8 +249,10 @@ var _test = _interopRequireDefault(__webpack_require__(/*! ../test/test.vue */ 3
 
 
   onLoad: function onLoad(option) {
-    console.log(option.type); //打印出上个页面传递的参数。
-
+    this.input.carTypeId = option.carType;
+    this.input.subjectTypeId = option.subject;
+    this.input.ids = [];
+    this.next();
   },
   onReady: function onReady() {
     uni.setNavigationBarTitle({
@@ -230,7 +263,7 @@ var _test = _interopRequireDefault(__webpack_require__(/*! ../test/test.vue */ 3
     //页面滚动事件
     uni.$emit('onPageScroll', e);
   },
-  mounted: function mounted() {var _this = this;
+  mounted: function mounted() {var _this2 = this;
     uni.getSystemInfo({
       success: function success(e) {
         var offsetTop = 0;
@@ -238,7 +271,7 @@ var _test = _interopRequireDefault(__webpack_require__(/*! ../test/test.vue */ 3
 
 
 
-        _this.offsetTop = offsetTop;
+        _this2.offsetTop = offsetTop;
       } });
 
   } }, "onPageScroll", function onPageScroll(
@@ -353,27 +386,25 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var l0 =
-    _vm.item.type == 2
-      ? _vm.__map(_vm.item.ansArr, function(aitem, index) {
-          var $orig = _vm.__get_orig(aitem)
+  var l0 = _vm.__map(_vm.item.options, function(aitem, index) {
+    var $orig = _vm.__get_orig(aitem)
 
-          var g0 = _vm.checkSel.findIndex(function(c) {
-            return c == aitem.seq
-          })
-          var g1 =
-            (_vm.checkSel.findIndex(function(c) {
-              return c == aitem.seq
-            }) !== -1 ||
-              _vm.anstype === 1) &&
-            _vm.anstype != 2
-          return {
-            $orig: $orig,
-            g0: g0,
-            g1: g1
-          }
-        })
-      : null
+    var g0 = _vm.checkSel.findIndex(function(c) {
+      return c.id == aitem.id
+    })
+    var g1 =
+      (_vm.checkSel.findIndex(function(c) {
+        return c.id == aitem.id
+      }) !== -1 ||
+        _vm.anstype === 1) &&
+      _vm.anstype != 2
+    return {
+      $orig: $orig,
+      g0: g0,
+      g1: g1
+    }
+  })
+
   _vm.$mp.data = Object.assign(
     {},
     {
@@ -497,43 +528,49 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 //
 //
 //
+//
 var _default =
 {
   props: ['item', 'anstype'],
   data: function data() {
     return {
-      selIndex: null,
-      selected: '', // seq
-      checkSel: [] };
-
-
+      isOptions: [], // 正确答案
+      checkSel: [], // 选择的答案
+      count: 1 //正确数量
+    };
   },
   watch: {
     item: function item(newValue, oldValue) {
-      this.selIndex = null;
-      this.selected = '';
+      this.initData();
     } },
 
   methods: {
+    initData: function initData() {
+      var list = this.item.options;
+      this.isOptions = list.filter(function (s) {return s.isCorrect;});
+      this.count = this.isOptions.length;
+      this.checkSel = [];
+    },
     selVal: function selVal(val) {// index
-      if (this.anstype === 1) {
+      if (this.checkSel.length >= this.count) {// 选完了
         return;
       }
-      if (this.item.type == 1) {
-        this.selIndex = val;
-        this.selected = this.item.ansArr[val].seq;
-      } else {
-        // 多选
-        console.log('duoxua');
-        var seq = this.item.ansArr[val].seq;
-        var fdx = this.checkSel.findIndex(function (c) {return c == seq;});
-        if (fdx !== -1) {
-          this.checkSel.splice(fdx, 1);
-        } else {
-          this.checkSel.push(seq);
-        }
-        console.log(this.checkSel);
-      }
+      console.log(val);
+      this.checkSel.push(this.item.options[val]);
+      // if (this.item.type == 1) {
+      // 	this.selIndex = val
+      // 	this.selected = this.item.ansArr[val].seq
+      // } else {
+      // 	// 多选
+      // 	const seq = this.item.ansArr[val].seq
+      // 	let fdx = this.checkSel.findIndex(c => c == seq)
+      // 	if (fdx !== -1) {
+      // 		this.checkSel.splice(fdx, 1)
+      // 	} else {
+      // 		this.checkSel.push(seq)
+      // 	}
+      // 	console.log(this.checkSel)
+      // }
 
     } } };exports.default = _default;
 

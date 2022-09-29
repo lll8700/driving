@@ -104,27 +104,25 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var l0 =
-    _vm.item.type == 2
-      ? _vm.__map(_vm.item.ansArr, function(aitem, index) {
-          var $orig = _vm.__get_orig(aitem)
+  var l0 = _vm.__map(_vm.item.options, function(aitem, index) {
+    var $orig = _vm.__get_orig(aitem)
 
-          var g0 = _vm.checkSel.findIndex(function(c) {
-            return c == aitem.seq
-          })
-          var g1 =
-            (_vm.checkSel.findIndex(function(c) {
-              return c == aitem.seq
-            }) !== -1 ||
-              _vm.anstype === 1) &&
-            _vm.anstype != 2
-          return {
-            $orig: $orig,
-            g0: g0,
-            g1: g1
-          }
-        })
-      : null
+    var g0 = _vm.checkSel.findIndex(function(c) {
+      return c.id == aitem.id
+    })
+    var g1 =
+      (_vm.checkSel.findIndex(function(c) {
+        return c.id == aitem.id
+      }) !== -1 ||
+        _vm.anstype === 1) &&
+      _vm.anstype != 2
+    return {
+      $orig: $orig,
+      g0: g0,
+      g1: g1
+    }
+  })
+
   _vm.$mp.data = Object.assign(
     {},
     {
@@ -250,43 +248,49 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 //
 //
 //
+//
 var _default =
 {
   props: ['item', 'anstype'],
   data: function data() {
     return {
-      selIndex: null,
-      selected: '', // seq
-      checkSel: [] };
-
-
+      isOptions: [], // 正确答案
+      checkSel: [], // 选择的答案
+      count: 1 //正确数量
+    };
   },
   watch: {
     item: function item(newValue, oldValue) {
-      this.selIndex = null;
-      this.selected = '';
+      this.initData();
     } },
 
   methods: {
+    initData: function initData() {
+      var list = this.item.options;
+      this.isOptions = list.filter(function (s) {return s.isCorrect;});
+      this.count = this.isOptions.length;
+      this.checkSel = [];
+    },
     selVal: function selVal(val) {// index
-      if (this.anstype === 1) {
+      if (this.checkSel.length >= this.count) {// 选完了
         return;
       }
-      if (this.item.type == 1) {
-        this.selIndex = val;
-        this.selected = this.item.ansArr[val].seq;
-      } else {
-        // 多选
-        console.log('duoxua');
-        var seq = this.item.ansArr[val].seq;
-        var fdx = this.checkSel.findIndex(function (c) {return c == seq;});
-        if (fdx !== -1) {
-          this.checkSel.splice(fdx, 1);
-        } else {
-          this.checkSel.push(seq);
-        }
-        console.log(this.checkSel);
-      }
+      console.log(val);
+      this.checkSel.push(this.item.options[val]);
+      // if (this.item.type == 1) {
+      // 	this.selIndex = val
+      // 	this.selected = this.item.ansArr[val].seq
+      // } else {
+      // 	// 多选
+      // 	const seq = this.item.ansArr[val].seq
+      // 	let fdx = this.checkSel.findIndex(c => c == seq)
+      // 	if (fdx !== -1) {
+      // 		this.checkSel.splice(fdx, 1)
+      // 	} else {
+      // 		this.checkSel.push(seq)
+      // 	}
+      // 	console.log(this.checkSel)
+      // }
 
     } } };exports.default = _default;
 

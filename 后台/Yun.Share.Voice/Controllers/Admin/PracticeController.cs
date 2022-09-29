@@ -58,11 +58,11 @@ namespace Yun.Share.Voice.Controllers.Admin
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("next")]
-        public Task<PracticeDto> GetNextAsync(Guid Id)
+        public Task<PracticeDto> GetNextAsync(PracticeListInput input)
         {
-            return _server.GetNextAsync(Id);
+            return _server.GetNextAsync(input);
         }
 
         /// <summary>

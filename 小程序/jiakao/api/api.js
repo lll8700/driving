@@ -22,7 +22,9 @@ var api = {
 	},
 	// 
 	Practice: {
-		list: portUrl + '/Practice/' + 'list' 
+		list: portUrl + '/Practice/' + 'list' ,
+		next: portUrl + '/Practice/' + 'next' ,
+		Random: portUrl + '/Practice/' + 'Random' ,
 	},
 }
 

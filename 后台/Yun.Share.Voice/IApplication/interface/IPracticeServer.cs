@@ -24,7 +24,7 @@ namespace Yun.Share.Voice.IApplication
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
-        Task<PracticeDto> GetNextAsync(Guid Id);
+        Task<PracticeDto> GetNextAsync(PracticeListInput input);
 
         /// <summary>
         /// 获取排除ids的随机一个题

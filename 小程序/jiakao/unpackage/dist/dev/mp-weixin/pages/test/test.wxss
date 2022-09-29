@@ -6,6 +6,9 @@
   width: 100%;
   height: auto;
 }
+.isOpensSpan.data-v-3e202046 {
+  margin-left: 10px;
+}
 .title.data-v-3e202046 {
   line-height: 72rpx;
 }

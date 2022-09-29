@@ -18,6 +18,10 @@ namespace Yun.Share.Voice.IApplication.Input
         /// </summary>
         public Guid? CarTypeId { get; set; }
 
+        /// <summary>
+        /// 查询ID
+        /// </summary>
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// 题目状态

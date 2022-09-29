@@ -6,6 +6,7 @@ using Yun.Share.Voice.Enum;
 using Yun.Share.Voice.Models.Base;
 using Yun.Share.Voice.Models.Entities;
 using Yun.Share.Voice.Models.Interface;
+using Yun.Share.Voice.Utils;
 
 namespace Yun.Share.Voice.IApplication.Dtos.Models
 {
@@ -33,6 +34,7 @@ namespace Yun.Share.Voice.IApplication.Dtos.Models
 
         public List<PracticeImageDto> PracticeImages { get; set; }
 
+        public List<OptionDto> Options { get; set; }
         /// <summary>
         /// 关键字 ，分隔
         /// </summary>
@@ -57,5 +59,7 @@ namespace Yun.Share.Voice.IApplication.Dtos.Models
         /// 单选/多选
         /// </summary>
         public ChoiceTyope ChoiceTyope { get; set; }
+
+        public string ChoiceTyopeEnmName => EnumHelper.GetDescription(ChoiceTyope);
     }
 }

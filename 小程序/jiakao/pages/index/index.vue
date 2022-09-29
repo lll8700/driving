@@ -97,14 +97,14 @@
 				})
 			},
 			toUrl(type) {
-				
+				var that = this;
 				if(type === 2){
 					uni.navigateTo({
-						url: '/pages/test/start?type='+type,
+						url: '/pages/test/start?type='+type + '&carType=' + that.CarType.id + '&subject=' + that.Subject.id,
 					});
 				}else{
 					uni.navigateTo({
-						url: '/pages/answer/answer?type='+type,
+						url: '/pages/answer/answer?type='+type + '&carType=' + that.CarType.id + '&subject=' + that.Subject.id,
 					});
 				}
 				
@@ -174,6 +174,7 @@
 						that.$http(that.$api.login.phone, "POST", input).then(res=> {
 							if(res.data.data) {
 								that.userDto = res.data.data;
+								console.log(that.userDto)
 								uni.setStorageSync("User", that.userDto);
 								that.toUrl(2)
 							}
