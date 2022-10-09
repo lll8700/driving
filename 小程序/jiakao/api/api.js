@@ -1,6 +1,6 @@
  //这里存放所有api路径
  
-const portUrl = 'https://localhost:44312/api' //正式地址
+const portUrl = 'http://106.14.209.175/api' //正式地址
 // const portUrl = "/api";
 var api = {
 	// 车型
@@ -24,7 +24,7 @@ var api = {
 	Practice: {
 		list: portUrl + '/Practice/' + 'list' ,
 		next: portUrl + '/Practice/' + 'next' ,
-		Random: portUrl + '/Practice/' + 'Random' ,
+		random: portUrl + '/Practice/' + 'Random' ,
 	},
 }
 

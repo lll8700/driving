@@ -19,4 +19,9 @@ namespace Yun.Share.Voice.Models.Interface
     {
         public Guid PracticeId { get; set; }
     }
+
+    public interface UserId
+    {
+        public Guid UserId { get; set; }
+    }
 }

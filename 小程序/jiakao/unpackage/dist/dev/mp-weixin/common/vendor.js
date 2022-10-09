@@ -1464,7 +1464,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_NAME":"jiakao","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_NAME":"jiakao","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -5069,7 +5069,7 @@ function request(url) {var method = arguments.length > 1 && arguments[1] !== und
 
 //这里存放所有api路径
 
-var portUrl = 'https://localhost:44312/api'; //正式地址
+var portUrl = 'http://106.14.209.175/api'; //正式地址
 // const portUrl = "/api";
 var api = {
   // 车型
@@ -5093,7 +5093,7 @@ var api = {
   Practice: {
     list: portUrl + '/Practice/' + 'list',
     next: portUrl + '/Practice/' + 'next',
-    Random: portUrl + '/Practice/' + 'Random' } };
+    random: portUrl + '/Practice/' + 'Random' } };
 
 
 
@@ -5130,75 +5130,6 @@ try {
 
 module.exports = g;
 
-
-/***/ }),
-
-/***/ 29:
-/*!******************************************************!*\
-  !*** F:/项目文件/驾照题库/driving/小程序/jiakao/common/data.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.question = void 0;var question = [{
-  seq: 0,
-  type: 1, // 1 单选，2 多选
-  title: '架势机动车发生交通事故后当事人故意破坏、伪造现场、毁灭证据的，应当承担什么责任？',
-  ansArr: [{
-    name: '主要责任',
-    rightTag: true,
-    seq: 'A' },
-  {
-    name: '次要责任',
-    rightTag: false,
-    seq: 'B' },
-  {
-    name: '同等责任',
-    rightTag: false,
-    seq: 'C' },
-  {
-    name: '全部责任',
-    rightTag: false,
-    seq: 'D' }],
-
-  imgArr: [{ url: './static/home.png' }],
-  rightAns: {
-    rightVal: 'A',
-    tec: '判责：非故意都判责；故意、不礼让的负全责；掉货物的负全责',
-    keyVal: '故意',
-    analysis: '发生交通事故后当事人逃逸、故意破坏、伪造现场毁灭证据的，均承担全部责任。' } },
-
-
-{
-  seq: 1,
-  type: 2, // 1 单选，2 多选
-  title: '架势机动车发生交通事故后当事人故意破坏、伪造现场、毁灭证据的，应当承担什么责任？',
-  ansArr: [{
-    name: '主要责任',
-    rightTag: true,
-    seq: 'A' },
-  {
-    name: '次要责任',
-    rightTag: true,
-    seq: 'B' },
-  {
-    name: '同等责任',
-    rightTag: true,
-    seq: 'C' },
-  {
-    name: '全部责任',
-    rightTag: false,
-    seq: 'D' }],
-
-  imgArr: [{
-    url: '' }],
-
-  rightAns: {
-    rightVal: 'A,B,C',
-    tec: '判责：非故意都判责；故意、不礼让的负全责；掉货物的负全责',
-    keyVal: '故意',
-    analysis: '发生交通事故后当事人逃逸、故意破坏、伪造现场毁灭证据的，均承担全部责任。' } }];exports.question = question;
 
 /***/ }),
 
@@ -11192,7 +11123,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"VUE_APP_NAME":"jiakao","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"NODE_ENV":"development","VUE_APP_NAME":"jiakao","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -11213,14 +11144,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"VUE_APP_NAME":"jiakao","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_NAME":"jiakao","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"VUE_APP_NAME":"jiakao","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_NAME":"jiakao","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -11306,7 +11237,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"VUE_APP_NAME":"jiakao","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_NAME":"jiakao","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -11728,6 +11659,75 @@ internalMixin(Vue);
 /***/ (function(module, exports) {
 
 
+
+/***/ }),
+
+/***/ 53:
+/*!******************************************************!*\
+  !*** F:/项目文件/驾照题库/driving/小程序/jiakao/common/data.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.question = void 0;var question = [{
+  seq: 0,
+  type: 1, // 1 单选，2 多选
+  title: '架势机动车发生交通事故后当事人故意破坏、伪造现场、毁灭证据的，应当承担什么责任？',
+  ansArr: [{
+    name: '主要责任',
+    rightTag: true,
+    seq: 'A' },
+  {
+    name: '次要责任',
+    rightTag: false,
+    seq: 'B' },
+  {
+    name: '同等责任',
+    rightTag: false,
+    seq: 'C' },
+  {
+    name: '全部责任',
+    rightTag: false,
+    seq: 'D' }],
+
+  imgArr: [{ url: './static/home.png' }],
+  rightAns: {
+    rightVal: 'A',
+    tec: '判责：非故意都判责；故意、不礼让的负全责；掉货物的负全责',
+    keyVal: '故意',
+    analysis: '发生交通事故后当事人逃逸、故意破坏、伪造现场毁灭证据的，均承担全部责任。' } },
+
+
+{
+  seq: 1,
+  type: 2, // 1 单选，2 多选
+  title: '架势机动车发生交通事故后当事人故意破坏、伪造现场、毁灭证据的，应当承担什么责任？',
+  ansArr: [{
+    name: '主要责任',
+    rightTag: true,
+    seq: 'A' },
+  {
+    name: '次要责任',
+    rightTag: true,
+    seq: 'B' },
+  {
+    name: '同等责任',
+    rightTag: true,
+    seq: 'C' },
+  {
+    name: '全部责任',
+    rightTag: false,
+    seq: 'D' }],
+
+  imgArr: [{
+    url: '' }],
+
+  rightAns: {
+    rightVal: 'A,B,C',
+    tec: '判责：非故意都判责；故意、不礼让的负全责；掉货物的负全责',
+    keyVal: '故意',
+    analysis: '发生交通事故后当事人逃逸、故意破坏、伪造现场毁灭证据的，均承担全部责任。' } }];exports.question = question;
 
 /***/ })
 

@@ -254,6 +254,7 @@ var _default =
       var that = this;
       var token = uni.getStorageSync("Token");
       var user = uni.getStorageSync("User");
+      console.log('user', user);
       if (!token || !user) {
         uni.login({
           success: function success(data) {

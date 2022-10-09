@@ -4,7 +4,7 @@
 			<view class="center">
 				倒计时 ：{{countdownTxt}}
 			</view>
-			<test :item='question[seq]' :anstype='seltype' />
+			<test :item='dataItem' :anstype='seltype' />
 		</view>
 
 		<view class="u_foot">
@@ -30,10 +30,14 @@
 			return {
 				question,
 				seltype: '',
-				seq: 0,
 				countdownTxt: '',
-				timer: null
-
+				timer: null,
+				dataItem: {}, // 选择的项
+				seq: 0,
+				input: {}, // 请求页面参数
+				list: [], // 加载的题库集合
+				index: -1, // 当前显示的题库指针
+				isNext: true
 			}
 		},
 		methods: {
@@ -63,23 +67,51 @@
 				}
 			},
 			pre() {
-				if (this.seq === 0) {
-					return
+				var that = this;
+				if (this.index > -1) {
+					this.index--;
+					this.dataItem = this.list[this.index]
+					that.isNext = true;
 				}
-				this.seq--
 			},
 			next() {
-				if (this.seq == question.length - 1) {
+				var that = this;
+				if (that.index <= this.list.length - 2 && that.list.length > 0) {
+					this.index++;
+					this.dataItem = this.list[this.index];
 					return
 				}
-				this.seq++
-			}
+				if (!that.isNext) {
+					return
+				}
+				that.input.id = that.dataItem.id;
+				if (that.dataItem.id) {
+					that.input.ids.push(that.dataItem.id);
+				}
+				that.$http(that.$api.Practice.random, "POST", that.input).then(res => {
+					if (res.data.id) {
+						that.list.push(res.data);
+						this.index++;
+						that.dataItem = res.data;
+						that.index = that.list.length - 1;
+					} else {
+						that.isNext = false;
+						uni.showToast({
+							icon: "none",
+							title: '已经没有再多的题了',
+							duration: 1500
+						})
+					}
+			
+				})
+			},
 
 		},
 		onLoad: function(option) {
-			this.seltype = option.type
-			console.log(option.type); //打印出上个页面传递的参数。
-
+			this.input.carTypeId = option.carType;
+			this.input.subjectTypeId = option.subject;
+			this.input.ids = [];
+			this.next();
 		},
 		onReady() {
 			this.countdownFun(60 * 60)

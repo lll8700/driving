@@ -35,6 +35,8 @@ namespace Yun.Share.Voice.DataBase
 
         public virtual DbSet<ErrorPracticeLog> ErrorPracticeLoges { get; set; }
 
+        public virtual DbSet<ErrorPracticeId> ErrorPracticeIds { get; set; }
+
         public virtual DbSet<Option> Optiones { get; set; }
 
         public virtual DbSet<Practice> Practices { get; set; }

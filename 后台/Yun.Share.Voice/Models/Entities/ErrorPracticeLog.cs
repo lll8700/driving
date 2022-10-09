@@ -10,8 +10,9 @@ namespace Yun.Share.Voice.Models.Entities
     /// <summary>
     /// 错题库
     /// </summary>
-    public class ErrorPracticeLog : BaseModel, ModelPracticeId
+    public class ErrorPracticeLog : BaseModel, ModelPracticeId, UserId
     {
+        public virtual Guid UserId { get; set; }
 
         public virtual Guid PracticeId { get; set; }
 
