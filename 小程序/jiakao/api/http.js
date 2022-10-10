@@ -26,13 +26,14 @@ export function get(url,params={},requestheader,isshowLoading=false){
 	 				resolve(res.data);
 	 				break;
 	 			case 401:
+					uni.setStorageSync("Token", null);
 	 				uni.showToast({
 	 					title: '未登录或者登录超时，请登录',
 	 					icon: 'none',
 	 					duration: 2000
 	 				});
 	 				uni.switchTab({
-	 					url: '/pages/home/home.vue'
+	 					url: '/pages/login/login'
 	 				});
 	 				break;
 	 			default:

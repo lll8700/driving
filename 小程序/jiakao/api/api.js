@@ -1,7 +1,8 @@
  //这里存放所有api路径
  
-const portUrl = 'http://106.14.209.175/api' //正式地址
-// const portUrl = "/api";
+// const portUrl = 'http://106.14.209.175:801/api' //正式地址
+// const portUrl = 'https://localhost:44312/api' //本地地址
+const portUrl = "/api/api";
 var api = {
 	// 车型
 	CarType: {
@@ -18,7 +19,8 @@ var api = {
 	// 登录
 	login: {
 		token:  portUrl +  '/login/' + "gettoken",
-		phone:  portUrl +  '/login/' + "phone"
+		phone:  portUrl +  '/login/' + "phone",
+		weblogin:  portUrl +  '/login/' + "weblogin"
 	},
 	// 
 	Practice: {

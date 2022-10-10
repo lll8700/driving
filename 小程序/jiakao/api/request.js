@@ -7,6 +7,21 @@
  */ 
 export function request(url,method="get",data,contentType=1) {
 	var token = uni.getStorageSync("Token");
+	var routes  = getCurrentPages()
+	let curRoute = routes[routes.length - 1].route //获取当前页面路由
+	if(curRoute !== 'pages/login/login' && (!token || token.length === 0)) {
+		uni.setStorageSync("Token", null);
+		uni.showToast({
+			icon:"none",
+			title: '未登入或登入状态已超时',
+			duration: 1500
+		})
+		uni.redirectTo({
+			url: '/pages/login/login'
+		});
+		return
+	}
+	
 	let header = {
 		'content-type': contentType === 1? 'application/json':'application/x-www-from-urlencoded',
 		'Authorization': token

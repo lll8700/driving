@@ -20,7 +20,7 @@ namespace Yun.Share.Voice.Controllers.Admin
         {
             _loginServer = loginServer;
         }
-        [HttpGet]
+        [HttpPost]
         [Route("token")]
         public async Task<TokenData> GetToken(LoginInputDto input)
         {
@@ -41,6 +41,20 @@ namespace Yun.Share.Voice.Controllers.Admin
             var dto = await _loginServer.WeChatLogin(input);
             WxTokenData data = new WxTokenData { code = 40000 };
             if (dto != null)
+            {
+                data.code = 20000;
+                data.data = dto;
+            }
+            return data;
+        }
+
+        [HttpPost]
+        [Route("weblogin")]
+        public async Task<WxTokenData> WebLogin(LoginInputDto input)
+        {
+            var dto = await _loginServer.WebLogin(input);
+            WxTokenData data = new WxTokenData { code = 40000 };
+            if (dto.UserDto!=null)
             {
                 data.code = 20000;
                 data.data = dto;

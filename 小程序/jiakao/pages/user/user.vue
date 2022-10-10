@@ -5,7 +5,7 @@
 
 		</view>
 		<view class="m10">
-			<button class="mini-btn" type="primary">开通账号</button>
+			<button v-if="userDto.userTypeEnum === 10 || userDto.userTypeEnum === 30" class="mini-btn" type="primary">开通账号</button>
 		</view>
 	</view>
 </template>
@@ -14,8 +14,12 @@
 	export default {
 		data() {
 			return {
-
+				userDto: {},
 			}
+		},
+		created() {
+			var user = uni.getStorageSync("User");
+			this.userDto = user;
 		},
 		methods: {
 			toUrl(type) {

@@ -88,6 +88,38 @@ namespace Yun.Share.Voice.Application.Serve
             return dto;
         }
 
+        public async Task<LoginDto>WebLogin(LoginInputDto input)
+        {
+            var pass = Md5Encrypt.Encrypt(input.Password);
+            var date = DateTime.Now;
+            User user = await _db.Users.FirstOrDefaultAsync(x => 
+            x.Password == pass 
+            && x.Phone == input.PhoneNumber
+            //&& x.UserTypeEnum == Enum.UserTypeEnum.Empty
+            && x.UserStatusTypeEnum == Enum.UserStatusTypeEnum.Formal
+             && x.StrTime < date
+             && x.EndTime == null || x.EndTime > date
+            );
+
+            LoginDto dto = new LoginDto();
+
+            if (user != null)
+            {
+                var jwtInput = new JwtAuthorizationTokenInput
+                {
+                    Name = user.Name,
+                    PhoneNumber = input.PhoneNumber,
+                    UserId = user.Id
+                };
+                var token = _jwtTokenServer.GetToken(jwtInput);
+                var userDto = user.MapTo<UserDto, User>();
+                dto.Token = token;
+                dto.UserDto = userDto;
+            }
+
+            return dto;
+        }
+
         public async Task<UserDto> TellPhoneNumber(TellPhonenumberInputDto inputDto)
         {
             var phone = await _weCharCodeServer.TellPhoneNumber(inputDto);

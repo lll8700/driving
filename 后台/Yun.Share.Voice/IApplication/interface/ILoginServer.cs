@@ -28,6 +28,14 @@ namespace Yun.Share.Voice.IApplication
         /// <returns></returns>
         Task<LoginDto> WeChatLogin(LoginInputDto input);
 
+
+        /// <summary>
+        /// Web H5登录
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<LoginDto> WebLogin(LoginInputDto input);
+
         /// <summary>
         /// 修改手机号
         /// </summary>
