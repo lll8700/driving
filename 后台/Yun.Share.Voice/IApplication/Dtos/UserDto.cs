@@ -36,6 +36,32 @@ namespace Yun.Share.Voice.IApplication.Dtos
         public DateTime? EndTime { get; set; }
     }
 
+    public class CreateUserDto
+    {
+        public virtual Guid? Id { get; set; }
+        /// <summary>
+        /// 手机号
+        /// </summary>
+        public string Phone { get; set; }
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string Password { get; set; }
+
+        /// <summary>
+        /// 身份类型
+        /// </summary>
+        public UserTypeEnum? UserTypeEnum { get; set; }
+
+        /// <summary>
+        /// 账号状态
+        /// </summary>
+        public UserStatusTypeEnum? UserStatusTypeEnum { get; set; }
+
+        public DateTime? EndTime { get; set; }
+    }
+
     public class FileGroupTableDto
     {
         public virtual Guid Id { get; set; }

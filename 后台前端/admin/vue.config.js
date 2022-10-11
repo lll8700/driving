@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || 'vue Element Admin' // page title
+const name = defaultSettings.title || 'jiakao' // page title
 
 // If your port is set to 80,
 // use administrator privileges to execute the command line.
@@ -32,11 +32,16 @@ module.exports = {
   devServer: {
     port: port,
     open: true,
-    overlay: {
-      warnings: false,
-      errors: true
-    },
-    before: require('./mock/mock-server.js')
+    // host: lolaohost, //默认lolaohost，也可0.0.0.0，这样同一网段的主机都能通过ip访问
+    proxy: { // 配置跨域
+      '/api': {
+        target: `https://localhost:44312`, // 请求后台接口
+        changeOrigin: true, // 允许跨域
+        pathRewrite: {
+          '^/api': '/api' // 重写请求
+        }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

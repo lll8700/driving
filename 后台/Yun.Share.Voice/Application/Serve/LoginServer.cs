@@ -43,6 +43,20 @@ namespace Yun.Share.Voice.Application.Serve
             return userData;
         }
 
+        public async Task<UserDto> Info()
+        {
+            UserDto userDto = null;
+            var userId = _jwtTokenServer.GetCurrentUserId();
+            if(userId.HasValue)
+            {
+                User user = await _db.Users.FindAsync(userId.Value);
+                userDto = user.MapTo<UserDto, User>();
+            }
+
+            return userDto;
+        }
+
+
         public async Task<LoginDto> WeChatLogin(LoginInputDto input)
         {
             var userId = _jwtTokenServer.GetCurrentUserId();

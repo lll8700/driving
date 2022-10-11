@@ -35,7 +35,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
+        commit('SET_TOKEN', 'admin-token')
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -54,18 +54,25 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction } = data
+        // const { roles, name, avatar, introduction } = data
 
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
+        // // roles must be a non-empty array
+        // if (!roles || roles.length <= 0) {
+        //   reject('getInfo: roles must be a non-null array!')
+        // }
+        var info =
+        {
+          roles: ['admin'],
+          introduction: '我是管理员',
+          avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+          name: data.userDto.name
         }
 
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
-        resolve(data)
+        commit('SET_ROLES', info.roles)
+        commit('SET_NAME', info.name)
+        commit('SET_AVATAR', info.avatar)
+        commit('SET_INTRODUCTION', info.introduction)
+        resolve(info)
       }).catch(error => {
         reject(error)
       })

@@ -33,7 +33,23 @@ namespace Yun.Share.Voice.Controllers.Admin
             }
             return data;
         }
-
+        [HttpGet]
+        [Route("info")]
+        public async Task<WxTokenData> Info()
+        {
+            var dto = await _loginServer.Info();
+            WxTokenData data = new WxTokenData { code = 40000 };
+            if (dto != null)
+            {
+                data.code = 20000;
+                data.data = new LoginDto
+                {
+                    Token = "" ,
+                    UserDto = dto
+                };
+            }
+            return data;
+        }
         [HttpPost]
         [Route("gettoken")]
         public async Task<WxTokenData> WeChatLogin(LoginInputDto input)

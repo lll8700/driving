@@ -1,24 +1,24 @@
 import request from '@/utils/request'
-
+import api from './api'
 export function login(data) {
+  var input = {
+    phoneNumber: data.username,
+    password: data.password
+  }
   return request({
-    url: '/vue-element-admin/user/login',
+    url: api.api.login.token,
     method: 'post',
-    data
+    data: input
   })
 }
 
-export function getInfo(token) {
+export function getInfo() {
   return request({
-    url: '/vue-element-admin/user/info',
-    method: 'get',
-    params: { token }
+    url: api.api.login.info,
+    method: 'get'
   })
 }
 
 export function logout() {
-  return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
-  })
+  return true
 }

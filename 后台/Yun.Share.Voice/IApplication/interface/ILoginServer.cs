@@ -49,5 +49,6 @@ namespace Yun.Share.Voice.IApplication
         /// <returns></returns>
         Task<UserDto> TellPhoneNumber(TellPhonenumberInputDto inputDto);
 
+        Task<UserDto> Info();
     }
 }
