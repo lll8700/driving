@@ -34,7 +34,7 @@ namespace Yun.Share.Voice.Controllers.Admin
         {
             return _server.GetAsync(Id);
         }
-        [HttpGet]
+        [HttpPost]
         [Route(RouteName.GetListAction)]
         public Task<PagedResultDto<PracticeDto>> GetListAsync(PracticeListInput input)
         {

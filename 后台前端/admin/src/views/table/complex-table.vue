@@ -232,15 +232,15 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+      var response = fetchList(this.listQuery)
+      console.log(response)
+      this.list = response.data.items
+      this.total = response.data.total
 
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
-      })
+      // Just to simulate the time of the request
+      setTimeout(() => {
+        this.listLoading = false
+      }, 1.5 * 1000)
     },
     handleFilter() {
       this.listQuery.page = 1

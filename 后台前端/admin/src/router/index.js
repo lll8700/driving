@@ -130,6 +130,18 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
+    path: '/practice',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/practice/list'),
+        name: 'practice',
+        meta: { title: '题库', icon: 'icon', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/permission',
     component: Layout,
     redirect: '/permission/page',
