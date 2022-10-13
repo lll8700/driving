@@ -142,6 +142,18 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/user',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/user/list'),
+        name: 'user',
+        meta: { title: '账户', icon: 'icon', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/permission',
     component: Layout,
     redirect: '/permission/page',

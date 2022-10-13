@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Yun.Share.Voice.Enum;
+using Yun.Share.Voice.Utils;
 
 namespace Yun.Share.Voice.IApplication.Dtos
 {
-    public class UserDto
+    public class UserDto: BaseModelDto
     {
-        public virtual Guid? Id { get; set; }
-
         /// <summary>
         /// Ñ§Ô±Ãû³Æ
         /// </summary>
@@ -30,10 +29,16 @@ namespace Yun.Share.Voice.IApplication.Dtos
         /// </summary>
         public UserStatusTypeEnum UserStatusTypeEnum { get; set; }
 
+        public string UserTypeEnumName => EnumHelper.GetDescription(UserTypeEnum);
+        public string UserStatusTypeEnumName => EnumHelper.GetDescription(UserStatusTypeEnum);
 
         public DateTime StrTime { get; set; }
 
         public DateTime? EndTime { get; set; }
+
+        public string StrTimeName => StrTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+        public string EndTimeName => EndTime.HasValue ? EndTime.Value.ToString("yyyy-MM-dd HH:mm:ss") : "";
     }
 
     public class CreateUserDto

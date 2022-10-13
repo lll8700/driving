@@ -47,10 +47,17 @@ namespace Yun.Share.Voice.Controllers.Admin
             return _server.UpdateAsync(input);
         }
         [HttpPost]
-        [Route("excel")]
-        public Task<bool> UploadFilePath(IFormFile file)
+        [Route("zip")]
+        public int UploadImageZip(IFormFile file)
         {
-            return _server.UploadFilePath(file);
+            return _server.UploadImageZip(file);
+        }
+
+        [HttpPost]
+        [Route("excel")]
+        public Task<int> UploadExcel(PracticeFileInput input)
+        {
+            return _server.UploadExcel(input);
         }
 
         /// <summary>
@@ -76,5 +83,6 @@ namespace Yun.Share.Voice.Controllers.Admin
         {
             return _server.GetRandomAsync(input);
         }
+
     }
 }

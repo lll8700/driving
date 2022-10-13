@@ -24,7 +24,10 @@ namespace Yun.Share.Voice
             CreateMap<SubjectType, SubjectTypeDto>(MemberList.Source);
             CreateMap<CarType, CarTypeDto>(MemberList.Source);
             CreateMap<PracticeImage, PracticeImageDto>(MemberList.None);
-            CreateMap<User, UserDto>(MemberList.Source);
+            CreateMap<User, UserDto>(MemberList.Source)
+                .ForMember(x => x.UserStatusTypeEnumName, s => s.Ignore())
+                .ForMember(x => x.UserTypeEnumName, s => s.Ignore())
+                ;
             CreateMap<Option, OptionDto>(MemberList.None);
             CreateMap<ErrorPracticeId, ErrorPracticeIdDto>(MemberList.None);
             CreateMap<ErrorPracticeLog, ErrorPracticeLogDto>(MemberList.None)

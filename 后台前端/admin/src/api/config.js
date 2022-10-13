@@ -15,3 +15,10 @@ export function getSubjectTypeList(query = {}) {
     data: query
   })
 }
+
+export function getEnum(className) {
+  return request({
+    url: api.api.Enums.getenum + '?className=' + className,
+    method: 'get'
+  })
+}

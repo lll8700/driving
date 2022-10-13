@@ -17,7 +17,7 @@ namespace Yun.Share.Voice.IApplication
         Task<PracticeDto> GetAsync(Guid Id);
         Task<PracticeDto> UpdateAsync(PracticeDto input);
         Task<PagedResultDto<PracticeDto>> GetListAsync(PracticeListInput input);
-        Task<bool> UploadFilePath(IFormFile file);
+        //Task<int> UploadFilePath(PracticeFileInput file);
 
         /// <summary>
         ///  按顺序获取下一个
@@ -32,5 +32,8 @@ namespace Yun.Share.Voice.IApplication
         /// <param name="input"></param>
         /// <returns></returns>
         Task<PracticeDto> GetRandomAsync(PracticeListInput input);
+
+        Task<int> UploadExcel(PracticeFileInput input);
+        int UploadImageZip(IFormFile file);
     }
 }

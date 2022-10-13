@@ -2,7 +2,7 @@
   <div>
     <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
     <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
-      拖拽Excel文件在这 或
+      {{ filename }}
       <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">
         点击上传
       </el-button>
@@ -21,6 +21,7 @@ export default {
   data() {
     return {
       loading: false,
+      filename: '拖拽Excel文件在这 或',
       excelData: {
         header: null,
         results: null
@@ -74,6 +75,7 @@ export default {
         return
       }
       const before = this.beforeUpload(rawFile)
+      this.filename = rawFile.name
       if (before) {
         this.readerData(rawFile)
       }

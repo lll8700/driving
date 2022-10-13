@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using Yun.Share.Voice.DataBase;
@@ -11,15 +12,19 @@ using Yun.Share.Voice.IApplication.Input;
 using Yun.Share.Voice.IApplication.UtilDtos;
 using Yun.Share.Voice.Models.Entities;
 using Yun.Share.Voice.Utils;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace Yun.Share.Voice.Application.Serve
 {
     public class PracticeServer : BaseVoiceServer<Practice, PracticeDto, PracticeListInput, PracticeDto>, IPracticeServer
     {
         private readonly CoreDbContext _db;
-        public PracticeServer(CoreDbContext db)
+        private readonly IConfiguration _configuration;
+        public PracticeServer(CoreDbContext db, IConfiguration configuration)
         {
             _db = db;
+            _configuration = configuration;
             base.query = db.Practices.AsQueryable();
         }
         public override async Task<PracticeDto> CreateAsync(PracticeDto input)
@@ -198,8 +203,59 @@ namespace Yun.Share.Voice.Application.Serve
             var list = await MapToGetListOutputDtosAsync(new List<Practice> { per });
             return list[0];
         }
+        public async Task<int> UploadExcel(PracticeFileInput input)
+        {
+            List<Practice> list = new List<Practice>();
+            for (int i = 0; i < input.ResultsLists.Count; i++)
+            {
+                var item = input.ResultsLists[i];
+                Practice per = new Practice()
+                {
+                    CarTypeId = input.CarTypeId,
+                    SubjectTypeId = input.SubjectTypeId,
+                    ChoiceTyope = item.TypeName.Contains("判断") ? Enum.ChoiceTyope.Choice : item.TypeName.Contains("单选") ? Enum.ChoiceTyope.Single : Enum.ChoiceTyope.More,
+                    Title = item.Title,
+                    Skill = item.Skill,
+                    SkillLast = item.SkillLast,
+                    Introduce = item.Introduce
+                };
+                if (item.Images.IsNotEmpty())
+                {
+                    var sp = item.Images.Split(new char[] { ',', '，' });
+                    List<PracticeImage> listImage = new List<PracticeImage>();
+                    foreach (var im in sp)
+                    {
+                        if (im.IsNotEmpty())
+                        {
+                            listImage.Add(new PracticeImage
+                            {
+                                Url = im
+                            });
+                        }
+                    }
+                    per.PracticeImages = listImage;
+                }
+                List<Option> ops = new List<Option>();
 
-        public async Task<bool> UploadFilePath(IFormFile file)
+                for (var j = 0; j < item.Options.Count; j++)
+                {
+                    var opData = item.Options[i];
+                    Option op = new Option()
+                    {
+                        Index = opData.Index,
+                        Title = opData.Title,
+                        IsCorrect = opData.IsCorrect
+                    }; 
+                    ops.Add(op);
+                }
+                per.Options = ops; 
+                list.Add(per);
+            }
+            await _db.Practices.AddRangeAsync(list);
+            await _db.SaveChangesAsync();
+            return list.Count;
+        }
+        public async Task<int> UploadFilePath(IFormFile file)
         {
             ExcelUtil excelUtil = new ExcelUtil();
             var dt =  excelUtil.ExcelToTable(file);
@@ -265,9 +321,35 @@ namespace Yun.Share.Voice.Application.Serve
                 }
                 list.Add(per);
             }
-            await _db.Practices.AddRangeAsync(list);
-            await _db.SaveChangesAsync();
-            return true;
+            //await _db.Practices.AddRangeAsync(list);
+            //await _db.SaveChangesAsync();
+            return list.Count;
+        }
+
+        public  int UploadImageZip(IFormFile file)
+        {
+            using (var stream = file.OpenReadStream())
+            {
+                var appPath = _configuration["Authentication:Oss:ImagePath"];
+                //解压缩到指定文件夹
+                string target = Directory.GetCurrentDirectory() + "/" + appPath;
+                var srcArchive = new ZipArchive(stream, ZipArchiveMode.Read);
+                var list = srcArchive.Entries.ToList();
+                list.ForEach((entry) =>
+                            {
+                                // 分每个文件进行保存
+                                using (Stream srcEntry = entry.Open())
+                                {
+                                    //文件保存
+                                    using (var fs = System.IO.File.Create(target + entry.FullName))
+                                    {
+                                        srcEntry.CopyTo(fs);
+                                        fs.Flush();
+                                    }
+                                }
+                            });
+                return list.Count;
+            }
         }
     }
 }

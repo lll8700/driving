@@ -38,6 +38,7 @@
   <ItemGroup>
     <Folder Include="Controllers\WeiChar\" />
     <Folder Include="Logs\" />
+    <Folder Include="Static\Image\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

@@ -19,6 +19,14 @@ export function getInfo() {
   })
 }
 
+export function fetchList(query) {
+  return request({
+    url: api.api.user.list,
+    method: 'post',
+    data: query
+  })
+}
+
 export function logout() {
   return true
 }

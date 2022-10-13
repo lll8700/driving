@@ -27,7 +27,9 @@ var api = {
   Practice: {
     list: portUrl + '/Practice/' + 'list',
     next: portUrl + '/Practice/' + 'next',
-    random: portUrl + '/Practice/' + 'Random'
+    random: portUrl + '/Practice/' + 'Random',
+    excel: portUrl + '/Practice/' + 'excel',
+    zip: portUrl + '/Practice/' + 'zip'
   },
   user: {
     list: portUrl + '/user/' + 'list',
