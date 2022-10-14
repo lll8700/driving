@@ -42,6 +42,14 @@
         </template>
       </el-table-column>
     </el-table>
+    <template>
+      <pagination
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.limit"
+        @pagination="getList"
+      />
+    </template>
   </div>
 </template>
 
@@ -50,8 +58,9 @@ const defaultFormThead = ['apple', 'banana']
 import { fetchList, exlcel } from '@/api/practice'
 import { getCarTypeList, getSubjectTypeList } from '@/api/config'
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
+import Pagination from '@/components/Pagination'
 export default {
-  components: { UploadExcelComponent },
+  components: { UploadExcelComponent, Pagination },
   data() {
     return {
       tableData: [],
@@ -60,7 +69,9 @@ export default {
       formTheadOptions: ['apple', 'banana', 'orange'],
       checkboxVal: defaultFormThead, // checkboxVal
       formThead: defaultFormThead, // 默认表头 Default header
+      total: 0,
       listQuery: {
+        limit: 10
       },
       carList: [], // 车型
       subLIst: [], // 科目
@@ -94,6 +105,7 @@ export default {
     getList() {
       fetchList(this.listQuery).then(res => {
         this.tableData = res.items
+        this.total = res.totalCount
       })
     },
     showExcel() {

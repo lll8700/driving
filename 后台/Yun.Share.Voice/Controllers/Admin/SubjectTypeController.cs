@@ -45,5 +45,11 @@ namespace Yun.Share.Voice.Controllers.Admin
         {
             return _server.UpdateAsync(input);
         }
+        [HttpPost]
+        [Route(RouteName.DeleteAction)]
+        public Task<bool> DeleteAsync(Guid Id)
+        {
+            return _server.DeleteAsync(Id);
+        }
     }
 }

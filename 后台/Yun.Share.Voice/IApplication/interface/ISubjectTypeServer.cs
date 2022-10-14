@@ -16,5 +16,7 @@ namespace Yun.Share.Voice.IApplication
         Task<SubjectTypeDto> GetAsync(Guid Id);
         Task<SubjectTypeDto> UpdateAsync(SubjectTypeDto input);
         Task<PagedResultDto<SubjectTypeDto>> GetListAsync(SubjectTypeListInput input);
+
+        Task<bool> DeleteAsync(Guid id);
     }
 }

@@ -21,6 +21,10 @@ namespace Yun.Share.Voice.Application.Serve
         }
         public override async Task<CarTypeDto> CreateAsync(CarTypeDto input)
         {
+            if(input.Id.HasValue)
+            {
+                return await UpdateAsync(input);
+            }
             CarType per = input.MapTo<CarType, CarTypeDto>();
             await _db.CarTypes.AddAsync(per);
             await _db.SaveChangesAsync();
@@ -37,8 +41,19 @@ namespace Yun.Share.Voice.Application.Serve
         {
             CarType per = await _db.CarTypes.FindAsync(input.Id);
             per.Name = input.Name;
+            per.Subname = input.Subname;
+            per.Icon = input.Icon;
             await _db.SaveChangesAsync();
             return per.MapTo<CarTypeDto, CarType>();
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var entity = await _db.CarTypes.FindAsync(id);
+            _db.CarTypes.Remove(entity);
+            await _db.SaveChangesAsync();
+
+            return true;
         }
 
         public override async Task<PagedResultDto<CarTypeDto>> GetListAsync(CarTypeListInput input)

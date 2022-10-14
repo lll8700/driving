@@ -21,6 +21,10 @@ namespace Yun.Share.Voice.Application.Serve
         }
         public override async Task<SubjectTypeDto> CreateAsync(SubjectTypeDto input)
         {
+            if(input.Id.HasValue)
+            {
+                return await UpdateAsync(input);
+            }
             SubjectType per = input.MapTo<SubjectType, SubjectTypeDto>();
             await _db.SubjectTypes.AddAsync(per);
             await _db.SaveChangesAsync();
@@ -40,7 +44,14 @@ namespace Yun.Share.Voice.Application.Serve
             await _db.SaveChangesAsync();
             return per.MapTo<SubjectTypeDto, SubjectType>();
         }
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var entity = await _db.SubjectTypes.FindAsync(id);
+            _db.SubjectTypes.Remove(entity);
+            await _db.SaveChangesAsync();
 
+            return true;
+        }
         public override async Task<PagedResultDto<SubjectTypeDto>> GetListAsync(SubjectTypeListInput input)
         {
             return await base.GetListAsync(input);

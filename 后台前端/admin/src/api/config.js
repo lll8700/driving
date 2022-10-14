@@ -22,3 +22,34 @@ export function getEnum(className) {
     method: 'get'
   })
 }
+
+export function createSub(query) {
+  return request({
+    url: api.api.SubjectType.create,
+    method: 'post',
+    data: query
+  })
+}
+export function deleteSub(query) {
+  return request({
+    url: api.api.SubjectType.delete + '?id=' + query.id,
+    method: 'post',
+    data: query
+  })
+}
+
+export function createCar(query) {
+  return request({
+    url: api.api.CarType.create,
+    method: 'post',
+    data: query
+  })
+}
+export function deleteCar(query) {
+  return request({
+    url: api.api.CarType.delete + '?id=' + query.id,
+    method: 'post',
+    data: query
+  })
+}
+
