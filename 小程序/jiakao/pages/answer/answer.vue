@@ -139,13 +139,17 @@
 
 	.content-wrap {
 		padding: 20px;
+		margin-bottom: 40px;
 		// height: 70vh;
 	}
 
 	.u_foot {
+		position: sticky;
+		background: #fff;
 
 		width: 100%;
-		bottom: 20px;
+		bottom: 0;
+		padding: 10px;
 
 		.itemflex {
 			display: flex;
