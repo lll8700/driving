@@ -134,7 +134,7 @@
 
 <style lang="less" scoped>
 	.content {
-		height: 100vh;
+		height: 98vh;
 	}
 
 	.content-wrap {
