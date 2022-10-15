@@ -64,24 +64,11 @@ namespace Yun.Share.Voice.Application
             where TSomeEntity : TEntity
         {
 
-          
 
-            if (!input.SkipCount.HasValue || input.SkipCount < 0)
-            {
-                input.SkipCount = 0;
-                if (input.Page.HasValue && input.Limit.HasValue)
-                {
-                    input.SkipCount = (input.Page -1) * input.Limit;
-                }
-            }
-            if (!input.MaxResultCount.HasValue || input.MaxResultCount < 1)
-            {
-                input.MaxResultCount = 10;
-                if (input.Limit.HasValue)
-                {
-                    input.MaxResultCount = input.Limit;
-                }
-            }
+            input.MaxResultCount = input.MaxResultCount.HasValue ? input.MaxResultCount : (input.Limit.HasValue ? input.Limit : 10);
+
+            input.SkipCount = input.SkipCount.HasValue ? input.SkipCount : (input.Page.HasValue ? (input.Page - 1) * input.MaxResultCount : 0);
+
             return query.Skip(input.SkipCount.Value ).Take(input.MaxResultCount.Value);
         }
         protected abstract Task<List<TDto>> MapToGetListOutputDtosAsync(List<TEntity> entities);

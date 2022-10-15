@@ -128,6 +128,72 @@ export const constantRoutes = [
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
+
+export const asyncAdminRoutes = [
+  {
+    path: '/config',
+    component: Layout,
+    children: [
+      {
+        path: 'config',
+        component: () => import('@/views/config/index'),
+        name: 'config',
+        meta: { title: '配置', icon: 'icon', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/practice',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/practice/list'),
+        name: 'practice',
+        meta: { title: '题库', icon: 'icon', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/user/list'),
+        name: 'user',
+        meta: { title: '账户', icon: 'icon', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/error',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'ErrorPages',
+    hidden: true,
+    meta: {
+      title: 'errorPages',
+      icon: '404'
+    },
+    children: [
+      {
+        path: '401',
+        component: () => import('@/views/error-page/401'),
+        name: 'Page401',
+        meta: { title: 'page401', noCache: true }
+      },
+      {
+        path: '404',
+        component: () => import('@/views/error-page/404'),
+        name: 'Page404',
+        meta: { title: 'page404', noCache: true }
+      }
+    ]
+  }
+
+]
+
 export const asyncRoutes = [
   {
     path: '/practice',

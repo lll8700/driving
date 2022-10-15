@@ -12,8 +12,8 @@ namespace Yun.Share.Voice.IApplication.Input
         public  string Name { get; set; }
         public List<Guid> UnIds { get; set; }
         public string Sorting { get; set; } = "CreationTime DESC";
-        public int? SkipCount { get; set; } = 0;
-        public int? MaxResultCount { get; set; } = 10;
+        public int? SkipCount { get; set; } 
+        public int? MaxResultCount { get; set; }
         public int? Page { get; set; }
         public int? Limit { get; set; }
     }

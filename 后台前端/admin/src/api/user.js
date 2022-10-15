@@ -27,6 +27,14 @@ export function fetchList(query) {
   })
 }
 
+export function create(query) {
+  return request({
+    url: api.api.user.create,
+    method: 'post',
+    data: query
+  })
+}
+
 export function logout() {
   return true
 }

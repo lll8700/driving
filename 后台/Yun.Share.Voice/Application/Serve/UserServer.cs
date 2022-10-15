@@ -37,9 +37,9 @@ namespace Yun.Share.Voice.Application.Serve
             {
                 throw new Exception($"当前无登录");
             }
-            if (user.UserTypeEnum != Enum.UserTypeEnum.Sale)
+            if (user.UserTypeEnum != Enum.UserTypeEnum.Sale && user.UserTypeEnum != Enum.UserTypeEnum.Admin)
             {
-                throw new Exception("只有销售员可以使用");
+                throw new Exception("只有销售员和管理员可以添加账户");
             }
 
             User per = new User();
