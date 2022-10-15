@@ -9,7 +9,7 @@
 		</uni-list>
 		<uni-section title="驾驶证类型" type="line">
 			<uni-row class="demo-uni-row">
-				<uni-col v-for="(citem,cidx) in typeArrs" :key="cidx" :span="8" class="driveWrap">
+				<uni-col v-for="(citem,cidx) in typeArrs" :key="cidx" :span="6" class="driveWrap">
 					<view @click="changeCarType(citem)" class="drives" :class="CarType.id === citem.id ?'carActive':''">
 						<span style='font-size: 36px;color: skyblue;' class="iconfont" :class="citem.icon"></span>
 						<br />{{citem.name}}<br /> {{citem.subname}}
@@ -30,7 +30,7 @@
 		</uni-section>
 		<uni-section title="题库练习" type="line">
 			<uni-card :is-shadow="false" class="btn">
-				<button v-if="userDto.phone" class="mini-btn" @click="toUrl(1)" @getphonenumber="all" size="mini"
+				<button v-if="userDto.phone" type="primary" class="mini-btn cbtn" @click="toUrl(1)" @getphonenumber="all" size="mini"
 					plain="true">全量题库</button>
 				<!-- <button v-else class="mini-btn" open-type="getPhoneNumber" @getphonenumber="all" size="mini"
 					plain="true">全量题库</button> -->
@@ -38,7 +38,7 @@
 		</uni-section>
 		<uni-section title="模拟考试" type="line">
 			<uni-card :is-shadow="false" class="btn">
-				<button v-if="userDto.phone" class="mini-btn" @click="toUrl(2)" @getphonenumber="all" size="mini"
+				<button v-if="userDto.phone"  type="primary" class="mini-btn cbtn" @click="toUrl(2)" @getphonenumber="all" size="mini"
 					plain="true">开始考试</button>
 				<!-- <button v-else class="mini-btn" open-type="getPhoneNumber" @getphonenumber="test" size="mini"
 					plain="true">开始考试</button> -->
@@ -226,6 +226,9 @@
 		.btn {
 			button {
 				margin: 0 5px;
+			}
+			.cbtn{
+				border-color: #0068f6;
 			}
 		}
 	}
