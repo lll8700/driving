@@ -36,7 +36,7 @@ module.exports = {
     proxy: { // 配置跨域
       '/api': {
         // target: `https://localhost:44312`, // 请求后台接口
-        target: `http://106.14.209.175:801`, // 请求后台接口
+        target: `http://106.14.209.175:800`, // 请求后台接口
         changeOrigin: true, // 允许跨域
         pathRewrite: {
           '^/api': '/api' // 重写请求

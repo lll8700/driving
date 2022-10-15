@@ -19,6 +19,7 @@ export function uploadZip(query) {
   return request({
     url: api.api.Practice.zip,
     method: 'post',
-    data: query
+    data: query,
+    headers: { 'Content-Type': 'multipart/form-data' }
   })
 }

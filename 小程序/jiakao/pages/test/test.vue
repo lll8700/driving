@@ -5,7 +5,7 @@
 		</view>
 		<view class="ansLists">
 			<view class="img" v-for="(m,index) in item.practiceImages" :key="'img_'+index">
-				<img :src="m.url">
+				<img :src="getImage(m.url)">
 			</view>
 			<!-- <view class="" v-if="item.choiceTyope !== 20">
 				<view class="itemlist" @click="selVal(index)" v-for="(aitem,index) in item.options "
@@ -104,6 +104,9 @@
 				this.isOptions = list.filter(s => s.isCorrect)
 				this.count = this.isOptions.length;
 				this.checkSel = []
+			},
+			getImage(url) {
+				return '/api/api/imgae/' + url
 			},
 			selVal(val) { // index
 				if (this.checkSel.length >= this.count) { // 选完了
