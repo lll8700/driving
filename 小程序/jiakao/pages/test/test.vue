@@ -50,6 +50,9 @@
 					{{item.skill}}
 				</view>
 			</view>
+			<view class="barline">
+				
+			</view>
 			<view class="p10" v-if="item.skillLast">
 				<view class="p_h">
 					答题技巧2
@@ -140,7 +143,8 @@
 
 	.img {
 		img {
-			width: 100%;
+			width: 80%;
+			margin:20px 10%;
 			height: auto;
 		}
 	}
@@ -176,6 +180,11 @@
 		.keyColor {
 			color: #0085ff;
 		}
+	}
+	.barline{
+		width: 100%;
+		height: 0.1rem;
+		background-color: #0085ff;
 	}
 
 	.p10 {
