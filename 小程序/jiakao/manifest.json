@@ -76,7 +76,7 @@
             "port" : 80,
             "proxy" : {
                 "/api" : {
-                    "target" : "http://106.14.209.175:801",
+                    "target" : "http://106.14.209.175:800",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {

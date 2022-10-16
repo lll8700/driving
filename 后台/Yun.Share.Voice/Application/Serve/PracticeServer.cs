@@ -217,7 +217,8 @@ namespace Yun.Share.Voice.Application.Serve
                     Title = item.Title,
                     Skill = item.Skill,
                     SkillLast = item.SkillLast,
-                    Introduce = item.Introduce
+                    Introduce = item.Introduce,
+                    StatusTypeEnum = Enum.StatusTypeEnum.Succeed,
                 };
                 if (item.Images.IsNotEmpty())
                 {

@@ -106,7 +106,7 @@
 				this.checkSel = []
 			},
 			getImage(url) {
-				return '/api/api/imgae/' + url
+				return 'http://106.14.209.175:800/api/imgae/' + url
 			},
 			selVal(val) { // index
 				if (this.checkSel.length >= this.count) { // 选完了
