@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -239,7 +239,7 @@ namespace Yun.Share.Voice.Application.Serve
 
                 for (var j = 0; j < item.Options.Count; j++)
                 {
-                    var opData = item.Options[i];
+                    var opData = item.Options[j];
                     Option op = new Option()
                     {
                         Index = opData.Index,
@@ -250,6 +250,7 @@ namespace Yun.Share.Voice.Application.Serve
                 }
                 per.Options = ops; 
                 list.Add(per);
+                
             }
             await _db.Practices.AddRangeAsync(list);
             await _db.SaveChangesAsync();
