@@ -23,11 +23,18 @@
         <el-option v-for="item in subLIst" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
       <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload" />
-      <el-button @click="handleDrag"> 取消</el-button>  <el-button @click="upload"> 确定</el-button>
+      <el-button @click="handleDrag"> 取消</el-button>
+      <el-button @click="upload"> 确定</el-button>
     </el-dialog>
-    <el-dialog v-el-drag-dialog :visible.sync="imageDialogVisible" title="导入图片Zip" @dragDialog="()=>{imageDialogVisible =false}">
-      <upload-excel-component :before-upload="beforeUploadImage" />
-      <el-button @click="()=>{imageDialogVisible =false}"> 取消</el-button>  <el-button @click="upload"> 确定</el-button>
+    <el-dialog
+      v-el-drag-dialog
+      :visible.sync="imageDialogVisible"
+      title="导入图片Zip"
+      @dragDialog="()=>{imageDialogVisible =false}"
+    >
+      <upload-zip-component :before-upload="beforeUploadImage" />
+      <el-button @click="()=>{imageDialogVisible =false}"> 取消</el-button>
+      <el-button @click="uploadIamge"> 确定</el-button>
     </el-dialog>
     <el-table :key="key" :data="tableData" border fit highlight-current-row style="width: 100%">
       <el-table-column prop="title" label="标题" width="180" />
@@ -43,28 +50,25 @@
       </el-table-column>
     </el-table>
     <template>
-      <pagination
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="getList"
-      />
+      <pagination :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
     </template>
   </div>
 </template>
 
 <script>
 const defaultFormThead = ['apple', 'banana']
-import { fetchList, exlcel } from '@/api/practice'
+import { fetchList, exlcel, uploadZip } from '@/api/practice'
 import { getCarTypeList, getSubjectTypeList } from '@/api/config'
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
+import UploadZipComponent from '@/components/UploadExcel/zip.vue'
 import Pagination from '@/components/Pagination'
 export default {
-  components: { UploadExcelComponent, Pagination },
+  components: { UploadExcelComponent, Pagination, UploadZipComponent },
   data() {
     return {
       tableData: [],
       excelDialogVisible: false, // excel弹窗
+      imageDialogVisible: false,
       key: 1, // table key
       formTheadOptions: ['apple', 'banana', 'orange'],
       checkboxVal: defaultFormThead, // checkboxVal
@@ -137,6 +141,7 @@ export default {
 
       if (isLt1M) {
         this.imageZip = file
+        console.log(this.imageZip)
         return true
       }
 
@@ -149,8 +154,7 @@ export default {
     uploadIamge() {
       var formData = new FormData()// 新建表单对象
       formData.append('file', this.imageZip)// 把文件对象添加到表单对象里
-      formData.append('filename', this.imageZip.name)// 把文件名称添加到表单对象里
-      exlcel(formData).then(count => {
+      uploadZip(formData).then(count => {
         if (count > 0) {
           this.$message({
             message: '成功！',
