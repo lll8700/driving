@@ -4,7 +4,7 @@
 			<view class="center">
 				倒计时 ：{{countdownTxt}}
 			</view>
-			<test :item='dataItem' :anstype='seltype' :next = "next"/>
+			<test :item='dataItem' :anstype='seltype' @next ="next()"/>
 		</view>
 
 		<view class="u_foot">
@@ -29,7 +29,7 @@
 		data() {
 			return {
 				question,
-				seltype: '',
+				seltype: 3,
 				countdownTxt: '',
 				timer: null,
 				dataItem: {}, // 选择的项
@@ -88,6 +88,7 @@
 				if (that.dataItem.id) {
 					that.input.ids.push(that.dataItem.id);
 				}
+				that.dataItem = {}
 				that.$http(that.$api.Practice.random, "POST", that.input).then(res => {
 					if (res.data.id) {
 						that.list.push(res.data);

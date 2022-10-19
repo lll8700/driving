@@ -32,7 +32,7 @@
 
 		</view>
 
-		<view class="isShow" v-if="checkSel.length === isOptions.length || anstype == 1">
+		<view class="isShow" v-if="(checkSel.length === isOptions.length && anstype ===0 && isError) || anstype == 1">
 			<view class="rightAns">
 				<view class="ans">
 					答案 ： <span v-for="item1 in isOptions" :key="item1.id" class="isOpensSpan">{{item1.seq}}</span>
@@ -88,12 +88,13 @@
 
 <script>
 	export default {
-		props: ['item', 'anstype', 'next'],
+		props: ['item', 'anstype'],
 		data() {
 			return {
 				isOptions: [], // 正确答案
 				checkSel: [], // 选择的答案
-				count: 1 //正确数量
+				count: 1 ,//正确数量
+				isError: false //是否答错题
 			}
 		},
 		watch: {
@@ -106,22 +107,54 @@
 				var list = this.item.options;
 				this.isOptions = list.filter(s => s.isCorrect)
 				this.count = this.isOptions.length;
-				this.checkSel = []
+				this.checkSel = [];
+				this.isError = false
+			},
+			clearData() {
+				this.isOptions = [] // 正确答案
+				this.checkSel = [] // 选择的答案
+				this.count = 1 //正确数量
+				this.isError = false
 			},
 			getImage(url) {
 				return 'http://106.14.209.175:800/api/imgae/' + url
 			},
 			selVal(val) { // index
+				var that = this
 				if (this.checkSel.length >= this.count) { // 选完了
 					return
 				}
-				console.log(val)
+				
 				this.checkSel.push(this.item.options[val]);
+				
+				if(this.checkSel.length === this.count) { // 全部答完了 
+					if(this.anstype === 0) { // 答题结束后 如果是全部正确则自动下一个
+						var isNext = true
+						for(var i = 0; i < that.isOptions.length; i++) {
+							var item = that.checkSel.filter(s => s.seq === that.isOptions[i].seq);
+							if(item.length === 0) {
+								isNext = false
+								break;
+							}
+						}
+						if(isNext) {
+							this.clearData()
+							this.$emit('next');
+						}else {
+							this.isError =true;
+						}
+						
+					}else if(this.anstype === 3) { // 考试也要下一个
+						this.clearData()
+						this.$emit('next');
+					}
+				}
+				
+				
+				
 				if (this.checkSel.length >= this.count && this.anstype === '') { // 选完最后一个
 					console.log(' 考试选完进行下一个')
-					setInterval(() => { // 是否半秒进行下一个
-							this.next()
-					}, 500);
+					
 				}
 				
 				// if (this.item.type == 1) {

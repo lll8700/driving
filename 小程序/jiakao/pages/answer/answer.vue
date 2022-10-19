@@ -4,12 +4,12 @@
 			:lineWidth='100' titleActiveColor="#009fff" color="#009fff" :offsetTop="offsetTop">
 			<template #pane0>
 				<view class="content-wrap">
-					<test :item='dataItem' :anstype='0' />
+					<test :item='dataItem' :anstype='0' @next = "next"/>
 				</view>
 			</template>
 			<template #pane1>
 				<view class="content-wrap">
-					<test :item='dataItem' :anstype='1' />
+					<test :item='dataItem' :anstype='1'/>
 				</view>
 			</template>
 
@@ -71,6 +71,7 @@
 				if (that.dataItem.id) {
 					that.input.ids.push(that.dataItem.id);
 				}
+				that.dataItem = {}
 				that.$http(that.$api.Practice.next, "POST", that.input).then(res => {
 					if (res.data.id) {
 						that.list.push(res.data);
