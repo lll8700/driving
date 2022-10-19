@@ -4,7 +4,7 @@
 			<view class="center">
 				倒计时 ：{{countdownTxt}}
 			</view>
-			<test :item='dataItem' :anstype='seltype' />
+			<test :item='dataItem' :anstype='seltype' :next = "next"/>
 		</view>
 
 		<view class="u_foot">
@@ -114,9 +114,7 @@
 			this.next();
 		},
 		onReady() {
-			this.countdownFun(60 * 60)
-
-
+			this.countdownFun(45 * 60)
 		},
 	}
 </script>

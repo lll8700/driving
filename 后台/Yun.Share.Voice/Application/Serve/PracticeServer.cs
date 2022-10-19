@@ -187,7 +187,7 @@ namespace Yun.Share.Voice.Application.Serve
 
                 var ims = imges.Where(s => s.PracticeId == x.Id).ToList();
 
-                var ops = options.Where(s => s.PracticeId == x.Id).ToList();
+                var ops = options.Where(s => s.PracticeId == x.Id).OrderBy(f => f.Index).ToList();
 
                 x.PracticeImages = ims.Select(f => f.MapTo<PracticeImageDto, PracticeImage>()).ToList();
 

@@ -85,7 +85,7 @@
 
 <script>
 	export default {
-		props: ['item', 'anstype'],
+		props: ['item', 'anstype', 'next'],
 		data() {
 			return {
 				isOptions: [], // 正确答案
@@ -114,6 +114,13 @@
 				}
 				console.log(val)
 				this.checkSel.push(this.item.options[val]);
+				if (this.checkSel.length >= this.count && this.anstype === '') { // 选完最后一个
+					console.log(' 考试选完进行下一个')
+					setInterval(() => { // 是否半秒进行下一个
+							this.next()
+					}, 500);
+				}
+				
 				// if (this.item.type == 1) {
 				// 	this.selIndex = val
 				// 	this.selected = this.item.ansArr[val].seq
