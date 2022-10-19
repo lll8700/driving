@@ -132,6 +132,7 @@
 	.content-wrap {
 		padding: 20px;
 		height: auto;
+		font-size: 1.1rem;
 	}
 
 	.u_foot {

@@ -140,6 +140,7 @@
 	.content-wrap {
 		padding: 20px;
 		margin-bottom: 40px;
+		font-size: 1.1rem;
 		// height: 70vh;
 	}
 
