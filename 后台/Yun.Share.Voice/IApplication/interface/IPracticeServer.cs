@@ -35,5 +35,12 @@ namespace Yun.Share.Voice.IApplication
 
         Task<int> UploadExcel(PracticeFileInput input);
         int UploadImageZip(IFormFile file);
+
+        /// <summary>
+        /// 获取考试100题
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<PracticeDto>> GetTestListAsync(PracticeTestListInput input);
     }
 }

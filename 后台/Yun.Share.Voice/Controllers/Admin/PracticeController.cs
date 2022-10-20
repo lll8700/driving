@@ -83,6 +83,17 @@ namespace Yun.Share.Voice.Controllers.Admin
         {
             return _server.GetRandomAsync(input);
         }
+        /// <summary>
+        /// ªÒ»°øº ‘100Ã‚
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("testlist")]
+        public Task<PagedResultDto<PracticeDto>> GetTestListAsync(PracticeTestListInput input)
+        {
+            return _server.GetTestListAsync(input);
+        }
 
     }
 }

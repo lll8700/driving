@@ -51,7 +51,50 @@ namespace Yun.Share.Voice.Application.Serve
             return perItem == null? new PracticeDto() : await GetMapDto(perItem);
         }
 
-       
+        /// <summary>
+        /// 获取考试100题
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<PagedResultDto<PracticeDto>> GetTestListAsync(PracticeTestListInput input)
+        {
+
+            var list = new List<PracticeDto>();
+
+            var baseList = new List<Practice>();
+
+            var iq = _db.Practices.AsQueryable();
+            iq = IncludeDefault(iq);
+
+            iq = iq.Where(x => x.StatusTypeEnum == Enum.StatusTypeEnum.Succeed);
+
+
+            if (input.ChoiceCount > 0)
+            {
+                var iqList = await iq.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.Choice).OrderBy(x => Guid.NewGuid()).Take(input.ChoiceCount).ToListAsync();
+                baseList.AddRange(iqList);
+            }
+            if (input.MoreCount > 0)
+            {
+                var iqList = await iq.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.More).OrderBy(x => Guid.NewGuid()).Take(input.MoreCount).ToListAsync();
+                baseList.AddRange(iqList);
+            }
+            if (input.SingleCount > 0)
+            {
+                var iqList = await iq.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.Single).OrderBy(x => Guid.NewGuid()).Take(input.SingleCount).ToListAsync();
+                baseList.AddRange(iqList);
+            }
+            if (input.UnChoiceCount > 0)
+            {
+                var iqList = await iq.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.Single || x.ChoiceTyope == Enum.ChoiceTyope.More).OrderBy(x => Guid.NewGuid()).Take(input.UnChoiceCount).ToListAsync();
+                baseList.AddRange(iqList);
+            }
+            list = await MapToGetListOutputDtosAsync(baseList);
+
+            return new PagedResultDto<PracticeDto>(list.Count, list);
+
+        }
+
 
         public async Task<PracticeDto> GetRandomAsync(PracticeListInput input)
         {

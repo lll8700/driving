@@ -72,7 +72,7 @@
 					that.input.ids.push(that.dataItem.id);
 				}
 				that.dataItem = {}
-				that.$http(that.$api.Practice.next, "POST", that.input).then(res => {
+				that.$http(that.$api.Practice.random, "POST", that.input).then(res => {
 					if (res.data.id) {
 						that.list.push(res.data);
 						this.index++;

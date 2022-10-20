@@ -9,8 +9,9 @@
 
 		<view class="u_foot">
 			<view class="itemflex">
-				<button class="mini-btn" type="primary" @click="pre">上一题</button>
-				<button class="mini-btn " type="primary" @click="next">下一题</button>
+				<button class="mini-btn" type="primary" @click="pre" :disabled="!isLast">上一题</button>
+				<button v-if="!isEnd" class="mini-btn " type="primary" :disabled="!isNext" @click="next" >下一题</button>
+				<button v-else class="mini-btn " type="primary" @click="put">提交</button>
 			</view>
 		</view>
 
@@ -37,8 +38,19 @@
 				input: {}, // 请求页面参数
 				list: [], // 加载的题库集合
 				index: -1, // 当前显示的题库指针
-				isNext: true
+				isNext: true, // 是否可以下一题
+				isLast: false, // 是否可以上一题
+				testList: [], // 已经答了的考试题
+				totalCount: 0, // 考试题数量
+				isEnd: false, // 是否已经全部答完
+				testInput: {
+					choiceCount: 40, // 单选40个
+					unChoiceCount: 60, // 选择题60个
+				}
 			}
+		},
+		created() {
+			this.initData()
 		},
 		methods: {
 			countdownFun(diffTime) {
@@ -66,45 +78,57 @@
 
 				}
 			},
+			initData() {
+				var that = this;
+				console.log('initData')
+				that.$http(that.$api.Practice.testlist, "POST", that.testInput).then(res => {
+					console.log(res)
+					that.totalCount = res.data.totalCount;
+					that.list = res.data.items;
+					that.next()
+				})
+			},
 			pre() {
 				var that = this;
 				if (this.index > -1) {
 					this.index--;
-					this.dataItem = this.list[this.index]
-					that.isNext = true;
+					that.getItem();
+				}
+			},
+			// 提交考试
+			put() { 
+				uni.showToast({
+					icon: "none",
+					title: '这里是提交后的显示',
+					duration: 3000
+				})
+			},
+			getItem() {
+				var that = this;
+				if(that.index < 1) {
+					that.isLast = false;
+				}else {
+					that.isLast = true;
+				}
+				if(that.index >= that.totalCount - 1) {
+					that.isEnd = true
+				}else {
+					that.isEnd = false
+				}
+				if(that.index < that.testList.length) {
+					this.dataItem = this.testList[this.index];
+				} else if(that.index <  this.list.length) {
+					this.dataItem = this.list[this.index];
+					that.testList.push(this.dataItem);
 				}
 			},
 			next() {
 				var that = this;
-				if (that.index <= this.list.length - 2 && that.list.length > 0) {
-					this.index++;
-					this.dataItem = this.list[this.index];
-					return
+				console.log(that.testList)
+				if(that.index < that.totalCount) {
+					that.index ++ ;
+					that.getItem();
 				}
-				if (!that.isNext) {
-					return
-				}
-				that.input.id = that.dataItem.id;
-				if (that.dataItem.id) {
-					that.input.ids.push(that.dataItem.id);
-				}
-				that.dataItem = {}
-				that.$http(that.$api.Practice.random, "POST", that.input).then(res => {
-					if (res.data.id) {
-						that.list.push(res.data);
-						this.index++;
-						that.dataItem = res.data;
-						that.index = that.list.length - 1;
-					} else {
-						that.isNext = false;
-						uni.showToast({
-							icon: "none",
-							title: '已经没有再多的题了',
-							duration: 1500
-						})
-					}
-			
-				})
 			},
 
 		},
@@ -112,7 +136,7 @@
 			this.input.carTypeId = option.carType;
 			this.input.subjectTypeId = option.subject;
 			this.input.ids = [];
-			this.next();
+			// this.next();
 		},
 		onReady() {
 			this.countdownFun(45 * 60)

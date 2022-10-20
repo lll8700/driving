@@ -21,18 +21,20 @@
 			<view>
 				<view class="itemlist" @click="selVal(index)" v-for="(aitem,index) in item.options "
 					:key="'anslist_'+index" :class="checkSel.findIndex(c=> c.id == aitem.id) !==-1 ? 'actvieColor' :''">
-					<span v-if="(checkSel.findIndex(c=> c.id == aitem.id) !==-1 || anstype === 1 ) && anstype !=2 "
+					
+					<span v-if="(checkSel.findIndex(c=> c.id == aitem.id) !==-1 || anstype === 1 ) && anstype !=2 && anstype !=3"
 						class="iconShow">
 						<span v-if="!aitem.isCorrect" style='color:orangered;' class="iconfont icon-cuowu"></span>
 						<span v-if="aitem.isCorrect" style='color:skyblue;' class="iconfont icon-zhengque"></span>
 					</span>
-					<span v-else class="iconShow"></span> {{aitem.title}}
+					<span v-else class="iconShow"></span> 
+					{{aitem.title}}
 				</view>
 			</view>
 
 		</view>
 
-		<view class="isShow" v-if="(checkSel.length === isOptions.length && anstype ===0 && isError) || anstype == 1">
+		<view class="isShow" v-if="(checkSel.length === isOptions.length && anstype ===0 && isError) || anstype == 1 || isShow">
 			<view class="rightAns">
 				<view class="ans">
 					答案 ： <span v-for="item1 in isOptions" :key="item1.id" class="isOpensSpan">{{item1.seq}}</span>
@@ -94,7 +96,9 @@
 				isOptions: [], // 正确答案
 				checkSel: [], // 选择的答案
 				count: 1 ,//正确数量
-				isError: false //是否答错题
+				isEdit: false, // 是否是修改
+				isError: false, //是否答错题
+				isShow: false // 是否直接显示
 			}
 		},
 		watch: {
@@ -108,7 +112,12 @@
 				this.isOptions = list.filter(s => s.isCorrect)
 				this.count = this.isOptions.length;
 				this.checkSel = [];
-				this.isError = false
+				this.isError = false;
+				if(this.item.checkSel) {
+					this.checkSel = this.item.checkSel;
+					if(this.anstype !== 3) 
+						this.isShow = true
+				}
 			},
 			clearData() {
 				this.isOptions = [] // 正确答案
@@ -122,12 +131,18 @@
 			selVal(val) { // index
 				var that = this
 				if (this.checkSel.length >= this.count) { // 选完了
-					return
+					if(this.anstype === 3) {
+						this.checkSel = [];
+						this.isEdit =true;
+					}else {
+						return
+					}
 				}
 				
 				this.checkSel.push(this.item.options[val]);
 				
 				if(this.checkSel.length === this.count) { // 全部答完了 
+					this.item.checkSel = this.checkSel
 					if(this.anstype === 0) { // 答题结束后 如果是全部正确则自动下一个
 						var isNext = true
 						for(var i = 0; i < that.isOptions.length; i++) {
@@ -145,33 +160,12 @@
 						}
 						
 					}else if(this.anstype === 3) { // 考试也要下一个
-						this.clearData()
-						this.$emit('next');
+						if(!this.isEdit) {
+							this.clearData()
+							this.$emit('next');
+						}
 					}
 				}
-				
-				
-				
-				if (this.checkSel.length >= this.count && this.anstype === '') { // 选完最后一个
-					console.log(' 考试选完进行下一个')
-					
-				}
-				
-				// if (this.item.type == 1) {
-				// 	this.selIndex = val
-				// 	this.selected = this.item.ansArr[val].seq
-				// } else {
-				// 	// 多选
-				// 	const seq = this.item.ansArr[val].seq
-				// 	let fdx = this.checkSel.findIndex(c => c == seq)
-				// 	if (fdx !== -1) {
-				// 		this.checkSel.splice(fdx, 1)
-				// 	} else {
-				// 		this.checkSel.push(seq)
-				// 	}
-				// 	console.log(this.checkSel)
-				// }
-
 			}
 		},
 

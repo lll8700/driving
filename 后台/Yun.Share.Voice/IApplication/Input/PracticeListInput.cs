@@ -40,6 +40,30 @@ namespace Yun.Share.Voice.IApplication.Input
         /// </summary>
         public ChoiceTyope? ChoiceTyope { get; set; }
     }
+
+    public class PracticeTestListInput
+    {
+        /// <summary>
+        /// 判断题数量
+        /// </summary>
+        public int ChoiceCount { get; set; } = 40;
+        /// <summary>
+        /// 单选数量
+        /// </summary>
+        public int SingleCount { get; set; } = 0;
+
+        /// <summary>
+        /// 多选数量
+        /// </summary>
+        public int MoreCount { get; set; } = 0;
+
+        /// <summary>
+        /// 选择题
+        /// </summary>
+        public int UnChoiceCount { get; set; } = 60;
+    }
+
+    
     public class PracticeFileInput
     {
 
