@@ -3,8 +3,6 @@
 		<view class="content-wrap">
 			<view class="center">
 				倒计时 ：{{countdownTxt}}  
-				<view class="selico"   @click="showDrawer('showLeft')">查看详情
-				</view>
 			</view>
 			<test :item='dataItem' :anstype='seltype' @next="next()" />
 		</view>
@@ -12,6 +10,7 @@
 		<view class="u_foot">
 			<view class="itemflex">
 				<button class="mini-btn" type="primary" @click="pre" :disabled="!isLast">上一题</button>
+				<button class="mini-btn" type="primary"@click="showDrawer('showLeft')" >{{ getInfo() }} </button>
 				<button v-if="!isEnd" class="mini-btn " type="primary" :disabled="!isNext" @click="next">下一题</button>
 				<button v-else class="mini-btn " type="primary" @click="put">提交</button>
 			</view>
@@ -32,10 +31,14 @@
 						<view class="ans_result">
 							<uni-row>
 								<!-- 答案结果显示 -->
-								<uni-col :span="6" class="carWrap" v-for="(t,cidx) in testlen" :key="'ii_'+t" >
+								<uni-col :span="6" class="carWrap" v-for="(t,cidx) in list" :key="'ii_'+ cidx" >
 									<!-- result == null  noblock  :class=" ? 'blue':'red'  -->
-									<view class="selicon">
-										{{t+1}}
+									<view class="selicon blue" v-if="t.checkSel && t.checkSel.length > 0" @click="saveIndex(cidx)"> 
+										<!-- result == null  noblock  :class=" ? 'blue':'red'  -->
+										{{cidx+1}} 
+									</view>
+									<view v-else class="selicon" @click="saveIndex(cidx)">
+										{{cidx+1}}
 									</view>
 								</uni-col>
 
@@ -121,7 +124,6 @@
 			},
 			
 			dialogConfirm() {
-				console.log('点击确认')
 				this.messageText = `点击确认了 ${this.msgType} 窗口`
 				this.$refs.alertDialog.close()
 			},
@@ -140,6 +142,11 @@
 			change(e, type) {
 			
 				this.showLeft = e
+			},
+			saveIndex(index) {
+				this.index = index
+				this.dataItem = this.list[this.index];
+				this.closeDrawer('showLeft')
 			},
 			countdownFun(diffTime) {
 				if (diffTime > 0) {
@@ -168,9 +175,7 @@
 			},
 			initData() {
 				var that = this;
-				console.log('initData')
 				that.$http(that.$api.Practice.testlist, "POST", that.testInput).then(res => {
-					console.log(res)
 					that.totalCount = res.data.totalCount;
 					that.list = res.data.items;
 					that.next()
@@ -182,6 +187,11 @@
 					this.index--;
 					that.getItem();
 				}
+			},
+			getInfo() {
+				return this.list.filter(item=> {
+					return item.checkSel
+				}).length + '/' + this.list.length
 			},
 			// 提交考试
 			put() {
@@ -212,7 +222,6 @@
 			},
 			next() {
 				var that = this;
-				console.log(that.testList)
 				if (that.index < that.totalCount) {
 					that.index++;
 					that.getItem();
