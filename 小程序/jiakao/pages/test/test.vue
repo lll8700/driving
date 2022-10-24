@@ -4,8 +4,11 @@
 			<uni-tag class="tip" :text="item.choiceTyopeEnmName" type="primary" /> {{item.title}}
 		</view>
 		<view class="ansLists">
-			<view class="img" v-for="(m,index) in item.practiceImages" :key="'img_'+index">
-				<img :src="getImage(m.url)">
+			<view class="img" v-if="item.practiceImages.length === 1" style="text-align: center;">
+				<img :src="getImage(item.practiceImages[0].url)" style="max-height:200px; max-width: 500px;">
+			</view>
+			<view class="img" v-else v-for="(m,index) in item.practiceImages" :key="'img_'+index">
+				<img :src="getImage(m.url)" style="max-height:200px; max-width: 200px;">
 			</view>
 			<!-- <view class="" v-if="item.choiceTyope !== 20">
 				<view class="itemlist" @click="selVal(index)" v-for="(aitem,index) in item.options "

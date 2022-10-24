@@ -76,7 +76,7 @@
             "port" : 81,
             "proxy" : {
                 "/api" : {
-                    "target" : "https://localhost:44312",
+                    "target" : "http://106.14.209.175:800",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {
