@@ -215,6 +215,7 @@ export default {
     update(item) {
       this.createInput = item
       this.createDialogVisible = true
+      this.createInput.imageSrc = ''
       if (item.practiceImages && item.practiceImages.length > 0) {
         for (let index = 0; index < item.practiceImages.length; index++) {
           this.createInput.imageSrc += item.practiceImages[index].url
@@ -240,7 +241,7 @@ export default {
       this.createInput.options.push({
         title: '',
         isCorrect: false,
-        index: indexItem
+        index: indexItem + 1
       })
     },
     getList() {
