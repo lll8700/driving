@@ -29,10 +29,17 @@ namespace Yun.Share.Voice.Application.Serve
         }
         public override async Task<PracticeDto> CreateAsync(PracticeDto input)
         {
-            Practice per = input.MapTo<Practice, PracticeDto>();
-            await _db.Practices.AddAsync(per);
-            await _db.SaveChangesAsync();
-            return per.MapTo<PracticeDto, Practice>();
+            Practice per = null;
+            if (input.Id.HasValue)
+                return await UpdateAsync(input);
+            else
+            {
+                per = input.MapTo<Practice, PracticeDto>();
+                await _db.Practices.AddAsync(per);
+                await _db.SaveChangesAsync();
+                return per.MapTo<PracticeDto, Practice>();
+            }
+         
         }
 
         public override async Task<PracticeDto> GetAsync(Guid Id)
@@ -41,7 +48,14 @@ namespace Yun.Share.Voice.Application.Serve
             return per.MapTo<PracticeDto, Practice>();
         }
 
-        
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var entity = await _db.Practices.FindAsync(id);
+            _db.Practices.Remove(entity);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<PracticeDto> GetNextAsync(PracticeListInput input)
         {
             var iq = NextFilter(input);
@@ -105,12 +119,71 @@ namespace Yun.Share.Voice.Application.Serve
 
         public override async Task<PracticeDto> UpdateAsync(PracticeDto input)
         {
-            Practice per = await _db.Practices.FindAsync(input.Id);
+
+            Practice per = await _db.Practices.FindAsync(input.Id.Value);
+
+            var opList = await _db.Optiones.Where(x => x.PracticeId == input.Id.Value).ToArrayAsync();
+            for (var i = 0; i < opList.Count(); i++)
+            {
+                _db.Optiones.Remove(opList[i]);
+            }
+
+            var images = await _db.PracticeImages.Where(x => x.PracticeId == input.Id.Value).ToArrayAsync();
+            for (var i = 0; i < images.Count(); i++)
+            {
+                _db.PracticeImages.Remove(images[i]);
+            }
+
+            if(input.Options.IsNotEmpty())
+            {
+                List<Option> ops = new List<Option>();
+                for (var j = 0; j < input.Options.Count; j++)
+                {
+                    var opData = input.Options[j];
+                    Option op = new Option()
+                    {
+                        PracticeId = input.Id.Value,
+                        Index = opData.Index,
+                        Title = opData.Title,
+                        IsCorrect = opData.IsCorrect
+                    };
+                    ops.Add(op);
+                    await _db.Optiones.AddAsync(op);
+                }
+                per.Options = ops;
+            }
+            if (input.ImageSrc.IsNotEmpty())
+            {
+
+                var sp = input.ImageSrc.Split(new char[] { ',', '，' });
+                List<PracticeImage> practiceImages = new List<PracticeImage>();
+                foreach (var im in sp)
+                {
+                    if (im.IsNotEmpty())
+                    {
+                        PracticeImage image = new PracticeImage
+                        {
+                            PracticeId = input.Id.Value,
+                            Url = im
+                        };
+                        practiceImages.Add(image);
+                        await _db.PracticeImages.AddAsync(image);
+                    }
+                }
+                per.PracticeImages = practiceImages;
+            }
+
             per.Title = input.Title;
             per.SubjectTypeId = input.SubjectTypeId;
             per.CarTypeId = input.CarTypeId;
+            per.ChoiceTyope = input.ChoiceTyope;
+            per.Skill = input.Skill;
+            per.SkillLast = input.SkillLast;
+            per.Introduce = input.Introduce;
+
+
             await _db.SaveChangesAsync();
-            return per.MapTo<PracticeDto, Practice>();
+            return new PracticeDto();
         }
 
         public override async Task<PagedResultDto<PracticeDto>> GetListAsync(PracticeListInput input)
@@ -184,6 +257,10 @@ namespace Yun.Share.Voice.Application.Serve
             if (input.StatusTypeEnum.HasValue)
             {
                 iq = iq.Where(x => x.StatusTypeEnum == input.StatusTypeEnum);
+            }
+            if (input.ChoiceTyope.HasValue)
+            {
+                iq = iq.Where(x => x.ChoiceTyope == input.ChoiceTyope);
             }
             if (input.UnIds.IsNotEmpty())
             {

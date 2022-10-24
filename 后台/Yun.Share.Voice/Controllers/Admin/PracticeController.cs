@@ -47,6 +47,12 @@ namespace Yun.Share.Voice.Controllers.Admin
             return _server.UpdateAsync(input);
         }
         [HttpPost]
+        [Route(RouteName.DeleteAction)]
+        public Task<bool> DeleteAsync(Guid id)
+        {
+            return _server.DeleteAsync(id);
+        }
+        [HttpPost]
         [Route("zip")]
         public int UploadImageZip(IFormFile file)
         {
@@ -61,7 +67,7 @@ namespace Yun.Share.Voice.Controllers.Admin
         }
 
         /// <summary>
-        ///  °´Ë³Ğò»ñÈ¡ÏÂÒ»¸ö
+        ///  æŒ‰é¡ºåºè·å–ä¸‹ä¸€ä¸ª
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
@@ -73,7 +79,7 @@ namespace Yun.Share.Voice.Controllers.Admin
         }
 
         /// <summary>
-        /// »ñÈ¡ÅÅ³ıidsµÄËæ»úÒ»¸öÌâ
+        /// è·å–æ’é™¤idsçš„éšæœºä¸€ä¸ªé¢˜
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -84,7 +90,7 @@ namespace Yun.Share.Voice.Controllers.Admin
             return _server.GetRandomAsync(input);
         }
         /// <summary>
-        /// »ñÈ¡¿¼ÊÔ100Ìâ
+        /// è·å–è€ƒè¯•100é¢˜
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>

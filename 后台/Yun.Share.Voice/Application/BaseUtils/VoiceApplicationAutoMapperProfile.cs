@@ -20,6 +20,7 @@ namespace Yun.Share.Voice
                 .ForMember(x => x.SubjectType, s => s.Ignore())
                 .ForMember(x => x.PracticeImages, s => s.Ignore())
                 .ForMember(x => x.Options, s => s.Ignore())
+                .ForMember(x => x.ImageSrc, s => s.Ignore())
                 ;
             CreateMap<SubjectType, SubjectTypeDto>(MemberList.Source);
             CreateMap<CarType, CarTypeDto>(MemberList.Source);

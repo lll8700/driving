@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,5 +42,7 @@ namespace Yun.Share.Voice.IApplication
         /// <param name="input"></param>
         /// <returns></returns>
         Task<PagedResultDto<PracticeDto>> GetTestListAsync(PracticeTestListInput input);
+
+        Task<bool> DeleteAsync(Guid id);
     }
 }

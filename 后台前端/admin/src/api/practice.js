@@ -23,3 +23,18 @@ export function uploadZip(query) {
     headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
+
+export function deleteItem(query) {
+  return request({
+    url: api.api.Practice.delete + '?id=' + query.id,
+    method: 'post',
+    data: query
+  })
+}
+export function create(query) {
+  return request({
+    url: api.api.Practice.create,
+    method: 'post',
+    data: query
+  })
+}

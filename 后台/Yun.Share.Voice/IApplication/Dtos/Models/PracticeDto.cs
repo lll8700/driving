@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,7 +37,7 @@ namespace Yun.Share.Voice.IApplication.Dtos.Models
         public List<OptionDto> Options { get; set; }
         /// <summary>
         /// 关键字 ，分隔
-        /// </summary>
+        /// </summary> 
         public string KeyWordls { get; set; }
 
         /// <summary>
@@ -61,5 +61,10 @@ namespace Yun.Share.Voice.IApplication.Dtos.Models
         public ChoiceTyope ChoiceTyope { get; set; }
 
         public string ChoiceTyopeEnmName => EnumHelper.GetDescription(ChoiceTyope);
+
+        /// <summary>
+        /// 图片集
+        /// </summary>
+        public string ImageSrc { get; set; }
     }
 }
