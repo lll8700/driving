@@ -302,6 +302,9 @@
 
 		.ans_result {
 			padding:10px;
+			height: 100vh;
+			overflow: hidden;
+			overflow-y: scroll;
 			.carWrap {
 				.selicon {
 					width: 40px;
