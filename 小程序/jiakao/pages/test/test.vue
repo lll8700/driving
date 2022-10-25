@@ -4,7 +4,7 @@
 			<uni-tag class="tip" :text="item.choiceTyopeEnmName" type="primary" /> {{item.title}}
 		</view>
 		<view class="ansLists">
-			<view class="img" v-if="item.practiceImages.length === 1" style="text-align: center; height: 220px;">
+			<view class="img" v-if="item.practiceImages && item.practiceImages.length === 1" style="text-align: center; height: 220px;">
 				<img :src="getImage(item.practiceImages[0].url)" style="max-height:150px; max-width: 500px;">
 			</view>
 			<view class="img" v-else v-for="(m,index) in item.practiceImages" :key="'img_'+index">
@@ -141,13 +141,13 @@
 						return
 					}
 				}
-				
 				this.checkSel.push(this.item.options[val]);
 				
 				if(this.checkSel.length === this.count) { // 全部答完了 
 					this.item.checkSel = this.checkSel
 					if(this.anstype === 0) { // 答题结束后 如果是全部正确则自动下一个
 						var isNext = true
+						
 						for(var i = 0; i < that.isOptions.length; i++) {
 							var item = that.checkSel.filter(s => s.seq === that.isOptions[i].seq);
 							if(item.length === 0) {

@@ -10,30 +10,30 @@
 		<view class="u_foot">
 			<view class="itemflex">
 				<button class="mini-btn" type="primary" @click="pre" :disabled="!isLast">上一题</button>
-				<button class="mini-btn" type="primary"@click="showDrawer('showLeft')" >{{ getInfo() }} </button>
+				<button class="mini-btn" type="primary" @click="showDrawer('showLeft')" >{{ getInfo() }} </button>
 				<button v-if="!isEnd" class="mini-btn " type="primary" :disabled="!isNext" @click="next">下一题</button>
-				<button v-else class="mini-btn " type="primary" @click="put">提交</button>
+				<button v-else class="mini-btn " type="primary" @click="dialogToggle('error')" >提交</button>
 			</view>
 		</view>
 		
 			
 		
 		
-		<view title="答案" type="line">
+		<view title="答案" type="line" :width="320">
 			<view class="answer_body">
 				<!-- >90  success  info   <90 error -->
-				<button type="primary" @click="dialogToggle('error')" ><text class="word-btn-white" >提交</text>
+			<!-- 	<button type="primary" @click="dialogToggle('error')" ><text class="word-btn-white" >提交</text> -->
 				</button>
 				
-				<uni-drawer :width="320" ref="showLeft" mode="left" :mask-click="false"
+				<uni-drawer :width="320" ref="showLeft" :mask-click="false"
 					@change="change($event,'showLeft')">
 					<view class="close">
 						<view class="ans_result">
 							<uni-row>
 								<!-- 答案结果显示 -->
-								<uni-col :span="6" class="carWrap" v-for="(t,cidx) in list" :key="'ii_'+ cidx" >
+								<uni-col :span="4" class="carWrap" v-for="(t,cidx) in list" :key="'ii_'+ cidx" >
 									<!-- result == null  noblock  :class=" ? 'blue':'red'  -->
-									<view class="selicon blue" v-if="t.checkSel && t.checkSel.length > 0" @click="saveIndex(cidx)"> 
+									<view class="selicon blue" v-if="isBule(t)" @click="saveIndex(cidx)"> 
 										<!-- result == null  noblock  :class=" ? 'blue':'red'  -->
 										{{cidx+1}} 
 									</view>
@@ -53,12 +53,18 @@
 		<view>
 			<!-- 提示窗示例 -->
 			<uni-popup ref="alertDialog" type="dialog">
-				<uni-popup-dialog :type="msgType" cancelText="提交试卷" confirmText="继续答题"  :title="alertTitle"  @confirm="dialogConfirm"
+				<uni-popup-dialog :type="msgType" cancelText="查看题库" confirmText="关闭"  :title="alertTitle"  @click="showDrawer('showLeft')"
 					@close="dialogClose">
 					<view class="dialogContent">
 						<!-- <text class="alertTitle  red">{{alertTitle}}</text> -->
 						<view class="tipContent">
-							未做题 :50
+							正确数 : {{ successNumber }}
+						</view>
+						<view class="tipContent">
+							错误数 : {{ totalCount - successNumber }}
+						</view>
+						<view class="tipContent">
+							未答题 : {{ nullNumber }}
 						</view>
 						<view class="">
 							<text>剩余时间：{{countdownTxt}}</text>
@@ -96,9 +102,10 @@
 				index: -1, // 当前显示的题库指针
 				isNext: true, // 是否可以下一题
 				isLast: false, // 是否可以上一题
-				testList: [], // 已经答了的考试题
 				totalCount: 0, // 考试题数量
 				isEnd: false, // 是否已经全部答完
+				successNumber: 0, // 考试正确数
+				nullNumber: 0, // 未答数
 				testInput: {
 					choiceCount: 40, // 单选40个
 					unChoiceCount: 60, // 选择题60个
@@ -129,6 +136,8 @@
 			},
 			dialogToggle(type) {
 				this.msgType = type
+				this.successNumber = this.getSuccessNumber()
+				console.log(this.successNumber)
 				this.$refs.alertDialog.open()
 			},
 			showDrawer(e) {
@@ -143,10 +152,50 @@
 			
 				this.showLeft = e
 			},
+			isBule(t) {
+				return t.checkSel && t.checkSel.length > 0
+			},
 			saveIndex(index) {
 				this.index = index
 				this.dataItem = this.list[this.index];
 				this.closeDrawer('showLeft')
+			},
+			getSuccessNumber() {
+				var that = this
+				var list1 = this.list.filter(item=> {
+					return that.getIndexItem(item)
+				}); 
+				return list1.length
+			},
+			getErrorNumber() {
+				
+			},
+			getNullNumber() {
+				var list1 = this.list.filter(item=> {
+					return !item.checkSel || item.checkSel.length === 0
+				}); 
+				return list1.length
+			},
+			getIndexItem(item) {
+				if(!item.options || item.options.length === 0) {
+					return false
+				}
+				if(!item.checkSel || item.checkSel.length === 0) {
+					return false
+				}
+				var isCreList = item.options.filter(s=> {
+					return s.isCorrect
+				});
+				
+				
+				
+				for(var i = 0; i < isCreList.length; i++) {
+					var item1 = item.checkSel.filter(s => s.seq === isCreList[i].seq);
+					if(item1.length === 0) {
+						return false
+					}
+				}
+				return true
 			},
 			countdownFun(diffTime) {
 				if (diffTime > 0) {
@@ -189,9 +238,11 @@
 				}
 			},
 			getInfo() {
-				return this.list.filter(item=> {
+				var list1 = this.list.filter(item=> {
 					return item.checkSel
-				}).length + '/' + this.list.length
+				});
+				
+				return list1 && list1.length + '/' + this.list.length
 			},
 			// 提交考试
 			put() {
@@ -213,11 +264,8 @@
 				} else {
 					that.isEnd = false
 				}
-				if (that.index < that.testList.length) {
-					this.dataItem = this.testList[this.index];
-				} else if (that.index < this.list.length) {
+				if (that.index < that.list.length) {
 					this.dataItem = this.list[this.index];
-					that.testList.push(this.dataItem);
 				}
 			},
 			next() {
