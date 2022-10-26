@@ -25,9 +25,9 @@
 							<span @click="dialogToggle('error')"> 交卷 </span>
 						</view>
 						<view class="num_view">
-						<span  class="cion" style='color:#008eff;'  ><span style='color:#008eff;' class="iconfont icon-zhengque"></span>
+						<span   style='color:#008eff;'  ><span style='color:#008eff;' class="iconfont icon-zhengque"></span>
 						{{getSuccessNumber()}}</span>
-						<span class="cion" > {{totalCount - getNullNumber()}}/ {{totalCount}}</span> 
+						<span  > {{totalCount - getNullNumber()}} / {{totalCount}}</span> 
 						</view>
 						
 					</view>
@@ -345,6 +345,7 @@
 			display: flex;
 			line-height: 20px;
 			justify-content: space-between;
+			padding-bottom: 10px;
 			
 			.btn_view{
 				flex:1;
@@ -360,7 +361,7 @@
 			.num_view{
 				// flex:1;
 				padding:6px 18px;
-				.cion{
+				span{
 					padding-left: 12px;
 					padding-right: 8px;
 				}
