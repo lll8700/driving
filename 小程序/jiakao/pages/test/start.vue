@@ -4,52 +4,54 @@
 			<view class="center">
 				倒计时 ：{{countdownTxt}}  
 			</view>
-			<test :item='dataItem' :anstype='seltype' @next="next()" />
+			<test :item='dataItem'  :seqNo='index' :anstype='seltype' @next="next()" />
 		</view>
 
 		<view class="u_foot">
 			<view class="itemflex">
 				<button class="mini-btn" type="primary" @click="pre" :disabled="!isLast">上一题</button>
-				<button class="mini-btn" type="primary" @click="showDrawer('showLeft')" >{{ getInfo() }} </button>
+				<button class="mini-btn" type="primary" @click="toggle('bottom')" >{{ getInfo() }} </button>
 				<button v-if="!isEnd" class="mini-btn " type="primary" :disabled="!isNext" @click="next">下一题</button>
 				<button v-else class="mini-btn " type="primary" @click="dialogToggle('error')" >提交</button>
 			</view>
 		</view>
 		
 			
-		
-		
-		<view title="答案" type="line" :width="320">
-			<view class="answer_body">
-				<!-- >90  success  info   <90 error -->
-			<!-- 	<button type="primary" @click="dialogToggle('error')" ><text class="word-btn-white" >提交</text> -->
-				</button>
-				
-				<uni-drawer :width="320" ref="showLeft" :mask-click="false"
-					@change="change($event,'showLeft')">
-					<view class="close">
-						<view class="ans_result">
-							<uni-row>
-								<!-- 答案结果显示 -->
-								<uni-col :span="4" class="carWrap" v-for="(t,cidx) in list" :key="'ii_'+ cidx" >
-									<!-- result == null  noblock  :class=" ? 'blue':'red'  -->
-									<view class="selicon blue" v-if="isBule(t)" @click="saveIndex(cidx)"> 
-										<!-- result == null  noblock  :class=" ? 'blue':'red'  -->
-										{{cidx+1}} 
-									</view>
-									<view v-else class="selicon" @click="saveIndex(cidx)">
-										{{cidx+1}}
-									</view>
-								</uni-col>
-
-							</uni-row>
+		<uni-popup ref="popup" background-color="#fff">
+			<view class="popup-content">
+				<view class="answer_body">
+					<view class="header_view">
+						<view class="btn_view">
+							<span @click="dialogToggle('error')"> 交卷 </span>
 						</view>
-						<button @click="closeDrawer('showLeft')"><text class="word-btn-white">关闭</text></button>
+						<view class="num_view">
+						<span  class="cion" style='color:#008eff;'  ><span style='color:#008eff;' class="iconfont icon-zhengque"></span>
+						{{getSuccessNumber()}}</span>
+						<span class="cion" > {{totalCount - getNullNumber()}}/ {{totalCount}}</span> 
+						</view>
+						
 					</view>
-				</uni-drawer>
+					<view class="ans_result">
+						<uni-row>
+							<!-- 答案结果显示 -->
+							<uni-col :span="4" class="carWrap" v-for="(t,cidx) in list" :key="'ii_'+ cidx" >
+								
+								<view class="selicon blue" v-if="isBule(t)" @click="saveIndex(cidx)"> 
+									{{cidx+1}} 
+								</view>
+								<view v-else class="selicon" @click="saveIndex(cidx)">
+									{{cidx+1}}
+								</view>
+							</uni-col>
+				
+						</uni-row>
+					</view>
+					<!-- <button @click="closeDrawer('showLeft')"><text class="word-btn-white">关闭</text></button> -->
+				</view>
 			</view>
-		</view>
+		</uni-popup>
 		
+	
 		<view>
 			<!-- 提示窗示例 -->
 			<uni-popup ref="alertDialog" type="dialog">
@@ -116,14 +118,12 @@
 		created() {
 			this.initData()
 		},
-		// onNavigationBarButtonTap(e) {
-		// 	if (this.showLeft) {
-		// 		this.$refs.showLeft.close()
-		// 	} else {
-		// 		this.$refs.showLeft.open()
-		// 	}
-		// },
+		
+		
 		methods: {
+			toggle(type){
+				this.$refs.popup.open(type)
+			},
 			dialogClose() {
 				console.log('点击关闭')
 				// 调 提交
@@ -158,7 +158,7 @@
 			saveIndex(index) {
 				this.index = index
 				this.dataItem = this.list[this.index];
-				this.closeDrawer('showLeft')
+				this.$refs.popup.close()
 			},
 			getSuccessNumber() {
 				var that = this
@@ -341,6 +341,33 @@
 	
 
 	.answer_body {
+		.header_view{
+			display: flex;
+			line-height: 20px;
+			justify-content: space-between;
+			
+			.btn_view{
+				flex:1;
+				span {
+					color: #fff;
+					display: inline-block;
+					padding:6px 18px;
+					border-radius: 20px;
+					background-image: linear-gradient(0deg, #008eff, #83def1); 
+				}
+				
+			}
+			.num_view{
+				// flex:1;
+				padding:6px 18px;
+				.cion{
+					padding-left: 12px;
+					padding-right: 8px;
+				}
+				
+			}
+		}
+		
 		padding: 20px;
 
 		button {
@@ -350,7 +377,7 @@
 
 		.ans_result {
 			padding:10px;
-			height: 100vh;
+			height: 400px;
 			overflow: hidden;
 			overflow-y: scroll;
 			.carWrap {
