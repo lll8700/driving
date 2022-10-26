@@ -24,6 +24,7 @@
 						<view class="btn_view">
 							<span @click="dialogToggle('error')"> 交卷 </span>
 						</view>
+						
 						<view class="num_view" >
 								<span  class="cion" style='color:#008eff;' v-if="isPut" >
 									<span style='color:#008eff;' class="iconfont icon-zhengque"></span>
@@ -31,6 +32,13 @@
 								</span>
 						
 						<span class="cion" > {{totalCount - getNullNumber()}}/ {{totalCount}}</span> 
+<!-- =======
+						<view class="num_view">
+						<span   style='color:#008eff;'  >
+							<span style='color:#008eff;' class="iconfont icon-zhengque"></span>
+						{{getSuccessNumber()}}</span>
+						<span  > {{totalCount - getNullNumber()}} / {{totalCount}}</span> 
+>>>>>>> 24c26f2411ec9c6c1c40f96ddf39d00e876fc286 -->
 						</view>
 						
 					</view>
@@ -365,6 +373,7 @@
 			display: flex;
 			line-height: 20px;
 			justify-content: space-between;
+			padding-bottom: 10px;
 			
 			.btn_view{
 				flex:1;
@@ -380,7 +389,7 @@
 			.num_view{
 				// flex:1;
 				padding:6px 18px;
-				.cion{
+				span{
 					padding-left: 12px;
 					padding-right: 8px;
 				}
