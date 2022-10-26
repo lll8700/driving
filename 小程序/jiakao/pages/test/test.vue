@@ -1,7 +1,8 @@
 <template>
 	<view class="contain">
-		<view class="title">
-			<uni-tag class="tip" :text="item.choiceTyopeEnmName" type="primary" /> {{item.title}}
+		<view class="title" v-if="item.title">
+		
+		<span v-if="seqNo != null">{{seqNo+1}} 、</span>	<uni-tag class="tip" :text="item.choiceTyopeEnmName" type="primary" /> {{item.title}}
 		</view>
 		<view class="ansLists">
 			<view class="img" v-if="item.practiceImages && item.practiceImages.length === 1" style="text-align: center; height: 220px;">
@@ -93,7 +94,7 @@
 
 <script>
 	export default {
-		props: ['item', 'anstype'],
+		props: ['item', 'anstype','seqNo'],
 		data() {
 			return {
 				isOptions: [], // 正确答案
@@ -106,13 +107,14 @@
 		},
 		watch: {
 			item(newValue, oldValue) {
+				
 				this.initData()
 			}
 		},
 		methods: {
 			initData() {
 				var list = this.item.options;
-				this.isOptions = list.filter(s => s.isCorrect)
+				this.isOptions = list && list.length > 0 &&list.filter(s => s.isCorrect) || []
 				this.count = this.isOptions.length;
 				this.checkSel = [];
 				this.isError = false;
