@@ -32,7 +32,7 @@
 						<span v-if="aitem.isCorrect" style='color:skyblue;' class="iconfont icon-zhengque"></span>
 					</span>
 					<span v-else class="iconShow"></span> 
-					{{aitem.title}}
+				<span class="seq">{{aitem.seq}}</span>	{{optFilter(aitem.title)}}
 				</view>
 			</view>
 
@@ -97,6 +97,7 @@
 		props: ['item', 'anstype','seqNo'],
 		data() {
 			return {
+				optionFilter:['A','B','C','D'],
 				isOptions: [], // 正确答案
 				checkSel: [], // 选择的答案
 				count: 1 ,//正确数量
@@ -112,6 +113,12 @@
 			}
 		},
 		methods: {
+			optFilter(str){
+				let status =this.optionFilter.map(item=>str.includes(item)).filter(c=>!!c);
+				return status.length > 0 &&str.slice(1) ||  str
+				
+				
+			},
 			initData() {
 				var list = this.item.options;
 				this.isOptions = list && list.length > 0 &&list.filter(s => s.isCorrect) || []
@@ -212,6 +219,18 @@
 
 	.itemlist {
 		// line-height: 72upx;
+		.seq{
+			margin: 10upx 5upx 10upx 0;
+			text-align: center;
+			display: inline-block;
+			height: 72upx;
+			// line-height: 72upx;
+			width:72upx ;
+			box-sizing: border-box;
+			border: 2upx solid;
+			border-radius: 50%;
+
+		}
 	}
 
 	.rightAns {

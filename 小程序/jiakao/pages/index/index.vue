@@ -229,6 +229,7 @@
 			}
 			.cbtn{
 				border-color: #0068f6;
+				color: #0068f6;
 			}
 		}
 	}
