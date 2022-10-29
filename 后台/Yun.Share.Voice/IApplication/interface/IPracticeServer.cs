@@ -44,5 +44,13 @@ namespace Yun.Share.Voice.IApplication
         Task<PagedResultDto<PracticeDto>> GetTestListAsync(PracticeTestListInput input);
 
         Task<bool> DeleteAsync(Guid id);
+
+        /// <summary>
+        /// 获取审核通过的题库数量
+        /// </summary>
+        /// <returns></returns>
+        Task<int> GetSucceedCount();
+
+        Task<List<PracticeDto>> GetCachePracticeDtos();
     }
 }
