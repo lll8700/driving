@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="content-wrap">
-			<view class="center">
+			<view class="center clockclass">
 				倒计时 ：{{countdownTxt}}  
 			</view>
 			<test :item='dataItem'  :seqNo='index' :anstype='seltype' @next="next()" />
@@ -271,8 +271,11 @@
 			next() {
 				var that = this;
 				if (that.index < that.totalCount) {
-					that.index++;
-					that.getItem();
+				
+						that.index++;
+						that.getItem();
+					
+					
 				}
 			},
 
@@ -313,7 +316,9 @@
 		height: auto;
 		font-size: 1.1rem;
 	}
-
+	.clockclass{
+		line-height: 1.2rem;
+	}
 	.u_foot {
 
 		width: 100%;

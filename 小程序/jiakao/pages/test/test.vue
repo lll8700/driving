@@ -133,6 +133,7 @@
 			getImage(url) {
 				return 'http://106.14.209.175:800/api/imgae/' + url
 			},
+			
 			selVal(val) { // index
 				var that = this
 				if (this.checkSel.length >= this.count) { // 选完了
@@ -159,6 +160,7 @@
 						}
 						if(isNext) {
 							this.clearData()
+							
 							this.$emit('next');
 						}else {
 							this.isError =true;
@@ -166,8 +168,10 @@
 						
 					}else if(this.anstype === 3) { // 考试也要下一个
 						if(!this.isEdit) {
-							this.clearData()
-							this.$emit('next');
+							setTimeout(()=>{
+								this.clearData()
+								this.$emit('next');
+							},500)
 						}
 					}
 				}
@@ -179,6 +183,7 @@
 
 <style lang="less" scoped>
 	.contain {
+		padding-top:10px;
 		line-height: 72upx;
 		min-height: 70vh;
 	}
