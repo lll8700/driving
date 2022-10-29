@@ -124,8 +124,13 @@
 				msgType: 'success',
 			}
 		},
-		created() {
-			this.initData()
+		  created() {
+			uni.showLoading({
+				title: '加载中'
+			});
+			
+			 this.initData()
+			
 		},
 		
 		
@@ -256,6 +261,8 @@
 					that.totalCount = res.data.totalCount;
 					that.list = res.data.items;
 					that.next()
+					uni.hideLoading();
+					this.countdownFun(45 * 60)
 				})
 			},
 			pre() {
@@ -315,7 +322,7 @@
 			// this.next();
 		},
 		onReady() {
-			this.countdownFun(45 * 60)
+			// this.countdownFun(45 * 60)
 		},
 	}
 </script>
