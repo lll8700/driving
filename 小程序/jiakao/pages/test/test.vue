@@ -130,6 +130,8 @@
 					this.checkSel = this.item.checkSel;
 					if(this.anstype !== 3) 
 						this.isShow = true
+				}else{
+					this.isEdit =false
 				}
 			},
 			clearData() {
