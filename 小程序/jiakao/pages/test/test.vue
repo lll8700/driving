@@ -118,6 +118,7 @@
 				this.count = this.isOptions.length;
 				this.checkSel = [];
 				this.isError = false;
+				this.isShow =false
 				if(this.item.checkSel) {
 					this.checkSel = this.item.checkSel;
 					if(this.anstype !== 3) 

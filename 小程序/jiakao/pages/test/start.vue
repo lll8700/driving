@@ -24,10 +24,21 @@
 						<view class="btn_view">
 							<span @click="dialogToggle('error')"> 交卷 </span>
 						</view>
+						
+						<view class="num_view" >
+								<span  class="cion" style='color:#008eff;' v-if="isPut" >
+									<span style='color:#008eff;' class="iconfont icon-zhengque"></span>
+								{{getSuccessNumber()}}
+								</span>
+						
+						<span class="cion" > {{totalCount - getNullNumber()}}/ {{totalCount}}</span> 
+<!-- =======
 						<view class="num_view">
-						<span   style='color:#008eff;'  ><span style='color:#008eff;' class="iconfont icon-zhengque"></span>
+						<span   style='color:#008eff;'  >
+							<span style='color:#008eff;' class="iconfont icon-zhengque"></span>
 						{{getSuccessNumber()}}</span>
 						<span  > {{totalCount - getNullNumber()}} / {{totalCount}}</span> 
+>>>>>>> 24c26f2411ec9c6c1c40f96ddf39d00e876fc286 -->
 						</view>
 						
 					</view>
@@ -36,11 +47,8 @@
 							<!-- 答案结果显示 -->
 							<uni-col :span="4" class="carWrap" v-for="(t,cidx) in list" :key="'ii_'+ cidx" >
 								
-								<view class="selicon blue" v-if="isBule(t)" @click="saveIndex(cidx)"> 
+								<view :class="'selicon ' + isColor(t)" @click="saveIndex(cidx)"> 
 									{{cidx+1}} 
-								</view>
-								<view v-else class="selicon" @click="saveIndex(cidx)">
-									{{cidx+1}}
 								</view>
 							</uni-col>
 				
@@ -108,6 +116,7 @@
 				isEnd: false, // 是否已经全部答完
 				successNumber: 0, // 考试正确数
 				nullNumber: 0, // 未答数
+				isPut: false, // 是否交卷
 				testInput: {
 					choiceCount: 40, // 单选40个
 					unChoiceCount: 60, // 选择题60个
@@ -136,7 +145,14 @@
 			},
 			dialogToggle(type) {
 				this.msgType = type
+				this.isPut = true
 				this.successNumber = this.getSuccessNumber()
+				if(this.successNumber >= 90) {
+					this.alertTitle = '成绩合格'
+					this.msgType = 'success'
+				}else {
+					this.alertTitle ='成绩不合格'
+				}
 				console.log(this.successNumber)
 				this.$refs.alertDialog.open()
 			},
@@ -152,8 +168,20 @@
 			
 				this.showLeft = e
 			},
-			isBule(t) {
-				return t.checkSel && t.checkSel.length > 0
+			isColor(t) {
+				if(!this.isPut)
+					return (t.checkSel && t.checkSel.length > 0) ?'blue' :''
+				else{
+					if(!t.checkSel || t.checkSel.length === 0) {
+						return ''
+					}
+					var isSuccess = this.getIndexItem(t)
+					if(isSuccess) {
+						return 'blue'
+					}else {
+						return 'red'
+					}
+				}
 			},
 			saveIndex(index) {
 				this.index = index
