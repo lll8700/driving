@@ -32,7 +32,7 @@
 						<span v-if="aitem.isCorrect" style='color:skyblue;' class="iconfont icon-zhengque"></span>
 					</span>
 					<span v-else class="iconShow"></span> 
-				<span class="seq">{{aitem.seq}}</span>	{{optFilter(aitem.title)}}
+				<span class="seq">{{aitem.seq}}</span>	{{optFilter(aitem &&aitem.title || '')}}
 				</view>
 			</view>
 
@@ -223,9 +223,9 @@
 			margin: 10upx 5upx 10upx 0;
 			text-align: center;
 			display: inline-block;
-			height: 72upx;
-			// line-height: 72upx;
-			width:72upx ;
+			height: 48upx;
+			line-height: 48upx;
+			width:48upx ;
 			box-sizing: border-box;
 			border: 2upx solid;
 			border-radius: 50%;

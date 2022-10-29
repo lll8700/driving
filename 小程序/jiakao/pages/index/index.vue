@@ -20,9 +20,10 @@
 		<uni-section title="切换题库" type="line">
 			<uni-card :is-shadow="false" class="btn">
 				<uni-row class="demo-uni-row">
-					<uni-col v-for="(t,index) in queTypeArrs" :key="index" :span="6" class="carWrap">
-						<uni-tag class="cartype" @click="changeType(t)" :inverted="true" :text="t.name" type="primary"
-							:class="Subject.id === t.id ?'carActive':''" />
+					<uni-col v-for="(t,index) in queTypeArrs" :key="index" :span="8" class="carWrap">
+						<button  type="primary" class="mini-btn cbtn"  @click="changeType(t)" size="mini"
+						:class="Subject.id === t.id ?'carActive':''" 	plain="true">{{t.name}}</button>
+						
 					</uni-col>
 				</uni-row>
 
