@@ -40,7 +40,8 @@ namespace Yun.Share.Voice
             AddAuthentication(services);
             AddCors(services);
             InitBaseData(services);
-            services.AddOptions();
+            services.AddOptions(); 
+            services.AddMemoryCache();
             services.AddMvcCore(
                    options =>
                    {

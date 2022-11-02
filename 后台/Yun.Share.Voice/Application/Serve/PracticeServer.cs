@@ -14,6 +14,7 @@ using Yun.Share.Voice.Models.Entities;
 using Yun.Share.Voice.Utils;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Yun.Share.Voice.Application.Serve
 {
@@ -21,10 +22,13 @@ namespace Yun.Share.Voice.Application.Serve
     {
         private readonly CoreDbContext _db;
         private readonly IConfiguration _configuration;
-        public PracticeServer(CoreDbContext db, IConfiguration configuration)
+        private readonly IMemoryCache _cache;
+        private readonly IPracticeServer _practiceServer;
+        public PracticeServer(CoreDbContext db, IMemoryCache cache, IConfiguration configuration)
         {
             _db = db;
             _configuration = configuration;
+            _cache = cache;
             base.query = db.Practices.AsQueryable();
         }
         public override async Task<PracticeDto> CreateAsync(PracticeDto input)
@@ -75,35 +79,28 @@ namespace Yun.Share.Voice.Application.Serve
 
             var list = new List<PracticeDto>();
 
-            var baseList = new List<Practice>();
-
-            var iq = _db.Practices.AsQueryable();
-            iq = IncludeDefault(iq);
-
-            iq = iq.Where(x => x.StatusTypeEnum == Enum.StatusTypeEnum.Succeed);
-
+            var baseList = await GetCachePracticeDtos();
 
             if (input.ChoiceCount > 0)
             {
-                var iqList = await iq.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.Choice).OrderBy(x => Guid.NewGuid()).Take(input.ChoiceCount).ToListAsync();
-                baseList.AddRange(iqList);
+                var iqList = baseList.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.Choice).OrderBy(x => Guid.NewGuid()).Take(input.ChoiceCount).ToList();
+                list.AddRange(iqList);
             }
             if (input.MoreCount > 0)
             {
-                var iqList = await iq.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.More).OrderBy(x => Guid.NewGuid()).Take(input.MoreCount).ToListAsync();
-                baseList.AddRange(iqList);
+                var iqList = baseList.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.More).OrderBy(x => Guid.NewGuid()).Take(input.MoreCount).ToList();
+                list.AddRange(iqList);
             }
             if (input.SingleCount > 0)
             {
-                var iqList = await iq.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.Single).OrderBy(x => Guid.NewGuid()).Take(input.SingleCount).ToListAsync();
-                baseList.AddRange(iqList);
+                var iqList = baseList.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.Single).OrderBy(x => Guid.NewGuid()).Take(input.SingleCount).ToList();
+                list.AddRange(iqList);
             }
             if (input.UnChoiceCount > 0)
             {
-                var iqList = await iq.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.Single || x.ChoiceTyope == Enum.ChoiceTyope.More).OrderBy(x => Guid.NewGuid()).Take(input.UnChoiceCount).ToListAsync();
-                baseList.AddRange(iqList);
+                var iqList = baseList.Where(x => x.ChoiceTyope == Enum.ChoiceTyope.Single || x.ChoiceTyope == Enum.ChoiceTyope.More).OrderBy(x => Guid.NewGuid()).Take(input.UnChoiceCount).ToList();
+                list.AddRange(iqList);
             }
-            list = await MapToGetListOutputDtosAsync(baseList);
 
             return new PagedResultDto<PracticeDto>(list.Count, list);
 
@@ -112,9 +109,9 @@ namespace Yun.Share.Voice.Application.Serve
 
         public async Task<PracticeDto> GetRandomAsync(PracticeListInput input)
         {
-            var perItem = await NextFilter(input).OrderBy(x=> Guid.NewGuid()).FirstOrDefaultAsync();
-
-            return perItem == null ? new PracticeDto() : await GetMapDto(perItem);
+            var baseList = await GetCachePracticeDtos();
+            var perItem = baseList.OrderBy(x=> Guid.NewGuid()).FirstOrDefault();
+            return perItem == null ? new PracticeDto() : perItem;
         }
 
         public override async Task<PracticeDto> UpdateAsync(PracticeDto input)
@@ -189,6 +186,16 @@ namespace Yun.Share.Voice.Application.Serve
         public override async Task<PagedResultDto<PracticeDto>> GetListAsync(PracticeListInput input)
         {
             return await base.GetListAsync(input);
+        }
+
+        public async Task<int> GetSucceedCount()
+        {
+            var iq = _db.Practices.AsQueryable();
+            iq = IncludeDefault(iq);
+
+            iq = iq.Where(x => x.StatusTypeEnum == Enum.StatusTypeEnum.Succeed);
+
+            return await iq.CountAsync();
         }
         /// <summary>
         /// 初始化外键
@@ -472,6 +479,49 @@ namespace Yun.Share.Voice.Application.Serve
                             });
                 return list.Count;
             }
+        }
+
+        public async Task<List<PracticeDto>> GetCachePracticeDtos()
+        {
+            var str = _configuration["Cache:Practice:Succeed"];
+
+            var list = _cache.Get(str);
+
+            if (list == null)
+            {
+                var items = await GetInitList();
+                _cache.Set(str, items);
+            }
+            else
+            {
+                var succeedCount = await GetSucceedCount();
+
+                var dtoList = (List<PracticeDto>)list;
+
+                if (dtoList.Count != succeedCount)
+                {
+                    var items = await GetInitList();
+                    _cache.Set(str, items);
+                }
+            }
+
+            var baseList = _cache.Get(str);
+
+            var dtos = (List<PracticeDto>)list;
+
+            return dtos;
+        }
+
+        private async Task<List<PracticeDto>> GetInitList()
+        {
+            var cacheCount = Convert.ToInt32(_configuration["Cache:Practice:CacheCount"]);
+            PracticeListInput input = new PracticeListInput
+            {
+                StatusTypeEnum = Enum.StatusTypeEnum.Succeed,
+                MaxResultCount = cacheCount,  // 默认缓存一万条数据
+            };
+            var dtolist = await GetListAsync(input);
+            return dtolist.Items;
         }
     }
 }

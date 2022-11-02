@@ -164,26 +164,41 @@ namespace Yun.Share.Voice.Application.Serve
 
         public async Task<string> Create(LoginInputDto input)
         {
+            var userId = _jwtTokenServer.GetCurrentUserId();
+            if (!userId.HasValue)
+            {
+                throw new Exception($"当前无登录");
+            }
+            var user = await _db.Users.FindAsync(userId.Value);
+            if (user == null)
+            {
+                throw new Exception($"当前无登录");
+            }
+            if (user.UserTypeEnum != Enum.UserTypeEnum.Sale && user.UserTypeEnum != Enum.UserTypeEnum.Admin)
+            {
+                throw new Exception("只有销售员和管理员可以添加账户");
+            }
+            var baseUser = await _db.Users.FirstOrDefaultAsync(x => x.Phone == input.PhoneNumber);
+
+            if(baseUser!= null)
+            {
+                throw new Exception("当前用户已有账号");
+            }
+
             var pass = Md5Encrypt.Encrypt(input.Password);
 
-            User user = new User()
+            User u = new User()
             {
                 Password = pass,
                 Phone = input.PhoneNumber,
                 Name = input.PhoneNumber,
-                UserTypeEnum = Enum.UserTypeEnum.Admin,
+                UserTypeEnum = Enum.UserTypeEnum.Empty,
                 StrTime = DateTime.Now,
                 UserStatusTypeEnum = Enum.UserStatusTypeEnum.Formal
             };
-            await _db.Users.AddAsync(user);
+            await _db.Users.AddAsync(u);
             await _db.SaveChangesAsync();
-            var jwtInput = new JwtAuthorizationTokenInput
-            {
-                Name = user.Name,
-                PhoneNumber = input.PhoneNumber,
-                UserId = user.Id
-            };
-            return _jwtTokenServer.GetToken(jwtInput);
+            return "success";
         }
     }
 }
