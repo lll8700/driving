@@ -73,7 +73,7 @@
         "devServer" : {
             "https" : false,
             "host" : "localhost",
-            "port" : 81,
+            "port" : 80,
             "proxy" : {
                 "/api" : {
                     "target" : "http://106.14.209.175:800",
