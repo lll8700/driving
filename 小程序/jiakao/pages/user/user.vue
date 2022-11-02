@@ -5,7 +5,7 @@
 
 		</view>
 		<view class="m10">
-			<button v-if="userDto.userTypeEnum === 10 || userDto.userTypeEnum === 30" class="mini-btn" type="primary">开通账号</button>
+			<button v-if="userDto.userTypeEnum === 10 || userDto.userTypeEnum === 30" class="mini-btn" type="primary" @click="add()">开通账号</button>
 		</view>
 	</view>
 </template>
@@ -22,9 +22,14 @@
 			this.userDto = user;
 		},
 		methods: {
+			add(){
+				uni.navigateTo({
+					url: '/pages/user/add'
+				});
+			},
 			toUrl(type) {
 				uni.navigateTo({
-					url: '/pages/answer/answer?type=' + type,
+					url: '/pages/errlist/errlist'
 				});
 			},
 		},

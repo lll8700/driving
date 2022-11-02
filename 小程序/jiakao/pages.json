@@ -47,7 +47,31 @@
                 "enablePullDownRefresh": false
             }
             
-        }
+        },
+		{
+		    "path" : "pages/user/add",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "添加账号",
+		        "enablePullDownRefresh": false
+		    } 
+		},
+		{
+		    "path" : "pages/errlist/errlist",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "错题列表",
+		        "enablePullDownRefresh": false
+		    } 
+		},
+		{
+		    "path" : "pages/errlist/detail",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "详情",
+		        "enablePullDownRefresh": false
+		    } 
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -60,11 +84,27 @@
 		"iconfontSrc": "static/iconfont.ttf",
 		"list": [{
 				"pagePath": "pages/index/index",
-				"text": "首页"
+				"text": "首页",
+				"fontSize": "24px",
+				"iconfont": {
+				          "text": "\ue102",
+				          "selectedText": "\ue103",
+				          "fontSize": "17px",
+				          "color": "#000000",
+				          "selectedColor": "#0000ff"
+				        }
 			},
 			{
 				"pagePath": "pages/user/user",
-				"text": "个人中心"
+				"text": "个人中心",
+				 "fontSize": "24px",
+				"iconfont": {
+				          "text": "\ue102",
+				          "selectedText": "\ue103",
+				          "fontSize": "17px",
+				          "color": "#000000",
+				          "selectedColor": "#0000ff"
+				        }
 			}
 		]
 	}
