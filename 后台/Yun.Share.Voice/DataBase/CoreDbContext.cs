@@ -47,6 +47,10 @@ namespace Yun.Share.Voice.DataBase
 
         public virtual DbSet<User> Users { get; set; }
 
+        public virtual DbSet<User_Jurisdiction> User_Jurisdictions { get; set; }
+
+        public virtual DbSet<Config> Configs { get; set; }
+
         #endregion
 
         #region 重写

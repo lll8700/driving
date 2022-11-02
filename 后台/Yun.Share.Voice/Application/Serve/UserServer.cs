@@ -164,8 +164,6 @@ namespace Yun.Share.Voice.Application.Serve
 
             var list = entities.Select(x => x.MapTo<UserDto, User>()).ToList();
 
-           
-
             return list;
         }
 

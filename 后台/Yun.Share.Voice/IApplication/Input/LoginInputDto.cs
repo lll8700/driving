@@ -21,6 +21,12 @@ namespace Yun.Share.Voice.IApplication.Input
         /// 微信ID
         /// </summary>
         public virtual string OpenId { get; set; }
+
+        public List<Guid> CarsIds { get; set; }
+
+        public List<Guid> SubjectTypes { get; set; }
+
+        public decimal? Price { get; set; }
     }
     public class TellPhonenumberInputDto
     {

@@ -31,6 +31,9 @@ namespace Yun.Share.Voice
                 ;
             CreateMap<Option, OptionDto>(MemberList.None);
             CreateMap<ErrorPracticeId, ErrorPracticeIdDto>(MemberList.None);
+            CreateMap<User_Jurisdiction, User_JurisdictionDto>(MemberList.None)
+                .ForMember(x => x.User_JurisdictionTypeEnumName, s => s.Ignore());
+                
             CreateMap<ErrorPracticeLog, ErrorPracticeLogDto>(MemberList.None)
                    .ForMember(x => x.ErrorPracticeIdDtos, s => s.Ignore());
         }

@@ -48,5 +48,10 @@ namespace Yun.Share.Voice.Models.Entities
         public DateTime StrTime { get; set; }
 
         public DateTime? EndTime { get; set; }
+
+        /// <summary>
+        /// 开账户实际金额
+        /// </summary>
+        public decimal? Price { get; set; }
     }
 }

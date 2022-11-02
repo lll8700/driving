@@ -65,6 +65,11 @@ namespace Yun.Share.Voice.IApplication.Dtos
         public UserStatusTypeEnum? UserStatusTypeEnum { get; set; }
 
         public DateTime? EndTime { get; set; }
+
+        /// <summary>
+        /// 开账户实际金额
+        /// </summary>
+        public decimal? Price { get; set; }
     }
 
     public class FileGroupTableDto
