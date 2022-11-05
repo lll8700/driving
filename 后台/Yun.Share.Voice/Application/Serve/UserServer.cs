@@ -152,6 +152,11 @@ namespace Yun.Share.Voice.Application.Serve
             {
                 iq = iq.Where(x => !input.UnIds.Contains(x.Id));
             }
+            if(input.IsSelfCreate == true)
+            {
+                var userId = _jwtTokenServer.GetCurrentUserId();
+                iq = iq.Where(x => x.CreatorId == userId.Value);
+            }
             return iq;
         }
 
@@ -163,6 +168,15 @@ namespace Yun.Share.Voice.Application.Serve
             }
 
             var list = entities.Select(x => x.MapTo<UserDto, User>()).ToList();
+
+            var createIds = list.Select(x => x.CreatorId).ToList();
+
+            var users = await _db.Users.Where(x => createIds.Contains(x.Id)).Select(x => new { x.Id, x.CreatorId,x.Name }).ToListAsync();
+
+            list.ForEach(item =>
+            {
+                item.CreateUserName = users.FirstOrDefault(x => x.Id == item.CreatorId)?.Name;
+            });
 
             return list;
         }

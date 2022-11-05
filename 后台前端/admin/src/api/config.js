@@ -53,3 +53,18 @@ export function deleteCar(query) {
   })
 }
 
+export function getFist() {
+  return request({
+    url: api.api.config.getfist,
+    method: 'get'
+  })
+}
+
+export function updateConfig(query) {
+  return request({
+    url: api.api.config.update,
+    method: 'post',
+    data: query
+  })
+}
+

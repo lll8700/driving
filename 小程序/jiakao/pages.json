@@ -57,6 +57,14 @@
 		    } 
 		},
 		{
+		    "path" : "pages/user/list",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "账户列表",
+		        "enablePullDownRefresh": false
+		    } 
+		},
+		{
 		    "path" : "pages/errlist/errlist",
 		    "style" :                                                                                    
 		    {

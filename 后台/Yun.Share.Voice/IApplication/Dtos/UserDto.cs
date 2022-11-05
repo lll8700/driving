@@ -39,6 +39,11 @@ namespace Yun.Share.Voice.IApplication.Dtos
         public string StrTimeName => StrTime.ToString("yyyy-MM-dd HH:mm:ss");
 
         public string EndTimeName => EndTime.HasValue ? EndTime.Value.ToString("yyyy-MM-dd HH:mm:ss") : "";
+
+        public decimal? Price { get; set; }
+        public string CreateRemarks { get; set; }
+
+        public string CreateUserName { get; set; }
     }
 
     public class CreateUserDto
@@ -101,4 +106,6 @@ namespace Yun.Share.Voice.IApplication.Dtos
         public virtual UserDto UserDto { get; set; }
     }
 
+
+    
 }

@@ -47,6 +47,7 @@
       <el-table-column prop="userStatusTypeEnumName" label="状态" width="180" />
       <el-table-column prop="strTimeName" label="开始" width="180" />
       <el-table-column prop="endTimeName" label="结束" width="180" />
+      <el-table-column prop="createUserName" label="开户人" width="180" />
     </el-table>
     <template>
       <pagination

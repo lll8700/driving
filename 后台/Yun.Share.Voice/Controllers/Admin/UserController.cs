@@ -47,6 +47,11 @@ namespace Yun.Share.Voice.Controllers.Admin
         {
             return _server.UpdateAsync(input);
         }
-       
+
+        #region Web
+
+
+        #endregion
+
     }
 }

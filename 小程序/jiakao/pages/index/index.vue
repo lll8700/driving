@@ -17,7 +17,7 @@
 				</uni-col>
 			</uni-row>
 		</uni-section>
-		<uni-section title="切换题库" type="line">
+		<uni-section title="切换科目" type="line">
 			<uni-card :is-shadow="false" class="btn">
 				<uni-row class="demo-uni-row">
 					<uni-col v-for="(t,index) in queTypeArrs" :key="index" :span="8" class="carWrap">
@@ -69,6 +69,9 @@
 			}
 		},
 		mounted() {
+			
+		},
+		onShow() {
 			this.initData();
 		},
 		methods: {
@@ -79,23 +82,42 @@
 				var user = uni.getStorageSync("User");
 				
 					that.userDto = user;
-				
-					that.$http(that.$api.CarType.list, "POST", {
-						Sorting: "CreationTime"
-					}).then(res => {
-						that.typeArrs = res.data.items;
-						that.CarType = that.typeArrs[0]
+					that.$http(that.$api.config.home, "get").then(res => {
+						if(!res.data || !res.data.carTypeDtos) {
+							uni.navigateTo({
+								url: '/pages/login/login',
+							});
+						}
+						that.typeArrs = res.data.carTypeDtos
+						that.queTypeArrs = res.data.subjectTypeDtos
 					})
-					that.$http(that.$api.SubjectType.list, 'POST', {
-						Sorting: "CreationTime"
-					}).then(res => {
-						that.queTypeArrs = res.data.items;
-						that.Subject = that.queTypeArrs[0]
-					})
+					
+					
+					
+					
+					// that.$http(that.$api.CarType.list, "POST", {
+					// 	Sorting: "CreationTime"
+					// }).then(res => {
+					// 	that.typeArrs = res.data.items;
+					// 	that.CarType = that.typeArrs[0]
+					// })
+					// that.$http(that.$api.SubjectType.list, 'POST', {
+					// 	Sorting: "CreationTime"
+					// }).then(res => {
+					// 	that.queTypeArrs = res.data.items;
+					// 	that.Subject = that.queTypeArrs[0]
+					// })
 				
 			},
 			toUrl(type) {
 				var that = this;
+				if(!that.CarType || !that.CarType.id || !that.Subject || !that.Subject.id) {
+					uni.showToast({
+						icon:'error',
+						title:'请先选择科目和车型!'
+					})
+					return
+				}
 				if (type === 2) {
 					uni.navigateTo({
 						url: '/pages/test/start?type=' + type + '&carType=' + that.CarType.id + '&subject=' + that

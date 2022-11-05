@@ -26,6 +26,8 @@ namespace Yun.Share.Voice.IApplication.Input
 
         public List<Guid> SubjectTypes { get; set; }
 
+        public string CreateRemarks { get; set; }
+
         public decimal? Price { get; set; }
     }
     public class TellPhonenumberInputDto

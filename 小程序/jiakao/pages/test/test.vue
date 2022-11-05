@@ -158,16 +158,19 @@
 				
 				if(this.checkSel.length === this.count) { // 全部答完了 
 					this.item.checkSel = this.checkSel
-					if(this.anstype === 0) { // 答题结束后 如果是全部正确则自动下一个
-						var isNext = true
-						
-						for(var i = 0; i < that.isOptions.length; i++) {
-							var item = that.checkSel.filter(s => s.seq === that.isOptions[i].seq);
-							if(item.length === 0) {
-								isNext = false
-								break;
-							}
+					
+					var isNext = true
+					
+					for(var i = 0; i < that.isOptions.length; i++) {
+						var item = that.checkSel.filter(s => s.seq === that.isOptions[i].seq);
+						if(item.length === 0) {
+							isNext = false
+							break;
 						}
+					}
+					
+					if(this.anstype === 0) { // 答题结束后 如果是全部正确则自动下一个
+						
 						if(isNext) {
 							this.clearData()
 							
@@ -178,10 +181,17 @@
 						
 					}else if(this.anstype === 3) { // 考试也要下一个
 						if(!this.isEdit) {
+							if(!isNext) {
+								uni.showToast({
+									icon:'none',
+									title:'答错了'
+								})
+							}
 							setTimeout(()=>{
 								this.clearData()
 								this.$emit('next');
 							},500)
+							
 						}
 					}
 				}

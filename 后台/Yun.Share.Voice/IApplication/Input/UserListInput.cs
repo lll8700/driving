@@ -17,5 +17,7 @@ namespace Yun.Share.Voice.IApplication.Input
         /// 账号状态
         /// </summary>
         public UserStatusTypeEnum? UserStatusTypeEnum { get; set; }
+
+        public bool? IsSelfCreate { get; set; }
     }
 }

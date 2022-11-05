@@ -19,11 +19,15 @@ namespace Yun.Share.Voice.Application.Serve
         private readonly IJwtTokenServer _jwtTokenServer;
         private readonly CoreDbContext _db;
         private readonly IWeCharCodeServer _weCharCodeServer;
-        public LoginServer(IJwtTokenServer jwtTokenServer, CoreDbContext db, IWeCharCodeServer weCharCodeServer)
+        private readonly IUser_JurisdictionServer _user_JurisdictionServer;
+        public LoginServer(IJwtTokenServer jwtTokenServer, CoreDbContext db, IWeCharCodeServer weCharCodeServer
+            , IUser_JurisdictionServer user_JurisdictionServer
+            )
         {
             _jwtTokenServer = jwtTokenServer;
             _db = db;
             _weCharCodeServer = weCharCodeServer;
+            _user_JurisdictionServer = user_JurisdictionServer;
         }
         public async Task<string> Login(LoginInputDto input)
         {
@@ -109,16 +113,21 @@ namespace Yun.Share.Voice.Application.Serve
             User user = await _db.Users.FirstOrDefaultAsync(x => 
             x.Password == pass 
             && x.Phone == input.PhoneNumber
-            //&& x.UserTypeEnum == Enum.UserTypeEnum.Empty
-            && x.UserStatusTypeEnum == Enum.UserStatusTypeEnum.Formal
+            // && x.UserTypeEnum == Enum.UserTypeEnum.Empty
+            // && x.UserStatusTypeEnum == Enum.UserStatusTypeEnum.Formal
              && x.StrTime < date
              && x.EndTime == null || x.EndTime > date
             );
+
 
             LoginDto dto = new LoginDto();
 
             if (user != null)
             {
+                if(user.UserStatusTypeEnum == Enum.UserStatusTypeEnum.Invalid)
+                {
+                    throw new Exception("您的账户已被冻结");
+                }
                 var jwtInput = new JwtAuthorizationTokenInput
                 {
                     Name = user.Name,
@@ -194,10 +203,21 @@ namespace Yun.Share.Voice.Application.Serve
                 Name = input.PhoneNumber,
                 UserTypeEnum = Enum.UserTypeEnum.Empty,
                 StrTime = DateTime.Now,
-                UserStatusTypeEnum = Enum.UserStatusTypeEnum.Formal
+                UserStatusTypeEnum = Enum.UserStatusTypeEnum.Formal,
+                CreateRemarks = input.CreateRemarks,
+                Price = input.Price
             };
+           
             await _db.Users.AddAsync(u);
             await _db.SaveChangesAsync();
+            User_JurisdictionInput jurs = new User_JurisdictionInput()
+            {
+                Cars = input.CarsIds,
+                SubjectTypes = input.SubjectTypes,
+                UserId = u.Id
+            };
+            await  _user_JurisdictionServer.CreateAsync(jurs);
+
             return "success";
         }
     }

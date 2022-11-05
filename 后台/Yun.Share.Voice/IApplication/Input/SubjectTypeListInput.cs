@@ -8,6 +8,6 @@ namespace Yun.Share.Voice.IApplication.Input
 {
     public class SubjectTypeListInput : ListInputBaseDto
     {
-
+        public bool? IsIds { get; set; }
     }
 }

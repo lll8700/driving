@@ -53,5 +53,7 @@ namespace Yun.Share.Voice.Models.Entities
         /// 开账户实际金额
         /// </summary>
         public decimal? Price { get; set; }
+
+        public string CreateRemarks { get; set; }
     }
 }

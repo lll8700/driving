@@ -63,6 +63,10 @@ namespace Yun.Share.Voice.Application.Serve
             {
                 iq = iq.Where(x => x.Name.Contains(input.Name));
             }
+            if (input.Ids.IsNotEmpty() || input.IsIds == true)
+            {
+                iq = iq.Where(x => input.Ids.Contains(x.Id));
+            }
             return iq;
         }
 
