@@ -267,7 +267,7 @@ namespace Yun.Share.Voice.Utils
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="file">导出路径(包括文件名与扩展名)</param>
-        public byte[] TableToExcelOutStream(DataTable dt,string fileName)
+        public MemoryStream TableToExcelOutStream(DataTable dt,string fileName)
         {
             IWorkbook workbook;
             string fileExt = Path.GetExtension(fileName).ToLower();
@@ -296,9 +296,9 @@ namespace Yun.Share.Voice.Utils
             //转为字节数组  
             MemoryStream stream = new MemoryStream();
             workbook.Write(stream);
-            var bys = stream.ToArray();
-            stream.Close();
-            return bys; 
+            //var bys = stream.ToArray();
+            //stream.Close();
+            return stream; 
         }
 
         /// <summary>
@@ -362,6 +362,38 @@ namespace Yun.Share.Voice.Utils
 
             return tb;
         }
+
+
+        /// <summary>
+        /// List to DataTable
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public DataTable ToDataTable(List<string> titles ,List<List<string>> datas)
+        {
+            var tb = new DataTable();
+
+            foreach(var item in titles)
+            {
+                tb.Columns.Add(item);
+            }
+            foreach (var items in datas)
+            {
+                var values = new object[items.Count];
+
+                for (int i = 0; i < values.Length; i++)
+                {
+                    values[i] = items[i];
+                }
+
+                tb.Rows.Add(values);
+            }
+
+            return tb;
+        }
+
+
 
         /// <summary>
         /// 自定义获取对象的列进行导出

@@ -100,6 +100,12 @@ namespace Yun.Share.Voice.Controllers.Admin
         {
             return _server.GetTestListAsync(input);
         }
+        [HttpPost]
+        [Route("outexcel")]
+        public Task<ExcelData> GetCommissionFormListExcel(PracticeListInput input)
+        {
+            return _server.GetCommissionFormListExcel(input);
+        }
 
     }
 }

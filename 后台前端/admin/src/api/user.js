@@ -38,3 +38,18 @@ export function create(query) {
 export function logout() {
   return true
 }
+
+export function update(query) {
+  return request({
+    url: api.api.user.update,
+    method: 'post',
+    data: query
+  })
+}
+export function deleteUser(query) {
+  return request({
+    url: api.api.user.delete,
+    method: 'post',
+    data: query
+  })
+}

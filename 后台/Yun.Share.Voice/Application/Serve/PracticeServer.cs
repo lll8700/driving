@@ -15,6 +15,7 @@ using Yun.Share.Voice.Utils;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Yun.Share.Voice.Application.Serve
 {
@@ -523,5 +524,84 @@ namespace Yun.Share.Voice.Application.Serve
             var dtolist = await GetListAsync(input);
             return dtolist.Items;
         }
+
+        #region  导出Excel
+
+        /// <summary>
+        /// 导出题库
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<ExcelData> GetCommissionFormListExcel(PracticeListInput input)
+        {
+
+            input.SkipCount = 0;
+            input.MaxResultCount = int.MaxValue;
+            var fromData = await GetListAsync(input);
+            var tableName = "题库数据";
+            var fileName = $"{tableName}.xlsx";
+            ExcelUtil excel = new ExcelUtil();
+            List<string> titles = new List<string>
+            {
+                "序号",
+                "题型",
+                "图片",
+                "题目",
+                "选项一",
+                "选项二",
+                "选项三",
+                "选项四",
+                "正确答案",
+                "答题技巧一",
+                "答题技巧二",
+                "题目解析"
+            };
+            List<List<string>> list = new List<List<string>>();
+            var index = 1;
+            foreach(var data in fromData.Items)
+            {
+                List<string> items = new List<string>();
+                items.Add(index.ToString());
+                items.Add(data.ChoiceTyopeEnmName);
+                var images = string.Join(',', data.PracticeImages.Select(x => x.Url));
+                items.Add(images);
+                var ops = data.Options.OrderBy(x => x.Index).ToList();
+                var isOps = ops.Where(x => x.IsCorrect).Select(x=>x.Title.Trim().Substring(0,1)).ToList();
+                foreach(var o in ops)
+                {
+                    items.Add(o.Title);
+                }
+                for(var i = ops.Count ; i < 5; i++)
+                {
+                    items.Add("");
+                }
+                items.Add(string.Join(',', isOps));
+                items.Add(data.Skill);
+                items.Add(data.SkillLast);
+                items.Add(data.Introduce);
+                list.Add(items);
+                index++;
+            }
+          
+            var dt = excel.ToDataTable(titles,list);
+            var excelPath = _configuration["Authentication:Oss:OutExcelPath"];
+            string target = Directory.GetCurrentDirectory() + "/" + excelPath;
+            var isOut = excel.TableToExcel(dt, target + fileName);
+            ExcelData excelData = new ExcelData
+            {
+                Status = false,
+                Url = null,
+            };
+            if(isOut)
+            {
+                excelData.Status = true;
+                excelData.Url = excelPath + fileName;
+            }
+
+            //以字符流的形式下载文件
+            return excelData;
+        }
+        #endregion
+
     }
 }

@@ -42,7 +42,8 @@ var api = {
   user: {
     list: portUrl + '/user/' + 'list',
     create: portUrl + '/user/' + 'create',
-    update: portUrl + '/user/' + 'update'
+    update: portUrl + '/user/' + 'update',
+    delete: portUrl + '/user/' + 'delete'
   },
   config: {
     getfist: portUrl + '/config/' + 'getfist',
