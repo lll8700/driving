@@ -38,7 +38,7 @@ namespace Yun.Share.Voice.IApplication.Dtos
 
         public string StrTimeName => StrTime.ToString("yyyy-MM-dd HH:mm:ss");
 
-        public string EndTimeName => EndTime.HasValue ? EndTime.Value.ToString("yyyy-MM-dd HH:mm:ss") : "";
+        public string EndTimeName => EndTime.HasValue ? EndTime.Value.ToString("yyyy-MM-dd HH:mm:ss") : "长期有效";
 
         public decimal? Price { get; set; }
         public string CreateRemarks { get; set; }

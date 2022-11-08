@@ -41,13 +41,19 @@ namespace Yun.Share.Voice.Application.Serve
             {
                 throw new Exception("只有销售员和管理员可以添加账户");
             }
+            if (!input.UserStatusTypeEnum.HasValue)
+                input.UserStatusTypeEnum = Enum.UserStatusTypeEnum.Formal;
+
+            if (!input.UserTypeEnum.HasValue)
+                input.UserTypeEnum = Enum.UserTypeEnum.Empty;
 
             User per = new User();
-            per.UserStatusTypeEnum = Enum.UserStatusTypeEnum.Formal;
-            per.UserTypeEnum = Enum.UserTypeEnum.Empty;
+            per.UserStatusTypeEnum = input.UserStatusTypeEnum.Value;
+            per.UserTypeEnum = input.UserTypeEnum.Value;
             per.StrTime = DateTime.Now;
             per.Name = input.Phone;
             per.Phone = input.Phone;
+            per.EndTime = input.EndTime;
             per.Password = Md5Encrypt.Encrypt(input.Password);
             await _db.Users.AddAsync(per);
             await _db.SaveChangesAsync();
@@ -81,6 +87,14 @@ namespace Yun.Share.Voice.Application.Serve
             
             await _db.SaveChangesAsync();
             return per.MapTo<UserDto, User>();
+        }
+
+        public async Task<bool> Delete(CreateUserDto input)
+        {
+            User per = await _db.Users.FindAsync(input.Id);
+            _db.Users.Remove(per);
+            await  _db.SaveChangesAsync();
+            return true;
         }
 
         public override async Task<PagedResultDto<UserDto>> GetListAsync(UserListInput input)

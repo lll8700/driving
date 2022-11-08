@@ -52,5 +52,11 @@ namespace Yun.Share.Voice.IApplication
         Task<int> GetSucceedCount();
 
         Task<List<PracticeDto>> GetCachePracticeDtos();
+        /// <summary>
+        /// 导出题库
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<ExcelData> GetCommissionFormListExcel(PracticeListInput input);
     }
 }

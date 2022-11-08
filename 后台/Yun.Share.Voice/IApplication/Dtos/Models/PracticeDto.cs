@@ -67,4 +67,17 @@ namespace Yun.Share.Voice.IApplication.Dtos.Models
         /// </summary>
         public string ImageSrc { get; set; }
     }
+
+    public class ExcelData
+    {
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public bool Status { get; set; }
+
+        /// <summary>
+        /// 地址
+        /// </summary>
+        public string Url { get; set; }
+    }
 }

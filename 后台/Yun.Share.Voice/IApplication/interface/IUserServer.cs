@@ -18,6 +18,6 @@ namespace Yun.Share.Voice.IApplication
         Task<UserDto> GetAsync(Guid Id);
         Task<UserDto> UpdateAsync(CreateUserDto input);
         Task<PagedResultDto<UserDto>> GetListAsync(UserListInput input);
-
+        Task<bool> Delete(CreateUserDto input);
     }
 }

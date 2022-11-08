@@ -47,6 +47,12 @@ namespace Yun.Share.Voice.Controllers.Admin
         {
             return _server.UpdateAsync(input);
         }
+        [HttpPost]
+        [Route(RouteName.DeleteAction)]
+        public Task<bool> Delete(CreateUserDto input)
+        {
+            return _server.Delete(input);
+        }
 
         #region Web
 
