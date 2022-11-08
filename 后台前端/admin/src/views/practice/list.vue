@@ -146,12 +146,13 @@
 
 <script>
 const defaultFormThead = ['apple', 'banana']
-import { fetchList, exlcel, uploadZip, deleteItem, create } from '@/api/practice'
+import { fetchList, exlcel, uploadZip, deleteItem, create, outExcel } from '@/api/practice'
 import { getCarTypeList, getSubjectTypeList, getEnum } from '@/api/config'
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 import UploadZipComponent from '@/components/UploadExcel/zip.vue'
 import Pagination from '@/components/Pagination'
-import { Message } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
+import fileDownload from 'js-file-download'
 export default {
   components: { UploadExcelComponent, Pagination, UploadZipComponent },
   data() {
@@ -167,7 +168,9 @@ export default {
       formThead: defaultFormThead, // 默认表头 Default header
       total: 0,
       listQuery: {
-        limit: 10
+        limit: 10,
+        subjectTypeId: undefined,
+        carTypeId: undefined
       },
       carList: [], // 车型
       subLIst: [], // 科目
@@ -366,7 +369,35 @@ export default {
       })
     },
     outExcel() {
-      console.log('outExcel')
+      var that = this
+      if (!that.listQuery.carTypeId) {
+        Message({
+          message: '请先选择车型',
+          type: 'error',
+          duration: 2 * 1000
+        })
+        return
+      }
+      if (!that.listQuery.subjectTypeId) {
+        Message({
+          message: '请先选择科目',
+          type: 'error',
+          duration: 2 * 1000
+        })
+        return
+      }
+      MessageBox.confirm('确定导出题库？', '系统提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        outExcel(that.listQuery).then(response => {
+          var buff = Buffer.from(response)
+          fileDownload(buff, decodeURI('驾考题库' + '.xlsx'))
+        })
+      }).catch(() => {
+
+      })
     },
     handleSuccess({ results, header }) { // 文件上传后成功回调
       this.inputExcel.ResultsLists = []

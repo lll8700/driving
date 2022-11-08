@@ -267,7 +267,7 @@ namespace Yun.Share.Voice.Utils
         /// </summary>
         /// <param name="dt"></param>
         /// <param name="file">导出路径(包括文件名与扩展名)</param>
-        public MemoryStream TableToExcelOutStream(DataTable dt,string fileName)
+        public byte[] TableToExcelOutStream(DataTable dt,string fileName)
         {
             IWorkbook workbook;
             string fileExt = Path.GetExtension(fileName).ToLower();
@@ -296,9 +296,9 @@ namespace Yun.Share.Voice.Utils
             //转为字节数组  
             MemoryStream stream = new MemoryStream();
             workbook.Write(stream);
-            //var bys = stream.ToArray();
-            //stream.Close();
-            return stream; 
+            var bys = stream.ToArray();
+            stream.Close();
+            return bys; 
         }
 
         /// <summary>

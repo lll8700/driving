@@ -92,6 +92,7 @@ namespace Yun.Share.Voice
                                              //   )
                     .AllowAnyMethod()
                     .AllowAnyHeader()
+                    .WithExposedHeaders("Content-Disposition")
                     .AllowCredentials();//指定处理cookie
                 });
             });

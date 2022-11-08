@@ -37,7 +37,8 @@ var api = {
     excel: portUrl + '/Practice/' + 'excel',
     zip: portUrl + '/Practice/' + 'zip',
     delete: portUrl + '/Practice/' + 'delete',
-    create: portUrl + '/Practice/' + 'create'
+    create: portUrl + '/Practice/' + 'create',
+    outexcel: portUrl + '/Practice/' + 'outexcel'
   },
   user: {
     list: portUrl + '/user/' + 'list',
