@@ -18,6 +18,7 @@
       <el-button @click="getSubList"> 查询</el-button>
       <el-button @click="showExcel"> 导入题库</el-button>
       <el-button @click="() => { imageDialogVisible = true }"> 导入图片</el-button>
+      <el-button @click="outExcel()"> 导出题库</el-button>
     </div>
     <el-dialog v-el-drag-dialog :visible.sync="excelDialogVisible" title="导入题型" @dragDialog="handleDrag">
       <el-select ref="select" v-model="inputExcel.carTypeId" placeholder="请选择车型">
@@ -363,6 +364,9 @@ export default {
           this.getList()
         }
       })
+    },
+    outExcel() {
+      console.log('outExcel')
     },
     handleSuccess({ results, header }) { // 文件上传后成功回调
       this.inputExcel.ResultsLists = []
