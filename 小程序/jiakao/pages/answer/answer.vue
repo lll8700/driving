@@ -111,6 +111,7 @@
 		onLoad: function(option) {
 			this.input.carTypeId = option.carType;
 			this.input.subjectTypeId = option.subject;
+			this.input.practiceTypeId = option.practiceTypeId;
 			this.input.ids = [];
 			this.next();
 		},

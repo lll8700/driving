@@ -4,12 +4,19 @@
       <el-checkbox-group>
         <el-input v-model="listQuery.name" placeholder="标题关键字" width="100" />
         <el-select ref="select" v-model="listQuery.carTypeId" placeholder="查询车型">
+          <el-option label="全部" value="" />
           <el-option v-for="item in carList" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
         <el-select ref="select" v-model="listQuery.subjectTypeId" placeholder="查询科目">
+          <el-option label="全部" value="" />
           <el-option v-for="item in subLIst" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
+        <el-select ref="select" v-model="listQuery.practiceTypeId" placeholder="题库查询">
+          <el-option label="全部" value="" />
+          <el-option v-for="item in practiceTypeList" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
         <el-select ref="select" v-model="listQuery.choiceTyope" placeholder="题目类型">
+          <el-option label="全部" value="" />
           <el-option v-for="item in choiceTyopeList" :key="item.key" :label="item.label" :value="item.key" />
         </el-select>
       </el-checkbox-group>
@@ -44,6 +51,12 @@
     <el-table :key="key" :data="tableData" border fit highlight-current-row style="width: 100%">
       <el-table-column prop="title" label="标题" width="180" />
       <el-table-column prop="carType.name" label="车型" width="180" />
+      <el-table-column prop="subjectType.name" label="科目" width="180" />
+      <el-table-column label="题库" width="180">
+        <template slot-scope="scope">
+          {{ scope.row.practiceType ? scope.row.practiceType.name : "全量题库" }}
+        </template>
+      </el-table-column>
       <el-table-column prop="carType.subname" label="执照" width="180" />
       <el-table-column prop="choiceTyopeEnmName" label="类型" width="180" />
       <el-table-column label="选项" width="180">
@@ -76,9 +89,14 @@
             <el-option v-for="item in carList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="题库科目">
+        <el-form-item label="科目">
           <el-select ref="select" v-model="createInput.subjectTypeId" placeholder="科目">
             <el-option v-for="item in subLIst" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="题库">
+          <el-select ref="select" v-model="createInput.practiceTypeId" placeholder="题库">
+            <el-option v-for="item in practiceTypeList" :key="item.id" :label="item.name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="题库类型">
@@ -148,6 +166,7 @@
 const defaultFormThead = ['apple', 'banana']
 import { fetchList, exlcel, uploadZip, deleteItem, create, outExcel } from '@/api/practice'
 import { getCarTypeList, getSubjectTypeList, getEnum } from '@/api/config'
+import { getTypeList } from '@/api/practiceType'
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 import UploadZipComponent from '@/components/UploadExcel/zip.vue'
 import Pagination from '@/components/Pagination'
@@ -170,10 +189,12 @@ export default {
       listQuery: {
         limit: 10,
         subjectTypeId: undefined,
-        carTypeId: undefined
+        carTypeId: undefined,
+        practiceTypeId: undefined
       },
       carList: [], // 车型
       subLIst: [], // 科目
+      practiceTypeList: [], // 题库
       choiceTyopeList: [], // 选项
       imageZip: undefined,
       createInput: {},
@@ -202,6 +223,9 @@ export default {
       })
       getSubjectTypeList().then(res => {
         this.subLIst = res.items
+      })
+      getTypeList().then(res => {
+        this.practiceTypeList = res.items
       })
       getEnum('ChoiceTyope').then(res => {
         this.choiceTyopeList = res

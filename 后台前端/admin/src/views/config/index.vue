@@ -27,17 +27,26 @@
       </el-card>
 
     </div>
+    <div class="filter-container">
+      <el-card aria-label="">
+        题库
+        <practiceTypeTable />
+      </el-card>
+
+    </div>
   </div>
 </template>
 
 <script>
 import carTbale from './carType'
 import subjectTable from './subject'
+import practiceTypeTable from './practiceType'
+
 import { Message } from 'element-ui'
 import { getFist, updateConfig } from '@/api/config'
 export default {
   // eslint-disable-next-line vue/no-unused-components
-  components: { carTbale, subjectTable },
+  components: { carTbale, subjectTable, practiceTypeTable },
   data() {
     return {
       carList: [], // 车型

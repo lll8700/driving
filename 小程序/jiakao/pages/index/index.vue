@@ -33,6 +33,10 @@
 			<uni-card :is-shadow="false" class="btn">
 				<button v-if="userDto.phone" type="primary" class="mini-btn cbtn" @click="toUrl(1)" @getphonenumber="all" size="mini"
 					plain="true">全量题库</button>
+					
+					<button v-if="userDto.phone" type="primary" class="mini-btn cbtn" v-for="(item, index) in practiceTypes" 
+					@click="toUrl(1,item.id)" @getphonenumber="all" size="mini"
+						plain="true">{{ item.name }}</button>
 				<!-- <button v-else class="mini-btn" open-type="getPhoneNumber" @getphonenumber="all" size="mini"
 					plain="true">全量题库</button> -->
 			</uni-card>
@@ -66,6 +70,7 @@
 				typeArrs: [],
 				queTypeArrs: [],
 				userDto: {},
+				practiceTypes: [] 
 			}
 		},
 		mounted() {
@@ -89,18 +94,18 @@
 							});
 						}
 						that.typeArrs = res.data.carTypeDtos
+						if(that.typeArrs.length > 0) {
+							that.CarType = that.typeArrs[0];
+						}
 						that.queTypeArrs = res.data.subjectTypeDtos
 					})
 					
-					
-					
-					
-					// that.$http(that.$api.CarType.list, "POST", {
-					// 	Sorting: "CreationTime"
-					// }).then(res => {
-					// 	that.typeArrs = res.data.items;
-					// 	that.CarType = that.typeArrs[0]
-					// })
+					that.$http(that.$api.PracticeType.list, "POST", {
+						Sorting: "CreationTime"
+					}).then(res => {
+						that.practiceTypes = res.data.items;
+						console.log(that.practiceTypes)
+					})
 					// that.$http(that.$api.SubjectType.list, 'POST', {
 					// 	Sorting: "CreationTime"
 					// }).then(res => {
@@ -109,7 +114,10 @@
 					// })
 				
 			},
-			toUrl(type) {
+			toTypeUrl() {
+				
+			},
+			toUrl(type,id) {
 				var that = this;
 				if(!that.CarType || !that.CarType.id || !that.Subject || !that.Subject.id) {
 					uni.showToast({
@@ -126,7 +134,7 @@
 				} else {
 					uni.navigateTo({
 						url: '/pages/answer/answer?type=' + type + '&carType=' + that.CarType.id + '&subject=' +
-							that.Subject.id,
+							that.Subject.id + '&practiceTypeId=' + id,
 					});
 				}
 

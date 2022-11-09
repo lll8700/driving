@@ -28,6 +28,13 @@ namespace Yun.Share.Voice.IApplication.Dtos.Models
         public CarTypeDto CarType { get; set; }
 
         /// <summary>
+        /// 题库类型
+        /// </summary>
+        public Guid? PracticeTypeId { get; set; }
+
+        public PracticeTypeDto PracticeType { get; set; }
+
+        /// <summary>
         /// 题目状态
         /// </summary>
         public StatusTypeEnum StatusTypeEnum { get; set; }

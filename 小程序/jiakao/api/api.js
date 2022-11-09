@@ -12,6 +12,9 @@ var api = {
 	SubjectType: {
 		list: portUrl + '/SubjectType/' + 'list' 
 	},
+	PracticeType: {
+		list: portUrl + '/PracticeType/' + 'list' 
+	},
 	// 枚举
 	Enums: {
 		getenum: portUrl +  '/Enum/' + "getenum"

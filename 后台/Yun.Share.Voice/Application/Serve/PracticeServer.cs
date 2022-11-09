@@ -23,8 +23,7 @@ namespace Yun.Share.Voice.Application.Serve
     {
         private readonly CoreDbContext _db;
         private readonly IConfiguration _configuration;
-        private readonly IMemoryCache _cache;
-        private readonly IPracticeServer _practiceServer;
+        private readonly IMemoryCache _cache;       
         public PracticeServer(CoreDbContext db, IMemoryCache cache, IConfiguration configuration)
         {
             _db = db;
@@ -111,7 +110,7 @@ namespace Yun.Share.Voice.Application.Serve
         public async Task<PracticeDto> GetRandomAsync(PracticeListInput input)
         {
             var baseList = await GetCachePracticeDtos();
-            var perItem = baseList.OrderBy(x=> Guid.NewGuid()).FirstOrDefault();
+            var perItem = FilterDtos(baseList, input).OrderBy(x=> Guid.NewGuid()).FirstOrDefault();
             return perItem == null ? new PracticeDto() : perItem;
         }
 
@@ -178,7 +177,7 @@ namespace Yun.Share.Voice.Application.Serve
             per.Skill = input.Skill;
             per.SkillLast = input.SkillLast;
             per.Introduce = input.Introduce;
-
+            per.PracticeTypeId = input.PracticeTypeId;
 
             await _db.SaveChangesAsync();
             return new PracticeDto();
@@ -258,6 +257,10 @@ namespace Yun.Share.Voice.Application.Serve
             {
                 iq = iq.Where(x => x.SubjectTypeId == input.SubjectTypeId);
             }
+            if (input.PracticeTypeId.HasValue)
+            {
+                iq = iq.Where(x => x.PracticeTypeId == input.PracticeTypeId);
+            }
             if (input.Ids.IsNotEmpty())
             {
                 iq = iq.Where(x => input.Ids.Contains(x.Id));
@@ -274,6 +277,45 @@ namespace Yun.Share.Voice.Application.Serve
             {
                 iq = iq.Where(x => !input.UnIds.Contains(x.Id));
             }
+           
+            return iq;
+        }
+
+        protected List<PracticeDto> FilterDtos(List<PracticeDto> iq, PracticeListInput input)
+        {
+            if (input.Name.IsNotEmpty())
+            {
+                iq = iq.Where(x => x.Title.Contains(input.Name)).ToList();
+            }
+            if (input.CarTypeId.HasValue)
+            {
+                iq = iq.Where(x => x.CarTypeId == input.CarTypeId).ToList();
+            }
+            if (input.SubjectTypeId.HasValue)
+            {
+                iq = iq.Where(x => x.SubjectTypeId == input.SubjectTypeId).ToList();
+            }
+            if (input.PracticeTypeId.HasValue)
+            {
+                iq = iq.Where(x => x.PracticeTypeId == input.PracticeTypeId).ToList();
+            }
+            if (input.Ids.IsNotEmpty())
+            {
+                iq = iq.Where(x => x.Id.HasValue && input.Ids.Contains(x.Id.Value)).ToList();
+            }
+            if (input.StatusTypeEnum.HasValue)
+            {
+                iq = iq.Where(x => x.StatusTypeEnum == input.StatusTypeEnum).ToList();
+            }
+            if (input.ChoiceTyope.HasValue)
+            {
+                iq = iq.Where(x => x.ChoiceTyope == input.ChoiceTyope).ToList();
+            }
+            if (input.UnIds.IsNotEmpty())
+            {
+                iq = iq.Where(x =>x.Id.HasValue && !input.UnIds.Contains(x.Id.Value)).ToList();
+            }
+
             return iq;
         }
 
@@ -290,14 +332,19 @@ namespace Yun.Share.Voice.Application.Serve
 
             var subIds = list.Select(x => x.SubjectTypeId).ToList();
 
+            var typeIds = list.Where(x=>x.PracticeTypeId.HasValue).Select(x => x.PracticeTypeId.Value).ToList();
+
             var carList = await _db.CarTypes.Where(x => carIds.Contains(x.Id)).ToListAsync();
             var subLIst = await _db.SubjectTypes.Where(x => subIds.Contains(x.Id)).ToListAsync();
+            var typeLIst = await _db.PracticeTypes.Where(x => typeIds.Contains(x.Id)).ToListAsync();
 
             var ids = list.Select(x => x.Id).ToList();
 
             var imges = await _db.PracticeImages.Where(x => ids.Contains(x.PracticeId)).ToListAsync();
 
             var options = await _db.Optiones.Where(x => ids.Contains(x.PracticeId)).ToListAsync();
+
+            
 
             for(var i=0;i<list.Count;i++)
             {
@@ -311,6 +358,12 @@ namespace Yun.Share.Voice.Application.Serve
                 if (sub != null)
                 {
                     x.SubjectType = sub.MapTo<SubjectTypeDto, SubjectType>();
+                }
+
+                var t = typeLIst.FirstOrDefault(s => s.Id == x.PracticeTypeId);
+                if (t != null)
+                {
+                    x.PracticeType = t.MapTo<PracticeTypeDto, PracticeType>();
                 }
 
                 var ims = imges.Where(s => s.PracticeId == x.Id).ToList();

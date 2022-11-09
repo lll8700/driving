@@ -51,6 +51,7 @@ namespace Yun.Share.Voice.DataBase
 
         public virtual DbSet<Config> Configs { get; set; }
 
+        public virtual DbSet<PracticeType> PracticeTypes { get; set; }
         #endregion
 
         #region 重写

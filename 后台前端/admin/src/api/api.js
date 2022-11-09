@@ -2,7 +2,7 @@
 
 // const portUrl = 'http://106.14.209.175:801/api' // 正式地址
 // const portUrl = 'https://localhost:44312/api' // 本地地址
-const portUrl = '/api'
+const portUrl = '/api/api'
 var api = {
   // 车型
   CarType: {
@@ -10,6 +10,12 @@ var api = {
     create: portUrl + '/CarType/' + 'create',
     delete: portUrl + '/CarType/' + 'delete',
     update: portUrl + '/CarType/' + 'update'
+  },
+  PracticeType: {
+    list: portUrl + '/PracticeType/' + 'list',
+    create: portUrl + '/PracticeType/' + 'create',
+    delete: portUrl + '/PracticeType/' + 'delete',
+    update: portUrl + '/PracticeType/' + 'update'
   },
   // 科目
   SubjectType: {

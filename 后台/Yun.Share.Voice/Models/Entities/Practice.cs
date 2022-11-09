@@ -29,6 +29,13 @@ namespace Yun.Share.Voice.Models.Entities
         public CarType CarType { get; set; }
 
         /// <summary>
+        /// 题库类型
+        /// </summary>
+        public Guid? PracticeTypeId { get; set; }
+
+        public PracticeType PracticeType { get; set; }
+
+        /// <summary>
         /// 题目状态
         /// </summary>
         public StatusTypeEnum StatusTypeEnum { get; set; }
