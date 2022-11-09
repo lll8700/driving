@@ -189,10 +189,10 @@ namespace Yun.Share.Voice.Application.Serve
             return await base.GetListAsync(input);
         }
 
-        public async Task<int> GetSucceedCount()
+        public async Task<int> GetSucceedCount(PracticeListInput input)
         {
             var iq = _db.Practices.AsQueryable();
-            iq = IncludeDefault(iq);
+            iq = Filter(iq, input);
 
             iq = iq.Where(x => x.StatusTypeEnum == Enum.StatusTypeEnum.Succeed);
 
@@ -495,7 +495,7 @@ namespace Yun.Share.Voice.Application.Serve
             }
             else
             {
-                var succeedCount = await GetSucceedCount();
+                var succeedCount = await GetSucceedCount( new PracticeListInput());
 
                 var dtoList = (List<PracticeDto>)list;
 

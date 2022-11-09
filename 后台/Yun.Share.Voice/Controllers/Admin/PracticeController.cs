@@ -96,6 +96,17 @@ namespace Yun.Share.Voice.Controllers.Admin
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
+        [Route("count")]
+        public Task<int> GetSucceedCount(PracticeListInput input)
+        {
+            return _server.GetSucceedCount(input);
+        }
+        /// <summary>
+        /// 获取考试100题
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [HttpPost]
         [Route("testlist")]
         public Task<PagedResultDto<PracticeDto>> GetTestListAsync(PracticeTestListInput input)
         {

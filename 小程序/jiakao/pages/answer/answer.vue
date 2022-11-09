@@ -17,6 +17,7 @@
 		<view class="u_foot">
 			<view class="itemflex">
 				<button class="mini-btn" type="primary" @click="pre" :disabled="index <= 0">上一题</button>
+				<button class="mini-btn" type="default" :disabled="true">{{ list.length }} / {{toallCount}}</button>
 				<button class="mini-btn " type="primary" @click="next" :disabled="!isNext">下一题</button>
 			</view>
 		</view>
@@ -44,11 +45,20 @@
 				list: [], // 加载的题库集合
 				index: -1, // 当前显示的题库指针
 				dataItem: {}, // 选择的项
-				isNext: true
+				isNext: true,
+				toallCount: 0
 			}
 		},
-
+		created() {
+			this.initData();
+		},
 		methods: {
+			initData() {
+				var that = this;
+				that.$http(that.$api.Practice.count, "POST", that.input).then(res => {
+					that.toallCount = res.data
+				})
+			},
 			pre() {
 				var that = this;
 				if (this.index > -1) {

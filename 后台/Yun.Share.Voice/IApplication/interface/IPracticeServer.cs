@@ -49,7 +49,7 @@ namespace Yun.Share.Voice.IApplication
         /// 获取审核通过的题库数量
         /// </summary>
         /// <returns></returns>
-        Task<int> GetSucceedCount();
+        Task<int> GetSucceedCount(PracticeListInput input);
 
         Task<List<PracticeDto>> GetCachePracticeDtos();
         /// <summary>
