@@ -565,13 +565,14 @@ namespace Yun.Share.Voice.Application.Serve
                 items.Add(data.ChoiceTyopeEnmName);
                 var images = string.Join(',', data.PracticeImages.Select(x => x.Url));
                 items.Add(images);
+                items.Add(data.Title);
                 var ops = data.Options.OrderBy(x => x.Index).ToList();
                 var isOps = ops.Where(x => x.IsCorrect).Select(x=>x.Title.Trim().Substring(0,1)).ToList();
                 foreach(var o in ops)
                 {
                     items.Add(o.Title);
                 }
-                for(var i = ops.Count ; i < 5; i++)
+                for(var i = ops.Count ; i < 4; i++)
                 {
                     items.Add("");
                 }
