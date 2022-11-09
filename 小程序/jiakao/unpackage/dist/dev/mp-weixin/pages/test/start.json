@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "模拟考试",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "test": "/pages/test/test"
-  }
-}

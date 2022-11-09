@@ -1,8 +1,0 @@
-{
-  "navigationBarTitleText": "answer",
-  "enablePullDownRefresh": false,
-  "usingComponents": {
-    "yui-tabs": "/uni_modules/yui-tabs/components/yui-tabs/yui-tabs",
-    "test": "/pages/test/test"
-  }
-}
