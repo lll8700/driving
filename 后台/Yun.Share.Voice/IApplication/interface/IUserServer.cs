@@ -19,5 +19,6 @@ namespace Yun.Share.Voice.IApplication
         Task<UserDto> UpdateAsync(CreateUserDto input);
         Task<PagedResultDto<UserDto>> GetListAsync(UserListInput input);
         Task<bool> Delete(CreateUserDto input);
+        Task<ExcelData> GetCommissionFormListExcel(UserListInput input);
     }
 }

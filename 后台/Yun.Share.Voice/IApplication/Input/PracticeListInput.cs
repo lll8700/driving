@@ -44,6 +44,9 @@ namespace Yun.Share.Voice.IApplication.Input
         /// 单选/多选
         /// </summary>
         public ChoiceTyope? ChoiceTyope { get; set; }
+        public DateTime? StrTime { get; set; }
+
+        public DateTime? EndTime { get; set; }
     }
 
     public class PracticeTestListInput

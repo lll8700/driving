@@ -278,7 +278,14 @@ namespace Yun.Share.Voice.Application.Serve
             {
                 iq = iq.Where(x => !input.UnIds.Contains(x.Id));
             }
-           
+            if (input.StrTime.HasValue)
+            {
+                iq = iq.Where(x => x.CreationTime >= input.StrTime);
+            }
+            if (input.EndTime.HasValue)
+            {
+                iq = iq.Where(x => x.CreationTime <= input.EndTime);
+            }
             return iq;
         }
 
@@ -314,6 +321,7 @@ namespace Yun.Share.Voice.Application.Serve
             {
                 iqList = iqList.Where(x => x.ChoiceTyope == input.ChoiceTyope);
             }
+            
             if (input.UnIds.IsNotEmpty())
             {
                 iqList = iqList.Where(x =>x.Id.HasValue && !input.UnIds.Contains(x.Id.Value));

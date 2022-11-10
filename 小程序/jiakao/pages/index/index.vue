@@ -98,13 +98,15 @@
 							that.CarType = that.typeArrs[0];
 						}
 						that.queTypeArrs = res.data.subjectTypeDtos
+						if(that.queTypeArrs.length > 0) {
+							that.Subject = that.queTypeArrs[0];
+						}
 					})
 					
 					that.$http(that.$api.PracticeType.list, "POST", {
 						Sorting: "CreationTime"
 					}).then(res => {
 						that.practiceTypes = res.data.items;
-						console.log(that.practiceTypes)
 					})
 					// that.$http(that.$api.SubjectType.list, 'POST', {
 					// 	Sorting: "CreationTime"

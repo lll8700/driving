@@ -19,5 +19,9 @@ namespace Yun.Share.Voice.IApplication.Input
         public UserStatusTypeEnum? UserStatusTypeEnum { get; set; }
 
         public bool? IsSelfCreate { get; set; }
+
+        public DateTime? StrTime { get; set; }
+
+        public DateTime? EndTime { get; set; }
     }
 }

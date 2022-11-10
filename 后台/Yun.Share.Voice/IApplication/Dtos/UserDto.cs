@@ -52,6 +52,11 @@ namespace Yun.Share.Voice.IApplication.Dtos
         /// <summary>
         /// 手机号
         /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 手机号
+        /// </summary>
         public string Phone { get; set; }
 
         /// <summary>

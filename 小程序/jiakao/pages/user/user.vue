@@ -39,6 +39,9 @@
 			}
 		},
 		created() {
+			
+		},
+		onShow() {
 			var user = uni.getStorageSync("User");
 			this.userDto = user;
 		},

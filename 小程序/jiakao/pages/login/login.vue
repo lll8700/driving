@@ -40,6 +40,9 @@
 			}
 		},
 		created() {
+			
+		},
+		onShow() {
 			uni.clearStorageSync()
 		},
 		methods: {

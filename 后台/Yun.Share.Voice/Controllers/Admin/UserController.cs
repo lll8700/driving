@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Yun.Share.Voice.IApplication;
 using Yun.Share.Voice.IApplication.Dtos;
@@ -54,8 +55,22 @@ namespace Yun.Share.Voice.Controllers.Admin
             return _server.Delete(input);
         }
 
-        #region Web
+        #region µ¼³ö
+        [HttpPost]
+        [Route("outexcel")]
+        public async Task<IActionResult> GetCommissionFormListExcel(UserListInput input)
+        {
+            var datas = await _server.GetCommissionFormListExcel(input);
 
+            using (var sw = new FileStream(datas.Url, FileMode.Open))
+            {
+                var bytes = new byte[sw.Length];
+                sw.Read(bytes, 0, bytes.Length);
+                sw.Close();
+                return new FileContentResult(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
+
+        }
 
         #endregion
 

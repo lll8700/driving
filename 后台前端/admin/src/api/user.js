@@ -53,3 +53,13 @@ export function deleteUser(query) {
     data: query
   })
 }
+
+export function outExcel(query) {
+  return request({
+    url: api.api.user.outexcel,
+    method: 'post',
+    responseType: 'arraybuffer', // 关键，不设置导出的文件无法打开
+    data: query
+  })
+}
+

@@ -6,12 +6,24 @@
           <el-option label="全部" value="" />
           <el-option v-for="item in userTypeEnums" :key="item.key" :label="item.label" :value="item.key" />
         </el-select>
+        <el-date-picker
+          v-model="listSearch.date"
+          type="daterange"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          :picker-options="pickerOptions"
+          style="margin-left: 10px;width:300px"
+        />
       </el-checkbox-group>
     </div>
     <div class="filter-container">
       <el-checkbox-group>
-        <el-button @click="getList()"> 查询</el-button>
+        <el-button @click="baseList()"> 查询</el-button>
         <el-button @click="()=> { excelDialogVisible = true }"> 新增</el-button>
+        <el-button @click="outExcel()"> 导出账户</el-button>
       </el-checkbox-group>
     </div>
     <el-dialog v-el-drag-dialog :visible.sync="excelDialogVisible" title="新增账户" @dragDialog="() => { excelDialogVisible =false }">
@@ -33,6 +45,9 @@
         </el-form-item>
         <el-form-item label="手机号">
           <el-input v-model="createInput.phone" maxlength="11" minlength="11" />
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="createInput.name" maxlength="11" minlength="11" placeholder="默认手机号" />
         </el-form-item>
         <el-form-item label="密码">
           <el-input v-model="createInput.password" maxlength="16" minlength="6" />
@@ -61,6 +76,9 @@
             <el-option v-for="item in userStatusTypeEnums" :key="item.key" :label="item.label" :value="item.key" />
           </el-select>
         </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="updateInput.name" />
+        </el-form-item>
         <el-form-item label="密码">
           <el-input v-model="updateInput.password" maxlength="16" minlength="6" />
         </el-form-item>
@@ -76,6 +94,11 @@
       <el-table-column prop="strTimeName" label="开始" width="180" />
       <el-table-column prop="endTimeName" label="结束" width="180" />
       <el-table-column prop="createUserName" label="开户人" width="130" />
+      <el-table-column label="开户日期" width="180">
+        <template slot-scope="scope">
+          {{ scope.row.creationTime.replace('T', ' ') }}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="600">
         <template slot-scope="scope">
           <el-button @click="updateUser(scope.row)"> 修改信息</el-button>
@@ -98,10 +121,11 @@
 
 <script>
 const defaultFormThead = ['apple', 'banana']
-import { fetchList, create, update, deleteUser } from '@/api/user'
+import { fetchList, create, update, deleteUser, outExcel } from '@/api/user'
 import { getEnum } from '@/api/config'
 import { Message, MessageBox } from 'element-ui'
 import Pagination from '@/components/Pagination'
+import fileDownload from 'js-file-download'
 export default {
   components: { Pagination },
   data() {
@@ -116,8 +140,11 @@ export default {
       listQuery: {
         userTypeEnum: undefined,
         userStatusTypeEnum: undefined,
-        limit: 10
+        limit: 10,
+        endTime: undefined,
+        strTime: undefined
       },
+      listSearch: {},
       userTypeEnums: [], // 用户类型
       userStatusTypeEnums: [], // 状态
       total: 0,
@@ -134,6 +161,41 @@ export default {
         name: undefined,
         userTypeEnum: undefined,
         userStatusTypeEnum: undefined
+      },
+      pickerOptions: {
+        shortcuts: [{
+          text: '当天',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime())
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', [start, end])
+          }
+        }, {
+          text: '最近一年',
+          onClick(picker) {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 365)
+            picker.$emit('pick', [start, end])
+          }
+        }]
       }
     }
   },
@@ -245,15 +307,35 @@ export default {
       })
     },
     getList() {
+      if (this.listSearch.date && this.listSearch.date.length >= 2) {
+        this.listQuery.strTime = this.listSearch.date[0]
+        this.listQuery.endTime = this.listSearch.date[1]
+      }
       fetchList(this.listQuery).then(res => {
         this.tableData = res.items
         this.total = res.totalCount
       })
     },
     baseList() {
+      console.log(this.listSearch)
       this.listQuery.page = 1
       this.listQuery.limit = 10
       this.getList()
+    },
+    outExcel() {
+      var that = this
+      MessageBox.confirm('确定导出题库？', '系统提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        outExcel(that.listQuery).then(response => {
+          var buff = Buffer.from(response)
+          fileDownload(buff, decodeURI('账户信息' + '.xlsx'))
+        })
+      }).catch(() => {
+
+      })
     }
   }
 }

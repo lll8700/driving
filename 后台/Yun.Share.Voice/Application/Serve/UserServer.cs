@@ -12,6 +12,8 @@ using Yun.Share.Voice.IApplication.Input;
 using Yun.Share.Voice.IApplication.UtilDtos;
 using Yun.Share.Voice.Models.Entities;
 using Yun.Share.Voice.Utils;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace Yun.Share.Voice.Application.Serve
 {
@@ -19,10 +21,12 @@ namespace Yun.Share.Voice.Application.Serve
     {
         private readonly CoreDbContext _db;
         private readonly IJwtTokenServer _jwtTokenServer;
-        public UserServer(CoreDbContext db, IJwtTokenServer jwtTokenServer)
+        private readonly IConfiguration _configuration;
+        public UserServer(CoreDbContext db, IJwtTokenServer jwtTokenServer, IConfiguration configuration)
         {
             _db = db;
             _jwtTokenServer = jwtTokenServer;
+            _configuration = configuration;
             base.query = db.Users.AsQueryable();
         }
         public override async Task<UserDto> CreateAsync(CreateUserDto input)
@@ -52,6 +56,10 @@ namespace Yun.Share.Voice.Application.Serve
             per.UserTypeEnum = input.UserTypeEnum.Value;
             per.StrTime = DateTime.Now;
             per.Name = input.Phone;
+            if(input.Name.IsNotEmpty())
+            {
+                per.Name = input.Name;
+            }
             per.Phone = input.Phone;
             per.EndTime = input.EndTime;
             per.Password = Md5Encrypt.Encrypt(input.Password);
@@ -76,7 +84,11 @@ namespace Yun.Share.Voice.Application.Serve
         public override async Task<UserDto> UpdateAsync(CreateUserDto input)
         {
             User per = await _db.Users.FindAsync(input.Id);
-            if(input.UserStatusTypeEnum.HasValue)
+            if (input.Name.IsNotEmpty())
+            {
+                per.Name = input.Name;
+            }
+            if (input.UserStatusTypeEnum.HasValue)
                 per.UserStatusTypeEnum = input.UserStatusTypeEnum.Value;
             if (input.UserTypeEnum.HasValue)
                 per.UserTypeEnum = input.UserTypeEnum.Value;
@@ -166,7 +178,15 @@ namespace Yun.Share.Voice.Application.Serve
             {
                 iq = iq.Where(x => !input.UnIds.Contains(x.Id));
             }
-            if(input.IsSelfCreate == true)
+            if(input.StrTime.HasValue)
+            {
+                iq = iq.Where(x => x.CreationTime >= input.StrTime);
+            }
+            if (input.EndTime.HasValue)
+            {
+                iq = iq.Where(x => x.CreationTime <= input.EndTime);
+            }
+            if (input.IsSelfCreate == true)
             {
                 var userId = _jwtTokenServer.GetCurrentUserId();
                 iq = iq.Where(x => x.CreatorId == userId.Value);
@@ -200,5 +220,65 @@ namespace Yun.Share.Voice.Application.Serve
             var list = await MapToGetListOutputDtosAsync(new List<User> { per });
             return list[0];
         }
+
+        #region  导出Excel
+
+        /// <summary>
+        /// 导出题库
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<ExcelData> GetCommissionFormListExcel(UserListInput input)
+        {
+
+            input.SkipCount = 0;
+            input.MaxResultCount = int.MaxValue;
+            var fromData = await GetListAsync(input);
+            var tableName = "账户数据";
+            var fileName = $"{tableName}.xlsx";
+            ExcelUtil excel = new ExcelUtil();
+            // 账号、类型、添加时间、创建人（配合第一条，导出销售员姓名）
+            List<string> titles = new List<string>
+            {
+                "序号",
+                "账号",
+                "类型",
+                "开户人",
+                "添加时间"
+               
+            };
+            List<List<string>> list = new List<List<string>>();
+            var index = 1;
+            foreach (var data in fromData.Items)
+            {
+                List<string> items = new List<string>();
+                items.Add(index.ToString());
+                items.Add(data.Phone);
+                items.Add(data.UserTypeEnumName);
+                items.Add(data.CreateUserName);
+                items.Add(data.CreationTime?.ToString("yyyy-MM-dd"));
+                list.Add(items);
+                index++;
+            }
+
+            var dt = excel.ToDataTable(titles, list);
+            var excelPath = _configuration["Authentication:Oss:OutExcelPath"];
+            string target = Directory.GetCurrentDirectory() + "/" + excelPath;
+            var isOut = excel.TableToExcel(dt, target + fileName);
+            ExcelData excelData = new ExcelData
+            {
+                Status = false,
+                Url = null,
+            };
+            if (isOut)
+            {
+                excelData.Status = true;
+                excelData.Url = excelPath + fileName;
+            }
+
+            //以字符流的形式下载文件
+            return excelData;
+        }
+        #endregion
     }
 }

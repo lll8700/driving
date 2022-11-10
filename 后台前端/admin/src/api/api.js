@@ -50,7 +50,8 @@ var api = {
     list: portUrl + '/user/' + 'list',
     create: portUrl + '/user/' + 'create',
     update: portUrl + '/user/' + 'update',
-    delete: portUrl + '/user/' + 'delete'
+    delete: portUrl + '/user/' + 'delete',
+    outexcel: portUrl + '/user/' + 'outexcel'
   },
   config: {
     getfist: portUrl + '/config/' + 'getfist',
