@@ -82,11 +82,13 @@
 					that.input.ids.push(that.dataItem.id);
 				}
 				that.dataItem = {}
+				console.log(that.input)
 				that.$http(that.$api.Practice.random, "POST", that.input).then(res => {
 					if (res.data.id) {
 						that.list.push(res.data);
 						this.index++;
 						that.dataItem = res.data;
+						console.log(that.dataItem)
 						that.index = that.list.length - 1;
 					} else {
 						that.isNext = false;

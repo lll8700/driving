@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,9 +89,9 @@ namespace Yun.Share.Voice.Application.Serve
 
             var subList = juList.Where(x => x.User_JurisdictionTypeEnum == Enum.User_JurisdictionTypeEnum.SubjectType).Select(x => x.TableId).ToList();
 
-            dto.CarTypeDtos = (await _carTypeServer.GetListAsync(new CarTypeListInput { Ids = carList,IsIds = true })).Items;
+            dto.CarTypeDtos = (await _carTypeServer.GetListAsync(new CarTypeListInput { Ids = carList,IsIds = true, Sorting = "CreationTime" })).Items;
 
-            dto.SubjectTypeDtos = (await _subjectTypeServer.GetListAsync(new SubjectTypeListInput { Ids = subList, IsIds = true })).Items;
+            dto.SubjectTypeDtos = (await _subjectTypeServer.GetListAsync(new SubjectTypeListInput { Ids = subList, IsIds = true, Sorting = "CreationTime" })).Items;
 
             return dto;
         }

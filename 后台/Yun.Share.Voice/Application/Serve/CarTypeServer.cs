@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -87,6 +87,7 @@ namespace Yun.Share.Voice.Application.Serve
             //};
             //await _db.CarTypes.AddRangeAsync(list);
             //await _db.SaveChangesAsync();
+            input.Sorting = "CreationTime";
             return await base.GetListAsync(input);
         }
 

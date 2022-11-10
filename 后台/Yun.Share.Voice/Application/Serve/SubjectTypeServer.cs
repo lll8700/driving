@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,6 +54,7 @@ namespace Yun.Share.Voice.Application.Serve
         }
         public override async Task<PagedResultDto<SubjectTypeDto>> GetListAsync(SubjectTypeListInput input)
         {
+            input.Sorting = "CreationTime";
             return await base.GetListAsync(input);
         }
 

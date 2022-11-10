@@ -76,8 +76,8 @@
             "port" : 80,
             "proxy" : {
                 "/api" : {
-                    "target" : "http://106.14.209.175:800",
-                    // "target" : "https://localhost:44312",
+                    // "target" : "http://106.14.209.175:800",
+                    "target" : "https://localhost:44312",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {

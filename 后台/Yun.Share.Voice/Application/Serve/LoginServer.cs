@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -116,7 +116,7 @@ namespace Yun.Share.Voice.Application.Serve
             // && x.UserTypeEnum == Enum.UserTypeEnum.Empty
             // && x.UserStatusTypeEnum == Enum.UserStatusTypeEnum.Formal
              && x.StrTime < date
-             && x.EndTime == null || x.EndTime > date
+             && (x.EndTime == null || x.EndTime > date)
             );
 
 

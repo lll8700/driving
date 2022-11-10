@@ -110,7 +110,8 @@ namespace Yun.Share.Voice.Application.Serve
         public async Task<PracticeDto> GetRandomAsync(PracticeListInput input)
         {
             var baseList = await GetCachePracticeDtos();
-            var perItem = FilterDtos(baseList, input).OrderBy(x=> Guid.NewGuid()).FirstOrDefault();
+            var list = FilterDtos(baseList, input);
+            var perItem = list.OrderBy(x=> Guid.NewGuid()).FirstOrDefault();
             return perItem == null ? new PracticeDto() : perItem;
         }
 
@@ -283,40 +284,42 @@ namespace Yun.Share.Voice.Application.Serve
 
         protected List<PracticeDto> FilterDtos(List<PracticeDto> iq, PracticeListInput input)
         {
+            var iqList = iq.Where(x => 1 == 1);
+
             if (input.Name.IsNotEmpty())
             {
-                iq = iq.Where(x => x.Title.Contains(input.Name)).ToList();
+                iqList = iqList.Where(x => x.Title.Contains(input.Name));
             }
             if (input.CarTypeId.HasValue)
             {
-                iq = iq.Where(x => x.CarTypeId == input.CarTypeId).ToList();
+                iqList = iqList.Where(x => x.CarTypeId == input.CarTypeId);
             }
             if (input.SubjectTypeId.HasValue)
             {
-                iq = iq.Where(x => x.SubjectTypeId == input.SubjectTypeId).ToList();
+                iqList = iqList.Where(x => x.SubjectTypeId == input.SubjectTypeId);
             }
             if (input.PracticeTypeId.HasValue)
             {
-                iq = iq.Where(x => x.PracticeTypeId == input.PracticeTypeId).ToList();
+                iqList = iqList.Where(x => x.PracticeTypeId == input.PracticeTypeId);
             }
-            if (input.Ids.IsNotEmpty())
+            if (input.Ids.IsNotEmpty()) // 这里是提供给前端的 所以排除这个
             {
-                iq = iq.Where(x => x.Id.HasValue && input.Ids.Contains(x.Id.Value)).ToList();
+                iqList = iqList.Where(x => x.Id.HasValue && !input.Ids.Contains(x.Id.Value));
             }
             if (input.StatusTypeEnum.HasValue)
             {
-                iq = iq.Where(x => x.StatusTypeEnum == input.StatusTypeEnum).ToList();
+                iqList = iqList.Where(x => x.StatusTypeEnum == input.StatusTypeEnum);
             }
             if (input.ChoiceTyope.HasValue)
             {
-                iq = iq.Where(x => x.ChoiceTyope == input.ChoiceTyope).ToList();
+                iqList = iqList.Where(x => x.ChoiceTyope == input.ChoiceTyope);
             }
             if (input.UnIds.IsNotEmpty())
             {
-                iq = iq.Where(x =>x.Id.HasValue && !input.UnIds.Contains(x.Id.Value)).ToList();
+                iqList = iqList.Where(x =>x.Id.HasValue && !input.UnIds.Contains(x.Id.Value));
             }
 
-            return iq;
+            return iqList.ToList();
         }
 
         protected override async Task<List<PracticeDto>> MapToGetListOutputDtosAsync(List<Practice> entities)
