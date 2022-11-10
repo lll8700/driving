@@ -132,9 +132,12 @@
 							.Subject.id,
 					});
 				} else {
+					var url = '/pages/answer/answer?type=' + type + '&carType=' + that.CarType.id + '&subject=' + that.Subject.id
+					if(id) {
+						url +=  '&practiceTypeId=' + id
+					}
 					uni.navigateTo({
-						url: '/pages/answer/answer?type=' + type + '&carType=' + that.CarType.id + '&subject=' +
-							that.Subject.id + '&practiceTypeId=' + id,
+						url: url,
 					});
 				}
 
