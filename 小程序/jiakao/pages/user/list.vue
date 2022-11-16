@@ -45,6 +45,12 @@
 								</checkbox-group>
 								
 							</uni-card>
+							<uni-card title="账户状态" class="btn">
+								<radio-group @change="userStatusType">
+									<radio :checked="dataItem.userStatusTypeEnum !== 30" value="20">启用</radio>
+									<radio :checked="dataItem.userStatusTypeEnum === 30" value="30" style="margin-left: 10px;" >禁用</radio>
+								</radio-group>
+							</uni-card>
 							
 						</uni-section>
 					</view>
@@ -140,6 +146,10 @@
 			},
 			isCarChecked(item) {
 				return this.jurInput.cars.filter(x=>x === item.id).length > 0
+			},
+			userStatusType(e) {
+				this.jurInput.userStatusTypeEnum = e.detail.value
+				console.log(this.jurInput)
 			},
 			save() {
 				var that = this

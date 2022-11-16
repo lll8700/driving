@@ -49,10 +49,26 @@ export function request(url,method="get",data,contentType=1) {
 						title: '请求方式错误',
 						duration: 1500
 					})
-				} else {
+				} else if(res.statusCode == 500)  {
+					var str = '错误:服务端请求错误'
+					if(res.data) {
+						var ex = res.data.split(':')
+						if(ex.length > 1) {
+							var ex1 =ex[1].split('at')
+							str = '错误:' + ex1[0]
+						}
+					}
+					
+					
 					uni.showToast({
 						icon:"none",
-						title: '请求错误'+res.statusCode,
+						title: str,
+						duration: 1500
+					})
+				}else {
+					uni.showToast({
+						icon:"none",
+						title: '错误：' + res.statusCode,
 						duration: 1500
 					})
 				}

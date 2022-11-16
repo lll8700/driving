@@ -2,7 +2,7 @@
  
 // const portUrl = 'http://106.14.209.175:801/api' //正式地址
 // const portUrl = 'https://localhost:44312/api' //本地地址
-const portUrl = "/api";
+const portUrl = "/api/api";
 var api = {
 	// 车型
 	CarType: {
