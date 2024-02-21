@@ -25,6 +25,21 @@ namespace Yun.Share.Voice.Application.Serve
 
         public async Task<bool> CreateAsync(User_JurisdictionInput input)
         {
+            if(input.UserStatusTypeEnum.HasValue)
+            {
+                var user = await _db.Users.FindAsync(input.UserId);
+
+                if(user.UserStatusTypeEnum != input.UserStatusTypeEnum)
+                {
+                    user.UserStatusTypeEnum = input.UserStatusTypeEnum.Value;
+                    if(input.UserStatusTypeEnum == Enum.UserStatusTypeEnum.Invalid)
+                    {
+                        await _db.SaveChangesAsync();
+                        return true;
+                    }
+                }
+            }
+           
             var list = await _db.User_Jurisdictions.Where(x => x.UserId == input.UserId).ToListAsync();
 
             _db.User_Jurisdictions.RemoveRange(list);

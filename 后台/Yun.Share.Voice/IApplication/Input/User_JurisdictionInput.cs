@@ -15,6 +15,7 @@ namespace Yun.Share.Voice.IApplication.Input
     {
         public Guid UserId { get; set; }
 
+        public UserStatusTypeEnum? UserStatusTypeEnum { get; set; }
         public List<Guid> Cars { get; set; }
 
         public List<Guid> SubjectTypes { get; set; }
