@@ -8,7 +8,7 @@ namespace Yun.Share.Voice.Utils
 {
     public static class EnumHelper
     {
-
+         
         /// <summary>
         /// 表示枚举所产生的数据项。
         /// </summary>
